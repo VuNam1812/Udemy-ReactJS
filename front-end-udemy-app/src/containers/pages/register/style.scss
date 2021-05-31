@@ -1,0 +1,26 @@
+@import '../../../styleRoot/color.scss';
+
+.register{
+    .register-body{
+        background-color: $--background;
+        padding: 5rem 0rem;
+
+        .wrap{
+            overflow: hidden;
+
+            width: 60rem;
+            box-sizing: border-box;
+    
+            background-color: $--white;
+            
+            border-radius: 0.5rem;
+            box-shadow: 0px 0px 15px rgba($color: $--gray, $alpha: .3);
+        
+            &__cover{
+                display: flex;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    }
+}

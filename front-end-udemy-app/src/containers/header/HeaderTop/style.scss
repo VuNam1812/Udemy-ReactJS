@@ -1,0 +1,26 @@
+@import '../../../styleRoot/color.scss';
+
+.header-top{
+    padding: 1rem 0rem;
+    background-color: $--background;
+    &__item{
+        &-title{
+            display: inline;
+            font-weight: bold;
+            color: $--text-color-bold;
+        }
+        
+        &-info{
+            margin-left: 0.5rem;
+            display: inline;
+            color: $--gray;
+        }
+    }
+
+    .btn-log{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+    }
+}
