@@ -5,3 +5,4 @@ export { InputWithLabel } from './inputWithLabel/inputWithLabel';
 export { Input } from './input/input';
 export { Checkbox } from './checkbox/checkbox';
 export { Select } from './select/select';
+export { Expander } from './expander/expander';

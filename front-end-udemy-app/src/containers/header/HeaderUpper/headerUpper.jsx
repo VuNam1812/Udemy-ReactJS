@@ -1,11 +1,20 @@
 // @flow 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './style.scss';
 import { Logo } from '../../../components';
 import { Categories } from './categories/categories';
+import $ from 'jquery';
 export const HeaderUpper = (props) => {
+    const header = useRef();
+    useEffect(() => {
+        window.addEventListener('scroll', () => {
+            header.current.classList.toggle('sticky', window.scrollY > 0);
+        })
+    }, [])
+
+
     return (
-        <div className='header-upper'>
+        <div className='header-upper' ref={header}>
             <div className='wrap'>
                 <Logo></Logo>
                 <div className='header-upper__nav-search'>

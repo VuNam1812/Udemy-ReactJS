@@ -1,7 +1,18 @@
 @import '../../../styleRoot/color.scss';
 
 .header-upper{
+    &.sticky{
+        background-color: $--dark;
+
+        color: $--white;
+
+        transform: scaleY(.9) translateY(-.5rem);
+    }
+    transition: all 0.3s;
     background-color: $--blue-main;
+    position: sticky;
+    top:0;
+    z-index: 100;
     &__nav-search{
         display: flex;
         flex-grow: 1;

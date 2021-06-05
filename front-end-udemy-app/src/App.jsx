@@ -1,9 +1,9 @@
 import './App.scss';
-import { Home, Login, Register, Courses } from './containers/pages';
+import { Home, Login, Register, Courses, CourseDetail } from './containers/pages';
 function App() {
   return (
     <div className="App">
-      <Courses></Courses>
+      <CourseDetail></CourseDetail>
     </div>
   );
 }
