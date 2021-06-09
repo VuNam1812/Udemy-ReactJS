@@ -3,3 +3,4 @@ export { Login } from './login/login';
 export { Register } from './register/register';
 export { Courses } from './courses/courses';
 export { CourseDetail } from './courseDetail/courseDetail';
+export { CourseLession } from './courseLession/courseLession';

@@ -61,7 +61,7 @@
             &-item{
                 &:hover{
                     transition: 0s;
-                    background-color: $--green-main;
+                    background-color: rgba($color: $--green-main, $alpha: .7);
                     .dropdown-item{
                         &__title{
                         color: $--white;

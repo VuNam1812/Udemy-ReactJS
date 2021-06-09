@@ -2,7 +2,7 @@ import './style.scss';
 import React, { useState, useEffect } from 'react';
 
 export const Expander = (props) => {
-    const [active, setActive] = useState('');
+    const [active, setActive] = useState((props.className === 'active')? '' : 'active');
     const activeExpander = () => {
         const activeValue = (active === '') ? 'active' : '';
         setActive(activeValue);

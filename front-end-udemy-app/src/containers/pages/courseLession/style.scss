@@ -1,0 +1,174 @@
+@import '../../../styleRoot/color.scss';
+
+.course-lession{
+    .lession-content{
+        position: relative;
+        display: flex;
+        .right-content{
+            display: flex;
+            flex-direction: column;
+            
+            
+            width: 70vw;
+            &__video{
+                width: 100%;
+                height: 75vh;
+                background-color: $--light;
+            }
+
+            .info-lession{
+                box-sizing: border-box;
+                padding: 3rem;
+
+                &__header{
+                    margin-top: 0rem;
+                    padding-left: 0rem;
+                    border-bottom: 1px solid rgba($color: $--gray, $alpha: .2);
+                    display: flex;
+                    position: relative;
+
+                    &::before{
+                        content: '';
+
+                        position: absolute;
+
+                        height: 3px;
+                        width: 7rem;
+                        
+                        border-radius: 1.5px;
+
+                        background-color: $--green-main;
+
+                        bottom: -1%;
+                        left: 0;
+                    }
+
+
+                    li + li {
+                        margin-left: 1rem;
+                    }
+
+                    &-item{
+                        display: block;
+                        box-sizing: border-box;
+
+                        padding: 1rem;
+                        &.active{
+
+                            font-weight: bold;
+                            color: $--green-main;
+                        }
+                    }
+                }
+
+                &__body{
+                    .text--normal{
+                        font-weight: normal;
+                    }
+                    .text--left{
+                        text-align: left;
+                    }
+                    .color--main{
+                        color: $--green-main;
+                    }
+                    &-title{
+                        text-align: left;
+
+                        margin-left: 2rem;
+
+                        font-family: 'Montserrat';
+
+                        font-weight: 900;
+
+                        color: $--text-color-bold;
+                        font-size: 2rem;
+                    }
+
+                    .course-info{
+                        font-weight: bold;
+                        opacity: .8;
+
+                        &__item{
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: flex-start;
+
+                            padding: 1rem 5rem;
+                            &:first-child{
+                                border-top: 1px solid rgba($color: $--gray, $alpha: .1);
+                            }
+                            border-bottom: 1px solid rgba($color: $--gray, $alpha: .1);
+                        }
+
+                        &__main{
+                            width: 75%;
+
+                        }
+
+                        &__teacher{
+                            width: 75%;
+                            cursor: pointer;
+
+                            text-align: left;
+
+                            color: $--green-main;
+                            font-weight: 500;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        .left-content{
+            box-sizing: border-box;
+            padding: 0rem 1rem;
+            width: 30vw;
+            .lession-videos{
+                position: sticky;
+    
+                top: 5.5rem;
+                width: 100%;
+
+                .lecture-video{
+                    &:first-child{
+                        border-top: none;
+                        padding-top: 0rem;
+                    }
+                    border-top: 1px solid rgba($color: $--gray, $alpha: .1);
+                    padding-bottom: 0.5rem;
+                    font-size: 0.8rem;
+
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    &.active{
+                        .lecture-video__name{
+                            color: $--green-main;
+                            &:hover{
+                                opacity: 1;
+                            }
+                        }
+                    }
+                    &__name{
+                        font-weight: bold;
+                        margin-bottom: 0;
+                        cursor: pointer;
+                        &:hover{
+                            opacity: .7;
+                        }
+                    }
+
+                    &__duration{
+                        text-align: left;
+                        margin: 0;
+                        margin-top: 0.25rem;
+                        .icon{
+                            margin-right: 0.5rem;
+                            opacity: .7;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

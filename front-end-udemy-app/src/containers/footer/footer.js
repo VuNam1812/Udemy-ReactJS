@@ -33,7 +33,7 @@ export const Footer = (props) => {
                     }
                     <div className='col--2--of--5'>
                         <div className='content__title'>
-                            <Logo className='logo--inline'></Logo>
+                            <Logo className='logo--inline logo--shadow'></Logo>
                         </div>
                         <div className='content__links'>
 

@@ -5,10 +5,8 @@
         background-color: $--dark;
 
         color: $--white;
-
-        transform: scaleY(.9) translateY(-.5rem);
     }
-    transition: all 0.3s;
+    transition: all 0.2s;
     background-color: $--blue-main;
     position: sticky;
     top:0;

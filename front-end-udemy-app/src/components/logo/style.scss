@@ -3,11 +3,22 @@
 .logo{
     display: flex;
     align-items: center;
-    &-icon{
+
+    &.logo--shadow{
+        .logo__icon{
+            text-shadow: 0px 3px 5px rgb(170,170,170);
+        }
+
+        .logo__name{
+            text-shadow: 0px 3px 5px rgba($color: $--gray, $alpha: .5);
+        }
+    }
+
+    &__icon{
         color: $--green-main;
     }
 
-    &-name{
+    &__name{
         color: $--white;
 
         font-family: QuickSand;

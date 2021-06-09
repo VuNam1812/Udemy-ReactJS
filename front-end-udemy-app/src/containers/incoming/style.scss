@@ -102,11 +102,14 @@
     &__detail{
         flex-grow: 1;
         box-sizing: border-box;
-        background-color: $--white;
+        background-color: rgba($color: $--white, $alpha: .1);
+        backdrop-filter: blur(0.25rem);
         padding: 2rem;
-
+        border: 1px solid rgba($color: $--white, $alpha: .5);
+        border-right: 1px solid rgba($color: $--white, $alpha: .2);
+        border-bottom: 1px solid rgba($color: $--white, $alpha: .2);
         border-radius: 0.5rem;
-        box-shadow: 0px 5px 10px rgba($color: $--gray, $alpha: .8);
+        box-shadow: 0px 25px 45px rgba($color: $--dark, $alpha: .1);
         margin-left: 10rem;
         &-title{
             font-family: 'Montserrat';

@@ -12,7 +12,7 @@ import cover from '../../../public/image/coverFooter.jpg';
 export const CoverFooter = (props) => {
     return (
         <div className='cover-footer' style={{ backgroundImage: `url(${cover})` }}>
-            <Logo></Logo>
+            <Logo className='logo--shadow'></Logo>
             <div className='leaves'>
                 <div className='leaves__item'><img src={leave1}></img></div>
                 <div className='leaves__item'><img src={leave2}></img></div>
