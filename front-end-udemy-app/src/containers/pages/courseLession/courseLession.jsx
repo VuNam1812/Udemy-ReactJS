@@ -60,7 +60,7 @@ export const CourseLession = (props) => {
                                 <p className='lecture-video__duration'><i className="icon fa fa-clock-o" aria-hidden="true"></i>00 : 00 : 00</p>
                             </div>
                         </Expander>
-                        
+
                     </div>
                 </div>
             </div>

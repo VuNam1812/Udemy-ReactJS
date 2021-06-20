@@ -9,6 +9,7 @@ export const CourseList = (props) => {
     useEffect(() => {
         setupPagination(37);
     }, [])
+    
     const handlePagination = (e) => {
         const index = +e.target.getAttribute('data-id');
         const newPagination = [...pagination];

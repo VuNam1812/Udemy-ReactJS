@@ -1,0 +1,154 @@
+@import "../../../styleRoot/color.scss";
+
+.course-card {
+  box-sizing: border-box;
+  .item {
+    width: 100%;
+    &:hover {
+      .item__image {
+        transform: rotateZ(3deg) scale(1.05);
+      }
+    }
+
+    min-height: 10rem;
+
+    background-color: $--white;
+
+    box-shadow: 0px 0px 25px rgba($color: $--gray, $alpha: 0.2);
+    .cover-image {
+      height: 15rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    &__image {
+      position: absolute;
+
+      transition: all 0.3s ease-out;
+
+      top: -10%;
+      left: -10%;
+
+      height: 120%;
+      width: 120%;
+
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    &__body {
+      padding: 1rem;
+    }
+
+    &__title {
+      text-align: left;
+
+      &-main {
+        font-size: 2rem;
+        font-weight: bold;
+        color: $--text-color-bold;
+      }
+
+      .title-main {
+        display: flex;
+        justify-content: space-between;
+        &__course-name {
+          margin-bottom: 0rem;
+          font-weight: 900;
+          font-family: "Montserrat";
+          opacity: 0.8;
+        }
+        &__course-price {
+          color: $--green-main;
+          margin-bottom: 0rem;
+        }
+      }
+
+      &-desc {
+        font-weight: 500;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    &__btn-all {
+      margin-top: 3rem;
+    }
+
+    &__enroll-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+
+      .lecture-count {
+        font-weight: normal;
+        color: $--gray;
+        margin-bottom: 0rem;
+      }
+    }
+  }
+}
+.cover-popover {
+  min-width: 20rem;
+  background-color: rgba($color: $--green-main, $alpha: 0.1);
+  font-family: "Quicksand";
+  font-size: 1rem;
+  color: $--text-color-bold;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0px 5px rgba($color: $--gray, $alpha: 0.3);
+  .popover-course {
+    border-radius: 0.5rem;
+    &__image {
+      width: 100%;
+      height: 15rem;
+      background-size: cover;
+      background-position: center;
+    }
+    .text--main-color {
+      color: $--green-main;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    .text--large{
+      font-size: 1.5rem;
+      color: $--warning;
+    }
+    &__name {
+      color: $--green-main;
+      font-weight: 900;
+      font-size: 1.5rem;
+      font-family: "Montserrat";
+    }
+
+    &__desc {
+      text-align: justify;
+      letter-spacing: 0.5px;
+      word-break: break-word;
+      font-weight: bold;
+      opacity: 0.7;
+    }
+
+    .info-course{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+    }
+
+    .btn-group{
+      .button{
+        width: 100%;
+        margin-top: 1rem;
+        flex: 1 1 0;
+        font-size: .7rem;
+      }
+    }
+  }
+}

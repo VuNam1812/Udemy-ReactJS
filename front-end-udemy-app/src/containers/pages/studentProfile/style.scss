@@ -1,0 +1,19 @@
+@import "../../../styleRoot/color.scss";
+
+.student-profile {
+  min-height: 50vh;
+
+  background-color: $--light;
+
+  padding-bottom: 2rem;
+  .wrap{
+    align-items: flex-start;
+    
+  }
+
+  &__course-info{
+    margin-left: 2rem;
+    flex-grow:  1;
+    margin-top: 2rem;
+  }
+}

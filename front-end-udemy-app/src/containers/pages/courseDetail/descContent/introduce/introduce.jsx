@@ -11,7 +11,7 @@ export const Introduce = (props) => {
             <p className='introduce__mini-desc'>Créez des sites web, des applications de bureau, faites du traitement de données ou encore des jeux, tout ça avec Python</p>
 
             <div className='course__statistics'>
-                <p className='course__statistics__joiner'>23.564 học viên</p>
+                <p className='course__statistics-joiner'>23.564 học viên</p>
                 <div className='rating'>
                     <div className='rating__stars'>
                         <p>4.5</p>
@@ -26,7 +26,7 @@ export const Introduce = (props) => {
                     <p className='rating__number'>(1.234) đánh giá</p>
                 </div>
 
-                <p className='course__statistics__viewer'>256 lượt xem</p>
+                <p className='course__statistics-viewer'>256 lượt xem</p>
             </div>
 
             <p className='introduce__last-update'><i className="fa fa-exclamation-circle icon" aria-hidden="true"></i>Last updated 5/2021</p>
