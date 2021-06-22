@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Button } from "../../../../../components";
 import "./style.scss";
-export const StudentInfo = ({info}) => {
+export const StudentInfo = ({ info, setStep }) => {
   return (
     <div className="student-info">
       <div className="avatar">
@@ -28,6 +28,9 @@ export const StudentInfo = ({info}) => {
       <Button
         className="btn-edit-profile btn--hover-change-color"
         content="Edit profile"
+        onClick={() => {
+          setStep(2);
+        }}
       ></Button>
       <div className="cover--bottom"></div>
     </div>

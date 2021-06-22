@@ -1,6 +1,9 @@
 export { Carousel } from "./carousel/carousel";
 export { Logo } from "./logo/logo";
+export { FieldText } from "./fieldText/fieldText";
+export { RadioButton } from "./radioButton/radioButton";
 export { Button } from "./button/button";
+export { Modal } from "./modal/modal";
 export { InputWithLabel } from "./inputWithLabel/inputWithLabel";
 export { Input } from "./input/input";
 export { Checkbox } from "./checkbox/checkbox";

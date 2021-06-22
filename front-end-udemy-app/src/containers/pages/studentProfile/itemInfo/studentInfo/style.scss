@@ -44,6 +44,10 @@
 
       bottom: 0%;
       right: 10%;
+      transition: all 0.3s;
+      &:hover{
+        background-color: $--gray;
+      }
     }
   }
 

@@ -53,24 +53,9 @@
             }
         }
         .gender{
-            display: flex;
-            align-items: center;
-            margin: 2rem 0rem;
-            
-            &__item{
-                &:first-child{
-                    margin-left: 0rem;
-                }
-
+            margin-bottom: .75rem;
+            .radio-button__item{
                 transform: scale(1.2);
-                margin-left: 5rem;
-                display: flex;
-                align-items: center;
-
-                &-text{
-                    cursor: pointer;
-                    margin: 0rem;
-                }
             }
         }
 

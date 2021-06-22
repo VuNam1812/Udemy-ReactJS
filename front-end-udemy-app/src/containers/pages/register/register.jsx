@@ -7,7 +7,7 @@ import { Footer } from '../../footer/footer';
 import './style.scss'
 
 export const Register = (props) => {
-    const [step, setStep] = useState(2);
+    const [step, setStep] = useState(1);
     return (
         <div className='register'>
             <HeaderUpper></HeaderUpper>
