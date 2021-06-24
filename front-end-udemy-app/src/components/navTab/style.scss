@@ -4,8 +4,47 @@
   &.tabs-content--none-shadow {
     .nav-tabs__content {
       box-shadow: none;
-      
-    border-radius: 0rem;
+
+      border-radius: 0rem;
+    }
+  }
+
+  &.tabs-style--fill {
+    .nav-tabs__header {
+      &::before {
+        content: "";
+        position: absolute;
+        width: 93%;
+        height: 100%;
+        border: 1px solid $--green-main;
+        left: 50%;
+        border-radius: 5rem;
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+      box-shadow: none;
+      .tab-indicator {
+        transform: scale(0.8);
+        height: 100%;
+        border-radius: 5rem;
+        background-image: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+      }
+
+      &-item {
+        &.active {
+          position: relative;
+          color: $--white;
+        }
+      }
+    }
+  }
+
+  &.tabs-content--flex-height-full{
+    .nav-tabs__content{
+      flex-grow: 1;
+      &-item{
+        height: 100%;
+      }
     }
   }
   flex-grow: 1;

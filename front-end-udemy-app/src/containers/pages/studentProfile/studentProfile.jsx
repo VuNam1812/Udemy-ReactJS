@@ -12,7 +12,7 @@ import { NavTab } from "../../../components";
 import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
 import { Footer } from "../../footer/footer";
 import { InComing } from "../../incoming/inComing";
-import avartar from "../../../public/image/teacher_1.jpg";
+import avartar from "../../../public/image/teacher_1.png";
 
 const enumState = {
   HIDDEN: "hidden",

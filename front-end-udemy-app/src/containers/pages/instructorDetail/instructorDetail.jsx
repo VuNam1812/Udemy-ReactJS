@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
 import { Footer } from "../../footer/footer";
-import teacherImg from "../../../public/image/teacher_1.jpg";
+import teacherImg from "../../../public/image/teacher_1.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Mousewheel, Pagination } from "swiper/core";
 import { CourseCard } from "../../itemsPage";

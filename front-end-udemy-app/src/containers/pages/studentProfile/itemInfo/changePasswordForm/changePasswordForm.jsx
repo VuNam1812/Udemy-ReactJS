@@ -12,14 +12,17 @@ export const ChangePasswordForm = (props) => {
         <FieldText
           className="field--none-rounded"
           label="Mật khẩu cũ"
+          type='password'
         ></FieldText>
         <FieldText
           className="field--none-rounded"
           label="Mật khẩu mới"
+          type='password'
         ></FieldText>
         <FieldText
           className="field--none-rounded"
           label="Nhập lại mật khẩu mới"
+          type='password'
         ></FieldText>
       </div>
       <div className="change-password-form__btn">

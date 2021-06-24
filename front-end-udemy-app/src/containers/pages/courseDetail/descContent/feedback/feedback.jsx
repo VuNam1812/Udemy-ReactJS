@@ -3,7 +3,7 @@ import React from 'react';
 import './style.scss'
 
 import { Button } from '../../../../../components';
-import teacherImage from '../../../../../public/image/teacher_1.jpg';
+import teacherImage from '../../../../../public/image/teacher_1.png';
 export const Feedback = (props) => {
     return (
         <div className='feedback'>

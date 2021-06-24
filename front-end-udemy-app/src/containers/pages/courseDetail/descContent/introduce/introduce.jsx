@@ -2,7 +2,7 @@
 import * as React from 'react';
 import './style.scss'
 
-import teacherImg from '../../../../../public/image/teacher_1.jpg';
+import teacherImg from '../../../../../public/image/teacher_1.png';
 export const Introduce = (props) => {
     return (
         <div className='introduce'>

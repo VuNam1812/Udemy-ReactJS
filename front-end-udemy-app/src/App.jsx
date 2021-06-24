@@ -8,12 +8,13 @@ import {
   CourseLession,
   InstructorDetail,
   StudentProfile,
+  TeacherProfile,
 } from "./containers/pages";
 
 function App() {
   return (
     <div className="App">
-      <StudentProfile></StudentProfile>
+      <TeacherProfile></TeacherProfile>
     </div>
   );
 }
