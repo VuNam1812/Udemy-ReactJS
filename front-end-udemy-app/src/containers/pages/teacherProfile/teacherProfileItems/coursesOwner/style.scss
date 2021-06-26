@@ -3,12 +3,26 @@
 .courses-owner {
   background-color: $--white;
   border-radius: 1rem;
-  &__fix {
+  &__cover {
     position: absolute;
     height: 100%;
-    overflow: hidden;
     width: 100%;
+    display: flex;
 
+    transition: all 1.2s;
+
+    &.active-view-courses {
+      transform: translateX(0%);
+    }
+
+    &.active-edit-course {
+      transform: translateX(calc(-100% - 2rem));
+    }
+  }
+  &__view-courses {
+    height: 100%;
+    overflow: hidden;
+    flex: 0 0 100%;
     display: flex;
     justify-content: space-between;
 
@@ -182,11 +196,11 @@
               justify-content: center;
 
               border-radius: 0.5rem;
-              font-size: .85rem;
+              font-size: 0.85rem;
               background-color: $--light;
 
               font-style: italic;
-              opacity: .7;
+              opacity: 0.7;
             }
             .swiper-container {
               padding: 2.5px;
@@ -266,6 +280,160 @@
                     color: $--white;
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__edit-course {
+    height: 100%;
+    overflow: hidden;
+    flex: 0 0 100%;
+    display: flex;
+    margin-left: 2rem;
+    border-radius: 0rem 0rem 1rem 1rem;
+    overflow: hidden;
+    .nav-tabs__content {
+      height: 100%;
+      &-item {
+        height: 100%;
+      }
+    }
+    .course-info {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1rem;
+      &__main-form {
+        display: flex;
+        justify-content: space-between;
+      }
+      &__form-input {
+        flex-grow: 1;
+        .form-item {
+          &-view-main {
+            &:last-child {
+              margin-bottom: 0;
+              &__input {
+                margin-bottom: 0;
+              }
+            }
+            font-size: 0.75rem;
+            align-items: flex-start;
+            margin-bottom: 0.35rem;
+            &__input {
+              .input__text {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+              }
+              margin-bottom: 0.25rem;
+              box-shadow: 0px 1px 2px rgba($color: $--dark, $alpha: 0.2);
+            }
+          }
+        }
+      }
+
+      &__image {
+        width: 20rem;
+        margin-left: 1rem;
+        background: $--light;
+      }
+
+      &__sub-form {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      &__full-desc {
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin: 0.5rem 0rem;
+        .full-desc {
+          &__editor {
+            flex-grow: 1;
+            background: rgba($color: $--gray, $alpha: 0.1);
+            height: 100%;
+            font-size: 0.75rem;
+            .editor {
+              &__toolbarClassName {
+                zoom: 80%;
+              }
+              &__wrapperClassName {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              }
+              &__ClassName {
+                flex-basis: 0;
+                height: auto;
+                flex-grow: 1;
+                padding: 0rem 0.5rem;
+              }
+            }
+          }
+        }
+      }
+
+      &__btn-group {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .lession-info {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1rem;
+      align-items: flex-end;
+      &__content {
+        margin-top: .5rem;
+        flex-grow: 1;
+        flex-basis: 0;
+        width: 100%;
+        .lession-info {
+          &__expander-lecture {
+            padding: .5rem 0rem .5rem 1rem;
+            .expander__title{
+              align-items: flex-end;
+              p{
+                font-size: 1rem;
+              }
+            }
+            .expander-left-control {
+              display: flex;
+              .bg--danger{
+                background-color: $--danger;
+              }
+              .bg--info{
+                background-color: $--primary;
+              }
+              .bg--success{
+                background-color: $--green-main;
+              }
+              .left-control__btn {
+                &:hover{
+                  opacity: .7;
+                }
+                margin-left: 0.5rem;
+                width: 2rem;
+                height: 2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 0.4rem;
+                color: white;
+                box-shadow: 0px 1px 3px rgba($color: $--gray, $alpha: 0.5);
               }
             }
           }

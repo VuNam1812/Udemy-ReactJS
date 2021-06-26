@@ -1,7 +1,7 @@
-import './style.scss';
-import { Input } from '../input/input';
-import PropTypes from 'prop-types';
-import React from 'react';
+import "./style.scss";
+import { Input } from "../input/input";
+import PropTypes from "prop-types";
+import React from "react";
 
 export const InputWithLabel = ({
   className,
@@ -12,13 +12,15 @@ export const InputWithLabel = ({
   value,
   children,
   iconStyle,
-  onChange
+  onChange,
+  inputClassName,
 }) => (
   <div className={`input-with-label ${className}`}>
     <label className="input-with-label__label" htmlFor={`txt${name}`}>
       {labelName}
     </label>
     <Input
+      className={inputClassName}
       onChange={onChange}
       iconStyle={iconStyle}
       type={type}
@@ -44,10 +46,10 @@ InputWithLabel.propTypes = {
 
 InputWithLabel.defaultProps = {
   iconStyle: {},
-  className: '',
-  name: '',
-  labelName: '',
-  value: '',
+  className: "",
+  name: "",
+  labelName: "",
+  value: "",
   children: <></>,
-  placeHolder: '',
+  placeHolder: "",
 };
