@@ -2,8 +2,9 @@
 
 .new-courses{
     display: flex;
+    justify-content: space-between;
     &__image{
-        width: 50vw;
+        flex-grow: 1;
         overflow: hidden;
 
         background-repeat: no-repeat;

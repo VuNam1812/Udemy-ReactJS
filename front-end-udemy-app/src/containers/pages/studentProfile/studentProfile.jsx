@@ -32,7 +32,7 @@ export const StudentProfile = (props) => {
   };
   return (
     <>
-      <HeaderUpper></HeaderUpper>
+      <HeaderUpper className="header--zoom-80"></HeaderUpper>
       <InComing></InComing>
       <div className="student-profile">
         <div className="wrap">
@@ -75,4 +75,4 @@ const infoStudent = {
   avatar: avartar,
 };
 
-const dataSet = new Array(12).fill("");
+const dataSet = new Array(5).fill("");

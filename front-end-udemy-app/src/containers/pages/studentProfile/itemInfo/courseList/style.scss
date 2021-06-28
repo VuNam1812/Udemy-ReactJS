@@ -69,6 +69,7 @@
 
 .course-lists {
   &.list-vertical {
+    zoom: 80%;
     flex-direction: column;
     .course-item {
       &:first-child {

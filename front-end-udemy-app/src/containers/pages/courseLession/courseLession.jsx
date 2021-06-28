@@ -7,7 +7,7 @@ import './style.scss';
 export const CourseLession = (props) => {
     return (
         <div className='course-lession'>
-            <HeaderUpper></HeaderUpper>
+            <HeaderUpper className='header--zoom-80'></HeaderUpper>
             <div className='lession-content'>
                 <div className='right-content'>
                     <div className='right-content__video'></div>

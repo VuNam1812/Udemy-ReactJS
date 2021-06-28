@@ -15,7 +15,6 @@ export const Teacher = (props) => {
           </div>
           <div className="item__content">
             <div className="item__image-teacher">
-              <div className="cover-img"></div>
               <img src={teacherImg}></img>
             </div>
             <div className="teacher-info">

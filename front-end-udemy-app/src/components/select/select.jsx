@@ -1,17 +1,19 @@
-import './style.scss';
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import "./style.scss";
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 export const Select = ({
   defaultSelected,
   className,
   labelName,
+  onChange,
+  value,
   name,
   data,
 }) => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({
-    value: -1,
+    value,
     text: defaultSelected,
   });
 
@@ -21,17 +23,19 @@ export const Select = ({
   const dropDownSelected = (e) => {
     setSelected({
       ...selected,
+      value: +e.target.getAttribute("data-id"),
       text: e.target.innerText,
     });
     setShow(!show);
+    e.target.value = e.target.getAttribute("value");
+    onChange(e);
   };
   return (
-    <div className={`select ${className || ''}`}>
+    <div className={`select ${className || ""}`}>
       <label htmlFor={`dropdown ${name}`} className="select__label">
         {labelName}
       </label>
       <div className="drop-down">
-        <input type="hidden" name={name} value={selected.value} />
         <div
           className="drop-down__select"
           onClick={dropDownFocus}
@@ -42,7 +46,7 @@ export const Select = ({
           <span>{selected.text}</span>
           <i className="fa fa-caret-down icon" />
         </div>
-        <div className={`drop-down__list ${!show ? 'Hidden' : ''}`}>
+        <div className={`drop-down__list ${!show ? "Hidden" : ""}`}>
           {+data.length > 0 &&
             data.map((item, key) => (
               <div
@@ -51,6 +55,7 @@ export const Select = ({
                 role="button"
                 tabIndex={key}
                 data-id={key}
+                value={key}
               >
                 {item}
               </div>
@@ -70,9 +75,9 @@ Select.propTypes = {
 };
 
 Select.defaultProps = {
-  defaultSelected: '',
-  className: '',
-  labelName: '',
-  name: '',
+  defaultSelected: "",
+  className: "",
+  labelName: "",
+  name: "",
   data: [],
 };

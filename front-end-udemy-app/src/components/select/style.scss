@@ -1,18 +1,19 @@
-@import '../../styleRoot/color.scss';
-  
-.select{
+@import "../../styleRoot/color.scss";
+
+.select {
   font-family: Quicksand;
   display: flex;
   flex-direction: column;
   width: 100%;
 
-  &.select--shadow{
-    .drop-down{
+  &.select--shadow {
+    .drop-down {
+      border-radius: 0.3rem;
       background-color: $--white;
-      box-shadow: 0px 3px 10px rgba($color: $--gray, $alpha: .5);
-      &__select{
+      box-shadow: 0px 3px 10px rgba($color: $--gray, $alpha: 0.5);
+      &__select {
         border-color: $--white;
-        span{
+        span {
           font-weight: bold;
           color: $--text-color-bold;
         }
@@ -20,16 +21,16 @@
     }
   }
 
-  &.select--bottom{
-    .drop-down{
-      &__list{
-        top:calc(100% + 0.3rem);
+  &.select--bottom {
+    .drop-down {
+      &__list {
+        top: calc(100% + 0.3rem);
         bottom: 0;
       }
     }
   }
 
-  &__label{
+  &__label {
     text-align: start;
     margin-bottom: 0.5rem;
     font-weight: bold;
@@ -37,9 +38,9 @@
     opacity: 0.8;
   }
 
-  .drop-down{
+  .drop-down {
     position: relative;
-    &__select{
+    &__select {
       cursor: pointer;
       display: flex;
       justify-content: space-between;
@@ -50,7 +51,7 @@
       padding: 0rem 0.5rem;
       color: #595959;
     }
-    &__list{
+    &__list {
       height: fit-content;
       position: absolute;
       border-radius: 0.25rem;
@@ -64,20 +65,20 @@
       z-index: 1;
       max-height: 50vh;
       overflow-y: auto;
-      &.Hidden{
+      &.Hidden {
         display: none;
       }
     }
 
-    &__item{
+    &__item {
       line-height: 2.5rem;
       border-bottom: 1px solid #bdbdbd;
       cursor: pointer;
-      &:last-child{
+      &:last-child {
         border-bottom: none;
       }
       transition: 1s;
-      &:hover{
+      &:hover {
         transition: 0s;
         background-color: $--green-main;
         color: $--white;
@@ -86,14 +87,14 @@
     }
   }
 }
-.select-horizontal{
+.select-horizontal {
   flex-direction: row;
   align-items: center;
-  .drop-down{
+  .drop-down {
     flex-grow: 1;
     margin-left: 2rem;
   }
-  label{
+  label {
     width: 15%;
   }
 }

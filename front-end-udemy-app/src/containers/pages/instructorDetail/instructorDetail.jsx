@@ -12,7 +12,7 @@ export const InstructorDetail = (props) => {
   SwiperCore.use([Mousewheel, Pagination]);
   return (
     <div className="instructor-detail">
-      <HeaderUpper></HeaderUpper>
+      <HeaderUpper className="header--zoom-80"></HeaderUpper>
       <div className="body-page">
         <div className="body-page__header">
           <div className="wrap">
@@ -66,53 +66,53 @@ export const InstructorDetail = (props) => {
                 Khóa học giảng dạy bởi giáo viên Hoàng Phúc Photo
               </p>
 
-                {dataSet.length === 0 ? (
-                  <p className="block-empty">(Hiện đang còn trống)</p>
-                ) : (
-                  (() => {
-                    return dataSet.length <= 4 ? (
-                      <Swiper
-                        slidesPerView={4}
-                        spaceBetween={16}
-                        className="mySwiper block-courses"
-                      >
-                        {dataSet.map((course) => {
-                          return (
-                            <SwiperSlide className="slide-item">
-                              <CourseCard
-                                className="slide-item__card"
-                                course={course}
-                              ></CourseCard>
-                            </SwiperSlide>
-                          );
-                        })}
-                      </Swiper>
-                    ) : (
-                      <Swiper
-                        direction={"horizontal"}
-                        mousewheel={true}
-                        pagination={{
-                          clickable: true,
-                        }}
-                        slidesPerView={4}
-                        loop={true}
-                        spaceBetween={16}
-                        className="mySwiper block-courses"
-                      >
-                        {dataSet.map((course) => {
-                          return (
-                            <SwiperSlide className="slide-item">
-                              <CourseCard
-                                className="slide-item__card"
-                                course={course}
-                              ></CourseCard>
-                            </SwiperSlide>
-                          );
-                        })}
-                      </Swiper>
-                    );
-                  })()
-                )}
+              {dataSet.length === 0 ? (
+                <p className="block-empty">(Hiện đang còn trống)</p>
+              ) : (
+                (() => {
+                  return dataSet.length <= 4 ? (
+                    <Swiper
+                      slidesPerView={4}
+                      spaceBetween={16}
+                      className="mySwiper block-courses"
+                    >
+                      {dataSet.map((course) => {
+                        return (
+                          <SwiperSlide className="slide-item">
+                            <CourseCard
+                              className="slide-item__card"
+                              course={course}
+                            ></CourseCard>
+                          </SwiperSlide>
+                        );
+                      })}
+                    </Swiper>
+                  ) : (
+                    <Swiper
+                      direction={"horizontal"}
+                      mousewheel={true}
+                      pagination={{
+                        clickable: true,
+                      }}
+                      slidesPerView={4}
+                      loop={true}
+                      spaceBetween={16}
+                      className="mySwiper block-courses"
+                    >
+                      {dataSet.map((course) => {
+                        return (
+                          <SwiperSlide className="slide-item">
+                            <CourseCard
+                              className="slide-item__card"
+                              course={course}
+                            ></CourseCard>
+                          </SwiperSlide>
+                        );
+                      })}
+                    </Swiper>
+                  );
+                })()
+              )}
             </div>
           </div>
         </div>

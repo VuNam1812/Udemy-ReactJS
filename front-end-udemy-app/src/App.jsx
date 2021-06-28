@@ -9,12 +9,13 @@ import {
   InstructorDetail,
   StudentProfile,
   TeacherProfile,
+  AdminProfile,
 } from "./containers/pages";
 
 function App() {
   return (
     <div className="App">
-      <TeacherProfile></TeacherProfile>
+      <Home></Home>
     </div>
   );
 }

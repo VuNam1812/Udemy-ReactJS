@@ -6,14 +6,14 @@ import { Footer } from '../../footer/footer';
 import './style.scss';
 export const Courses = (props) => {
     return (
-        <div className='courses-page'>
-            <HeaderUpper></HeaderUpper>
-            <div className='courses-page__body'>
-                <div className='wrap'>
-                    <CourseList></CourseList>
-                </div>
-            </div>
-            <Footer coverFooter={true}></Footer>
+      <div className="courses-page">
+        <HeaderUpper className="header--zoom-80"></HeaderUpper>
+        <div className="courses-page__body">
+          <div className="wrap">
+            <CourseList></CourseList>
+          </div>
         </div>
+        <Footer coverFooter={true}></Footer>
+      </div>
     );
 };

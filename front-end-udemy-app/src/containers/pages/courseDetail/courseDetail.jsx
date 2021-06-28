@@ -12,13 +12,13 @@ import "./style.scss";
 export const CourseDetail = (props) => {
   return (
     <div className="course-detail">
-      <HeaderUpper></HeaderUpper>
+      <HeaderUpper className="header--zoom-80"></HeaderUpper>
       <InComing></InComing>
       <div className="wrap">
         <div className="course-detail__body">
           <div className="content">
             <NavTab
-              className='tab-course'
+              className="tab-course"
               headers={["Giới thiệu", "Giảng viên", "Video", "Đánh giá"]}
               blocks={[
                 <Introduce></Introduce>,

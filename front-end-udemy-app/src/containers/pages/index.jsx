@@ -7,3 +7,4 @@ export { CourseLession } from "./courseLession/courseLession";
 export { InstructorDetail } from "./instructorDetail/instructorDetail";
 export { StudentProfile } from "./studentProfile/studentProfile";
 export { TeacherProfile } from "./teacherProfile/teacherProfile";
+export { AdminProfile } from "./adminProfile/adminProfile";

@@ -7,7 +7,7 @@ import './style.scss'
 export const Login = (props) => {
     return (
         <div className='login'>
-            <HeaderUpper></HeaderUpper>
+            <HeaderUpper className="header--zoom-80"></HeaderUpper>
             <div className='login-body'>
                 <div className='wrap'>
                     <LoginForm></LoginForm>

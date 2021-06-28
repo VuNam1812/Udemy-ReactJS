@@ -9,17 +9,23 @@ import './style.scss'
 export const Register = (props) => {
     const [step, setStep] = useState(1);
     return (
-        <div className='register'>
-            <HeaderUpper></HeaderUpper>
-            <div className='register-body'>
-                <div className='wrap'>
-                    <div className='wrap__cover'>
-                        <RegisterForm setActive={setStep} className={`${(step === 1) ? 'active' : 'hidden'}`}></RegisterForm>
-                        <Confirm setActive={setStep} className={`${(step === 2) ? 'active' : 'hidden'}`}></Confirm>
-                    </div>
-                </div>
+      <div className="register">
+        <HeaderUpper className="header--zoom-80"></HeaderUpper>
+        <div className="register-body">
+          <div className="wrap">
+            <div className="wrap__cover">
+              <RegisterForm
+                setActive={setStep}
+                className={`${step === 1 ? "active" : "hidden"}`}
+              ></RegisterForm>
+              <Confirm
+                setActive={setStep}
+                className={`${step === 2 ? "active" : "hidden"}`}
+              ></Confirm>
             </div>
-            <Footer coverFooter={true}></Footer>
+          </div>
         </div>
+        <Footer coverFooter={true}></Footer>
+      </div>
     );
 };
