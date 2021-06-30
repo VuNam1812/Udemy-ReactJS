@@ -26,20 +26,15 @@
 
   &__body {
     position: absolute;
-    top: 100%;
-    animation: showDropdown 0.3s ease-in;
-    animation-fill-mode: backwards;
-    animation-iteration-count: initial;
-    &.hidden {
-      pointer-events: none;
-      animation: hiddenDropdown 0.2s ease-in;
-      animation-fill-mode: forwards;
-      animation-iteration-count: initial;
-      .dropdown {
-        animation: hiddenDropdown 0.2s ease-in;
-        animation-fill-mode: backwards;
-        animation-iteration-count: initial;
-      }
+    top: 120%;
+    left: 0;
+    pointer-events: none;
+    transition: all .3s;
+    opacity: 0;
+    &.active {
+      pointer-events: all;
+      opacity: 1;
+      top: 100%;
     }
 
     .dropdown {

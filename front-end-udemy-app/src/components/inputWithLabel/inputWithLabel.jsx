@@ -2,36 +2,39 @@ import "./style.scss";
 import { Input } from "../input/input";
 import PropTypes from "prop-types";
 import React from "react";
-
 export const InputWithLabel = ({
   className,
   name,
   labelName,
   type,
   placeHolder,
-  value,
   children,
   iconStyle,
-  onChange,
+  register,
   inputClassName,
-}) => (
-  <div className={`input-with-label ${className}`}>
-    <label className="input-with-label__label" htmlFor={`txt${name}`}>
-      {labelName}
-    </label>
-    <Input
-      className={inputClassName}
-      onChange={onChange}
-      iconStyle={iconStyle}
-      type={type}
-      name={name}
-      placeHolder={placeHolder}
-      id={`txt${name}`}
-      value={value}
-    />
-    {children}
-  </div>
-);
+  error,
+  onBlur,
+}) => {
+  return (
+    <div className={`input-with-label ${className}`}>
+      <label className="input-with-label__label" htmlFor={`txt${name}`}>
+        {labelName}
+      </label>
+      <Input
+        className={inputClassName}
+        iconStyle={iconStyle}
+        type={type}
+        name={name}
+        placeHolder={placeHolder}
+        register={register}
+        id={`txt${name}`}
+        error={error}
+        onBlur={onBlur}
+      />
+      {children}
+    </div>
+  );
+};
 
 InputWithLabel.propTypes = {
   className: PropTypes.string,
@@ -42,6 +45,8 @@ InputWithLabel.propTypes = {
   value: PropTypes.string,
   children: PropTypes.element,
   placeHolder: PropTypes.string,
+  onBlur: PropTypes.func,
+  register: PropTypes.object,
 };
 
 InputWithLabel.defaultProps = {
@@ -52,4 +57,6 @@ InputWithLabel.defaultProps = {
   value: "",
   children: <></>,
   placeHolder: "",
+  onBlur: () => {},
+  register: {},
 };

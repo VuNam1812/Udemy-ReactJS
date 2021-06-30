@@ -1,12 +1,21 @@
-import './style.scss';
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import "./style.scss";
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { useForm } from "react-hook-form";
+const iconStylePassword = ["eye", "eye-slash"];
 
-const iconStylePassword = ['eye', 'eye-slash'];
-
-export const Input = ({ className, type, value, placeHolder, iconStyle, name, onChange }) => {
+export const Input = ({
+  className,
+  type,
+  placeHolder,
+  iconStyle,
+  name,
+  error,
+  register,
+  onBlur,
+}) => {
   const [Type, setType] = useState(type);
-  const flag = type === 'password';
+  const flag = type === "password";
   /*{typeof iconStyle === 'object' && (
     <i
       className={`input__right-icon fa fa-${iconStyle.icon}`}
@@ -15,34 +24,36 @@ export const Input = ({ className, type, value, placeHolder, iconStyle, name, on
     />
   )}*/
   const switchType = () => {
-    setType(Type === 'password' ? 'text' : 'password');
+    setType(Type === "password" ? "text" : "password");
   };
   return (
     <div className={`input ${className}`}>
       <div className="main-content">
-
         <input
           className="input__text"
           type={`${Type}`}
           placeholder={placeHolder}
+          onBlur={onBlur}
           name={name}
           id={`txt${name}`}
-          onChange={onChange}
+          {...register(name)}
         />
       </div>
       {flag && (
         <div className="option-content">
           <i
-            className={`input__right-icon fa fa-${iconStylePassword[Type === 'password' ? 1 : 0]
-              }`}
+            className={`input__right-icon fa fa-${
+              iconStylePassword[Type === "password" ? 1 : 0]
+            }`}
             aria-hidden="true"
             onClick={switchType}
           />
         </div>
       )}
+      {error.isShow && <span className="input__error">{error.message}</span>}
     </div>
   );
-}
+};
 
 Input.propTypes = {
   type: PropTypes.string.isRequired,
@@ -53,11 +64,18 @@ Input.propTypes = {
     style: PropTypes.object,
   }),
   name: PropTypes.string,
+  error: PropTypes.objectOf({
+    isShow: PropTypes.bool,
+    message: PropTypes.string,
+  }),
+  onBlur: PropTypes.func,
 };
 
 Input.defaultProps = {
-  value: '',
-  placeHolder: '',
+  value: "",
+  placeHolder: "",
   iconStyle: {},
-  name: '',
+  name: "",
+  error: { isShow: false, message: "" },
+  onBlur: () => {},
 };

@@ -1,56 +1,57 @@
-@import '../../../../styleRoot/color.scss';
+@import "../../../../styleRoot/color.scss";
 
-.confirm{
-    min-height: 50vh;
-    min-width: 60rem;
-    
-    transition: all 1s;
+.confirm {
+  min-height: 50vh;
+  min-width: 60rem;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  transition: all 1s;
 
-    padding: 2rem;
-    box-sizing: border-box;
-    &__image{
-        margin-top: 3.5rem;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    &__title{
-        font-family: 'Montserrat';
-        font-weight: 900;
-        color: $--text-color-bold;
-        margin-bottom: 0rem;
-    }
+  padding: 2rem;
+  box-sizing: border-box;
+  &__image {
+    margin-top: 3.5rem;
+  }
 
-    &__desc{
-        width: 30rem;
-        font-weight: normal;
-    }
+  &__title {
+    font-family: "Montserrat";
+    font-weight: 900;
+    color: $--text-color-bold;
+    margin-bottom: 0rem;
+  }
 
-    &__input{
-        margin-top: 2rem;
-        transform: scale(1.3);
-        width: 40rem;
-    }
+  &__desc {
+    width: 30rem;
+    font-weight: normal;
+  }
 
-    .btn-group{
-        margin-top: 1.5rem;
-        display: flex;
-
-        .button + .button {
-            margin-left: 1rem;
+  &__input {
+    margin-top: 2rem;
+    transform: scale(1.3);
+    width: 40rem;
+    input {
+        &::placeholder{
+            text-transform: capitalize;
         }
+      text-transform: uppercase;
     }
-    &.active{
-        transform: translateX(calc(-100% - 5rem));
+  }
+
+  .btn-group {
+    margin-top: 1.5rem;
+    display: flex;
+
+    .button + .button {
+      margin-left: 1rem;
     }
-    &.hidden{
-        transform: translateX(0%);
-    }
+  }
+  &.active {
+    transform: translateX(calc(-100% - 5rem));
+  }
+  &.hidden {
+    transform: translateX(0%);
+  }
 }
-
-
-
-
-
