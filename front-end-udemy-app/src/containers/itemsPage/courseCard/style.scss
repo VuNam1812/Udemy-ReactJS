@@ -2,7 +2,9 @@
 
 .course-card {
   box-sizing: border-box;
+  border-radius: 0.75rem;
   .item {
+    border-radius: 0.75rem;
     width: 100%;
     &:hover {
       .item__image {
@@ -19,6 +21,7 @@
       height: 15rem;
       position: relative;
       overflow: hidden;
+      border-radius: 0.75rem 0.75rem 0rem 0rem;
     }
 
     &__image {
@@ -51,26 +54,38 @@
       }
 
       .title-main {
-        display: flex;
         justify-content: space-between;
         &__course-name {
-          margin-bottom: 0rem;
+          line-height: 1.3rem;
+          margin: 0rem;
           font-weight: 900;
           font-family: "Montserrat";
           opacity: 0.8;
+          font-size: 1rem;
         }
-        &__course-price {
-          color: $--green-main;
-          margin-bottom: 0rem;
+        &__title-cate {
+          margin: 0;
+          font-size: 0.85rem;
+          opacity: 0.7;
+          font-weight: bold;
+          margin-top: 0.5rem;
+        }
+        &__title-teacher {
+          font-weight: 500;
+          overflow: hidden;
+          margin: 0.5rem 0;
+          color: $--blue-main;
+          font-weight: bold;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
         }
       }
 
-      &-desc {
-        font-weight: 500;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
+      &-course-price {
+        margin-top: 0.25rem;
+        color: $--green-main;
+        margin-bottom: 0rem;
       }
     }
 
@@ -117,14 +132,15 @@
       font-weight: bold;
       font-size: 1rem;
     }
-    .text--large{
+    .text--large {
       font-size: 1.5rem;
       color: $--warning;
     }
     &__name {
+      line-height: 1.3rem;
       color: $--green-main;
       font-weight: 900;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-family: "Montserrat";
     }
 
@@ -136,18 +152,18 @@
       opacity: 0.7;
     }
 
-    .info-course{
+    .info-course {
       display: flex;
       justify-content: space-between;
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
     }
 
-    .btn-group{
-      .button{
+    .btn-group {
+      .button {
         width: 100%;
         margin-top: 1rem;
         flex: 1 1 0;
-        font-size: .7rem;
+        font-size: 0.7rem;
       }
     }
   }

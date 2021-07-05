@@ -1,5 +1,5 @@
 // @flow
-import * as React from "react";
+import React, {useEffect} from "react";
 import "./style.scss";
 import { Button } from "../../../../components";
 import { CourseCard } from "../../../itemsPage";
@@ -9,60 +9,29 @@ export const TopCourses = (props) => {
       <div className="wrap">
         <div className="top-courses-item">
           <div className="top-courses-item__title">
-            <h2 className="top-courses-item__title-main">Our top courses</h2>
+            <h2 className="top-courses-item__title-main">
+              Các khóa học nổi bật
+            </h2>
             <p className="top-courses-item__title-desc">
-              Replenish him third creature and meat blessed void a fruit
-              gathered you’re, they’re two waters own morning gathered. Get
-              Stared{" "}
+              Các khóa học được đánh giá cao nhất với số lượng học viên đông
+              đảo. Tìm kiếm khóa học chưa bao giờ là khó khăn, tiếp cận nhanh
+              chóng bằng một vài thao tác đơn giản.
             </p>
           </div>
           <Button
             className="top-courses-item__btn-all btn--hover-horizontal-change-color"
-            content="See more"
+            content="Xem thêm"
           ></Button>
         </div>
-        {dataSet.map((course) => {
-          return <CourseCard className='top-courses-item' course={course}></CourseCard>;
+        {props.courses.map((course) => {
+          return (
+            <CourseCard
+              className="top-courses-item"
+              course={course}
+            ></CourseCard>
+          );
         })}
       </div>
     </div>
   );
 };
-
-const dataSet = [
-  {
-    id: 1,
-    courseName: "Our top courses",
-    teacherName: "Vũ Thành Nam",
-    coursePrice: 140,
-    lectureCount: 12,
-  },
-  {
-    id: 2,
-    courseName: "Our top courses",
-    teacherName: "Vũ Thành Nam",
-    coursePrice: 140,
-    lectureCount: 12,
-  },
-  {
-    id: 3,
-    courseName: "Our top courses",
-    teacherName: "Vũ Thành Nam",
-    coursePrice: 140,
-    lectureCount: 12,
-  },
-  {
-    id: 4,
-    courseName: "Our top courses",
-    teacherName: "Vũ Thành Nam",
-    coursePrice: 140,
-    lectureCount: 12,
-  },
-  {
-    id: 5,
-    courseName: "Our top courses",
-    teacherName: "Vũ Thành Nam",
-    coursePrice: 140,
-    lectureCount: 12,
-  },
-];

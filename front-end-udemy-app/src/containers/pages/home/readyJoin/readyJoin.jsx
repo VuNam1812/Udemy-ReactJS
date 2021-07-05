@@ -10,12 +10,11 @@ export const ReadyJoin = (props) => {
             </div>
             <div className='ready-join__content'>
                 <div className='wrap'>
-                    <p className='ready-join__content-title'>Ready to get started?</p>
-                    <p className='ready-join__content-desc'>Replenish him third creature and meat blessed void a fruit gathered you’re, they’re two
-    waters own morning gathered greater shall had behold had seed.</p>
+                    <p className='ready-join__content-title'>Bạn đã sẵn sàng chưa?</p>
+                    <p className='ready-join__content-desc'>Tham gia cùng chúng tôi để học thêm nhiều kiến thức mới. Bắt đầu học ngay hôm nay nào, cùng lướt tìm kiếm những khóa học tốt nhất.</p>
                     <div className='btn-group'>
-                        <Button className='btn--hover-vertical-change-color' content='Get Started'><i className="fa fa-chevron-right btn-group__icon" aria-hidden="true" /></Button>
-                        <Button className='btn--color-white btn--hover-vertical-change-color-reverse' content='All Courses'><i className="fa fa-chevron-right btn-group__icon" aria-hidden="true" /></Button>
+                        <Button className='btn--hover-vertical-change-color' content='Hướng dẫn'><i className="fa fa-chevron-right btn-group__icon" aria-hidden="true" /></Button>
+                        <Button className='btn--color-white btn--hover-vertical-change-color-reverse' content='Khóa học'><i className="fa fa-chevron-right btn-group__icon" aria-hidden="true" /></Button>
                     </div>
                 </div>
             </div>

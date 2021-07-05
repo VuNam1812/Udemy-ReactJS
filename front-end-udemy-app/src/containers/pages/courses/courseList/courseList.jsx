@@ -17,7 +17,6 @@ export const CourseList = (props) => {
             ele.active = (+index === +ele.id) ? 'pagination__item--active' : ''
         })
         setPagination(newPagination);
-        //setTableData(transactions.slice((index - 1) * 10, (index) * 10));
     }
     const setupPagination = (length) => {
         const subPage = (length % limit > 0) ? 1 : 0;
@@ -32,81 +31,108 @@ export const CourseList = (props) => {
         setPagination(object);
     }
     return (
-        <div className='course-list'>
-            <p className='course-list__header'>Tất cả khóa học của danh mục "CNTT và Phần mềm"</p>
-            <div className='course-list__content'>
-                <div className='body-list'>
-                    <div className='body-list__filter'>
-                        <Select data={dataSet_filter} className='body-list__filter-select select--bottom select--shadow' defaultSelected='---------- Bộ lọc ----------'></Select>
-                        <div className='btn-filter-list'>
-                            <Button className='btn--color-white btn--square'><i className="fa fa-th-list" aria-hidden="true"></i></Button>
-                            <Button className='btn--color-white btn--square'><i className="fa fa-th-large" aria-hidden="true"></i></Button>
-                        </div>
-                    </div>
-                    <div className='body-list__content'>
-                        <div className='courses'>
-                            {
-                                dataSet_Course.map(course => {
-                                    return (
-                                        <div className='courses-item'>
-                                            <div className='cover-image'>
-                                                <div className='courses-item__image' style={{ backgroundImage: `url(${imageCourse})` }}></div>
-                                            </div>
-                                            <div className='courses-item__body'>
-                                                <div className='courses-item__title'>
-                                                    <div className='title-main'>
-                                                        <h3 className='title-main__course-name'>{course.courseName}</h3>
-                                                        <h3 className='title-main__course-price'>$ {course.coursePrice}</h3>
-                                                    </div>
-                                                    <p className='courses-item__title-desc'>{course.courseMiniDesc}</p>
-                                                </div>
-                                                <div className='courses-item__enroll-btn'>
-                                                    <h3 className='lecture-count'>{course.lectureCount} Bài giảng</h3>
-                                                    <Button className='btn-smaller btn--hover-change-color' content='Enroll now'></Button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                        <div className='pagination'>
-                            {
-                                pagination.map((item) => {
-                                    return <div data-id={item.id} className={`pagination__item ${item.active}`} onClick={handlePagination}>{item.id}</div>
-                                })
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div className='filter-by'>
-                    <p className='filter-by__header'>Filter by</p>
-                    <div className='filter-by__content'>
-                        {
-                            dataSet_filterBy.map((item, index) => {
-                                return (
-                                    <div key={index} className='content-items'>
-                                        <p className='content-items__title'>{item.title}</p>
-                                        <div className='content-items__body'>
-                                            {
-                                                item.items.map((itemFilter, indexItem) => {
-                                                    return (
-                                                        <label key={indexItem} className='content-items__body-item'>
-                                                            <Checkbox className='checkbox-basic'></Checkbox>
-                                                            {itemFilter.name} <span> ({itemFilter.count})</span>
-                                                        </label>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                </div>
+      <div className="course-list">
+        <p className="course-list__header">
+          Tất cả khóa học {props.title && `của ${props.search ? 'từ khóa' : 'danh mục'} "${props.title}"`}
+        </p>
+        <div className="course-list__content">
+          <div className="body-list">
+            <div className="body-list__filter">
+              <Select
+                data={dataSet_filter}
+                className="body-list__filter-select select--bottom select--shadow"
+                defaultSelected="---------- Bộ lọc ----------"
+              ></Select>
+              <div className="btn-filter-list">
+                <Button className="btn--color-white btn--square">
+                  <i className="fa fa-th-list" aria-hidden="true"></i>
+                </Button>
+                <Button className="btn--color-white btn--square">
+                  <i className="fa fa-th-large" aria-hidden="true"></i>
+                </Button>
+              </div>
             </div>
+            <div className="body-list__content">
+              <div className="courses">
+                {dataSet_Course.map((course) => {
+                  return (
+                    <div className="courses-item">
+                      <div className="cover-image">
+                        <div
+                          className="courses-item__image"
+                          style={{ backgroundImage: `url(${imageCourse})` }}
+                        ></div>
+                      </div>
+                      <div className="courses-item__body">
+                        <div className="courses-item__title">
+                          <div className="title-main">
+                            <h3 className="title-main__course-name">
+                              {course.courseName}
+                            </h3>
+                            <h3 className="title-main__course-price">
+                              $ {course.coursePrice}
+                            </h3>
+                          </div>
+                          <p className="courses-item__title-desc">
+                            {course.courseMiniDesc}
+                          </p>
+                        </div>
+                        <div className="courses-item__enroll-btn">
+                          <h3 className="lecture-count">
+                            {course.lectureCount} Bài giảng
+                          </h3>
+                          <Button
+                            className="btn-smaller btn--hover-change-color"
+                            content="Enroll now"
+                          ></Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="pagination">
+                {pagination.map((item) => {
+                  return (
+                    <div
+                      data-id={item.id}
+                      className={`pagination__item ${item.active}`}
+                      onClick={handlePagination}
+                    >
+                      {item.id}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div className="filter-by">
+            <p className="filter-by__header">Filter by</p>
+            <div className="filter-by__content">
+              {dataSet_filterBy.map((item, index) => {
+                return (
+                  <div key={index} className="content-items">
+                    <p className="content-items__title">{item.title}</p>
+                    <div className="content-items__body">
+                      {item.items.map((itemFilter, indexItem) => {
+                        return (
+                          <label
+                            key={indexItem}
+                            className="content-items__body-item"
+                          >
+                            <Checkbox className="checkbox-basic"></Checkbox>
+                            {itemFilter.name} <span> ({itemFilter.count})</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
+      </div>
     );
 };
 

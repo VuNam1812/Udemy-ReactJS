@@ -1,5 +1,5 @@
 import "./App.scss";
-import React, {useEffect, useContext} from "react";
+import React, { useEffect, useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import {
   Home,
@@ -29,6 +29,16 @@ function App() {
         </Route>
         <Route path="/login">
           {!store_auth.auth ? <Login></Login> : <Redirect to="/"></Redirect>}
+        </Route>
+        <Route path="/courses">
+          <Switch>
+            <Route exact path="/courses">
+              <Courses></Courses>
+            </Route>
+            <Route path="/courses/:catId">
+              <Courses></Courses>
+            </Route>
+          </Switch>
         </Route>
         <Route path="/">
           <Home></Home>

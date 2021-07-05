@@ -10,10 +10,10 @@ export const CategoryProvider = ({ children }) => {
       //load categories
       const cat_res = await categoryApi.getAll();
       let cats = [];
-      cat_res.data.forEach((cat) => {
+      cat_res.data.all.forEach((cat) => {
         cat.isSubCategory = cat.id_parentCat === 0 ? true : false;
         if (cat.id_parentCat === 0) {
-          cat.subCategory = cat_res.data.filter(
+          cat.subCategory = cat_res.data.all.filter(
             (value) => value.id_parentCat === cat.id
           );
           cat.isSubCategory = cat.subCategory.length === 0 ? false : true;

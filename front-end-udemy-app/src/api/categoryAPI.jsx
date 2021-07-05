@@ -1,9 +1,9 @@
 import axiosClient from "./axiosClient";
 
 const categoryApi = {
-  getAll: () => {
+  getAll: (filter={}) => {
     const url = "categories";
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: {...filter}});
   },
   getSingle: (id) => {
     const url = `categories/${id}`;

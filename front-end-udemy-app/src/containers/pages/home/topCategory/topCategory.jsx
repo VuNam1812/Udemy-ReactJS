@@ -1,7 +1,7 @@
 // @flow 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './style.scss'
-import cateImg from '../../../../public/image/course_1.jpg';
+import numeral from 'numeral';
 export const TopCategory = (props) => {
     return (
         <div className='top-categories'>
@@ -9,16 +9,28 @@ export const TopCategory = (props) => {
                 <div className='top-categories__body'>
                     <div className='body-group'>
                         {
-                            dataSet.map(cat => {
+                            props.cats.map(cat => {
                                 return (
-                                    <div key={cat.id} className='body-item'>
-                                        <div className='body-item__image' style={{ backgroundImage: `url(${cat.catImg})` }}></div>
-                                        <div className='body-item__content'>
-                                            <p className='body-item__content-cat-name'>{cat.catName}</p>
-                                            <p className='body-item__content-joiner'>({cat.joiner}) Người đăng ký</p>
-                                        </div>
+                                  <div key={cat.id} className="body-item">
+                                    <div
+                                      className="body-item__image"
+                                      style={{
+                                        backgroundImage: `url(${
+                                          "http://localhost:3030/" +
+                                          cat.srcImage.replaceAll("\\", "/")
+                                        })`,
+                                      }}
+                                    ></div>
+                                    <div className="body-item__content">
+                                      <p className="body-item__content-cat-name">
+                                        {cat.catName}
+                                      </p>
+                                      <p className="body-item__content-joiner">
+                                        ({numeral(cat.joinerCount).format('0,0')}) Người đăng ký
+                                      </p>
                                     </div>
-                                )
+                                  </div>
+                                );
                             })
                         }
 
@@ -28,11 +40,3 @@ export const TopCategory = (props) => {
         </div>
     );
 };
-
-const dataSet = [
-    { id: 1, catImg: cateImg, catName: 'CNTT và Phần mềm', joiner: '100.000' },
-    { id: 2, catImg: cateImg, catName: 'CNTT và Phần mềm', joiner: '100.000' },
-    { id: 3, catImg: cateImg, catName: 'CNTT và Phần mềm', joiner: '100.000' },
-    { id: 4, catImg: cateImg, catName: 'CNTT và Phần mềm', joiner: '100.000' },
-    { id: 5, catImg: cateImg, catName: 'CNTT và Phần mềm', joiner: '100.000' },
-]

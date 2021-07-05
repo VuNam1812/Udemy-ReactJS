@@ -1,83 +1,76 @@
-// @flow 
-import * as React from 'react';
-import './style.scss';
+// @flow
+import * as React from "react";
+import "./style.scss";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Mousewheel, Pagination } from "swiper/core";
+import numeral from "numeral";
+import newCourseImage from "../../../../public/image/new_course.jpg";
 
-import newCourseImage from '../../../../public/image/new_course.jpg';
+SwiperCore.use([Mousewheel, Pagination]);
 
 export const NewCourses = (props) => {
-    return (
-        <div className='new-courses'>
-            <div className='new-courses__image' style={{backgroundImage:`url(${newCourseImage})`}}></div>
+  return (
+    <div className="new-courses">
+      <div
+        className="new-courses__image"
+        style={{ backgroundImage: `url(${newCourseImage})` }}
+      ></div>
 
-            <div className='new-courses-body'>
-                <p className='new-courses-body__title'>Upcomming Courses</p>
+      <div className="new-courses-body">
+        <p className="new-courses-body__title">Khóa học mới nhất</p>
 
-                <div className='body-content'>
-                    <div className='body-item'>
-                        <div className='body-item__header'>
-                            <div className='body-item__date'><span className='high-light-circle'>23</span> MAY 2021</div>
-                            <div className='body-item__category-name'>Development | Web Development</div>
-                        </div>
-
-                        <div className='body-item__content'>
-                            <div className='course-info'>
-                                <div className='course-info__name'>The Complete 2021 Web Development Bootcamp</div>
-                                <div className='course-info__mentor'>Dr. Angela Yu</div>
-                            </div>
-                            <div className='body-item__price'>
-                                <div className='cover-before'>zxc</div>
-                                <p>$ 9.999.99</p>
-                                <div className='cover-after'>{' '}</div>
-                            </div>
-                        </div>
-                   
-                        <div className='body-item__bar'></div>
+        <div className="body-content">
+          <Swiper
+            direction={"vertical"}
+            slidesPerView={3}
+            spaceBetween={0}
+            mousewheel={true}
+            pagination={{
+              clickable: true,
+            }}
+            className="body-content__swiper"
+          >
+            {props.courses.map((course) => {
+              return (
+                <SwiperSlide className="swiper__item">
+                  {" "}
+                  <div className="body-item">
+                    <div className="body-item__header">
+                      <div className="body-item__date">
+                        <p className="high-light-circle">
+                          {new Date(course.createAt).getDay()}
+                        </p>
+                        {new Date(course.createAt).toGMTString().substr(8, 8)}
+                      </div>
+                      <div className="body-item__category-name">
+                        {course.catName}
+                      </div>
                     </div>
 
-                    <div className='body-item'>
-                        <div className='body-item__header'>
-                            <div className='body-item__date'><span className='high-light-circle'>23</span> MAY 2021</div>
-                            <div className='body-item__category-name'>Development | Web Development</div>
+                    <div className="body-item__content">
+                      <div className="course-info">
+                        <div className="course-info__name">
+                          {course.courName}
                         </div>
-
-                        <div className='body-item__content'>
-                            <div className='course-info'>
-                                <div className='course-info__name'>The Complete 2021 Web Development Bootcamp</div>
-                                <div className='course-info__mentor'>Dr. Angela Yu</div>
-                            </div>
-                            <div className='body-item__price'>
-                                <div className='cover-before'>zxc</div>
-                                <p>$ 9.999.99</p>
-                                <div className='cover-after'>{' '}</div>
-                            </div>
+                        <div className="course-info__mentor">
+                          Mr. {course.teacherName}
                         </div>
-                   
-                        <div className='body-item__bar'></div>
+                      </div>
+                      <div className="body-item__price">
+                        <div className="cover-before">zxc</div>
+                        <p>{numeral(course.price).format("0,0")} VND</p>
+                        <div className="cover-after"> </div>
+                      </div>
                     </div>
 
-                    <div className='body-item'>
-                        <div className='body-item__header'>
-                            <div className='body-item__date'><span className='high-light-circle'>23</span> MAY 2021</div>
-                            <div className='body-item__category-name'>Development | Web Development</div>
-                        </div>
-
-                        <div className='body-item__content'>
-                            <div className='course-info'>
-                                <div className='course-info__name'>The Complete 2021 Web Development Bootcamp</div>
-                                <div className='course-info__mentor'>Dr. Angela Yu</div>
-                            </div>
-                            <div className='body-item__price'>
-                                <div className='cover-before'>zxc</div>
-                                <p>$ 9.999.99</p>
-                                <div className='cover-after'>{' '}</div>
-                            </div>
-                        </div>
-                   
-                        <div className='body-item__bar'></div>
-                    </div>
-
-                </div>
-            </div>
+                    <div className="body-item__bar"></div>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         </div>
-    );
+      </div>
+    </div>
+  );
 };

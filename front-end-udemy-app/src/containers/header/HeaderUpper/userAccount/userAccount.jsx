@@ -12,12 +12,13 @@ export const UserAccount = ({ account }) => {
         <div
           className="header__image"
           style={{
-            backgroundImage: `url(${"http://localhost:3030/" + account.imgSrc})`,
+            backgroundImage: `url("http://localhost:3030/${+account.imgSrc}")`,
           }}
         ></div>
         <div className="user-account__options">
           <div className="option__item">
-            <i className="icon fa fa-info" aria-hidden="true"></i>Quản lý cá nhân
+            <i className="icon fa fa-info" aria-hidden="true"></i>Quản lý cá
+            nhân
           </div>
           <hr></hr>
           <div className="option__item">
