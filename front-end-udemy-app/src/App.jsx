@@ -35,10 +35,16 @@ function App() {
             <Route exact path="/courses">
               <Courses></Courses>
             </Route>
-            <Route path="/courses/:catId">
-              <Courses></Courses>
+            <Route path="/courses/:courId">
+              <CourseDetail></CourseDetail>
             </Route>
           </Switch>
+        </Route>
+        <Route exact path="/categories/:catId">
+          <Courses></Courses>
+        </Route>
+        <Route exact path="/teachers/:teacherId">
+          <InstructorDetail></InstructorDetail>
         </Route>
         <Route path="/">
           <Home></Home>

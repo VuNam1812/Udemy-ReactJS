@@ -1,6 +1,6 @@
-const db = require('../utils/db');
+const db = require("../utils/db");
 
-const TBL_CATEGORIES = 'categories';
+const TBL_CATEGORIES = "categories";
 
 module.exports = {
   all() {
@@ -13,6 +13,12 @@ module.exports = {
       .groupByRaw(`${TBL_CATEGORIES}.id, ${TBL_CATEGORIES}.id_parentCat`)
       .sum("courses.joinerCount as joinerCount")
       .select(`${TBL_CATEGORIES}.*`);
+  },
+
+  allWithId(id) {
+    return db(TBL_CATEGORIES)
+      .where(`${TBL_CATEGORIES}.id`, id)
+      .orWhere(`${TBL_CATEGORIES}.id_parentCat`, id);
   },
 
   async single(id) {

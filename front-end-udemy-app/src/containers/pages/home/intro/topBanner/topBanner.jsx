@@ -25,7 +25,7 @@ export const TopBanner = (props) => {
           className="btn--color-white btn--hover-vertical-change-color-reverse"
           content="Khóa học"
           onClick={() => {
-            history.push("/courses/CNTT");
+            history.push("/courses");
           }}
         >
           <i

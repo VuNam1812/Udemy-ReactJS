@@ -14,7 +14,7 @@ export const Select = ({
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({
     value,
-    text: defaultSelected,
+    text: value === -1 ? defaultSelected : data[value],
   });
 
   const dropDownFocus = () => {
@@ -50,7 +50,7 @@ export const Select = ({
           {+data.length > 0 &&
             data.map((item, key) => (
               <div
-                className="drop-down__item"
+                className={`drop-down__item ${value === key ? "active" : ''}`} 
                 onClick={dropDownSelected}
                 role="button"
                 tabIndex={key}
@@ -72,6 +72,8 @@ Select.propTypes = {
   labelName: PropTypes.string,
   name: PropTypes.string,
   data: PropTypes.objectOf(PropTypes.string),
+  onChange: PropTypes.func,
+  value: PropTypes.number
 };
 
 Select.defaultProps = {
@@ -80,4 +82,6 @@ Select.defaultProps = {
   labelName: "",
   name: "",
   data: [],
+  onChange: (e) => {},
+  value: -1
 };

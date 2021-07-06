@@ -2,6 +2,7 @@
 import React, { useState, useContext } from "react";
 import "./style.scss";
 import { categoryContext } from "../../../../contexts/categories/categoryContext";
+import { Link } from "react-router-dom";
 export const Categories = (props) => {
   const { store_cat } = useContext(categoryContext);
   const [show, setShow] = useState(false);
@@ -23,30 +24,32 @@ export const Categories = (props) => {
         <>
           {cat.isSubCategory === false && (
             <li>
-              <a
+              <Link
                 data-id={cat.id}
                 href="#"
                 className="dropdown-item"
                 onMouseEnter={mouseEnterHiddenItem}
+                to={`/categories/${cat.id}`}
               >
                 <p className="dropdown-item__title">{cat.catName}</p>
-              </a>
+              </Link>
             </li>
           )}
           {cat.isSubCategory && (
             <li className="dropdown-submenu">
-              <a
+              <Link
                 data-id={cat.id}
                 href="#"
                 className="dropdown-item"
                 onMouseEnter={MouseEnterDropItem}
+                to={`/categories/${cat.id}`}
               >
                 <p className="dropdown-item__title">{cat.catName}</p>
                 <i
                   className="fa fa-chevron-right dropdown-item__icon"
                   aria-hidden="true"
                 />
-              </a>
+              </Link>
 
               <ul
                 className={`dropdown-menu ${

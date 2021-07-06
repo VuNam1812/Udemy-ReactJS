@@ -3,7 +3,7 @@
 .logo{
     display: flex;
     align-items: center;
-
+    cursor: pointer;    
     &.logo--shadow{
         .logo__icon{
             text-shadow: 0px 3px 5px rgb(170,170,170);

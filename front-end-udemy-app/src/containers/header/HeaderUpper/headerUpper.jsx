@@ -5,9 +5,11 @@ import { Logo } from "../../../components";
 import { Categories } from "./categories/categories";
 import { UserAccount } from "./userAccount/userAccount";
 import { authContext } from "../../../contexts/auth/authContext";
+import { useHistory } from "react-router-dom";
 export const HeaderUpper = (props) => {
   const headerUpper = useRef();
   const [height, setHeight] = useState(0);
+  const history = useHistory();
   const { store_auth } = useContext(authContext);
   const [sticky, setSticky] = useState({
     beginPos: props.offsetTop ? props.offsetTop : 0,
@@ -60,7 +62,12 @@ export const HeaderUpper = (props) => {
         ref={headerUpper}
       >
         <div className="wrap">
-          <Logo className="header-upper__logo"></Logo>
+          <Logo
+            className="header-upper__logo"
+            onClick={() => {
+              history.push("/");
+            }}
+          ></Logo>
           <div className="header-upper__nav-search">
             <Categories></Categories>
             <div className="navigation">

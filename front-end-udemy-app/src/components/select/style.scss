@@ -71,6 +71,9 @@
     }
 
     &__item {
+      text-align: left;
+      padding: 0rem 0.5rem;
+
       line-height: 2.5rem;
       border-bottom: 1px solid #bdbdbd;
       cursor: pointer;
@@ -78,6 +81,12 @@
         border-bottom: none;
       }
       transition: 1s;
+
+      &.active {
+        background-color: $--green-main;
+        color: $--white;
+        font-weight: bold;
+      }
       &:hover {
         transition: 0s;
         background-color: $--green-main;
