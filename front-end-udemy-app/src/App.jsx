@@ -12,6 +12,7 @@ import {
   StudentProfile,
   TeacherProfile,
   AdminProfile,
+  Payment,
 } from "./containers/pages";
 import { authContext } from "./contexts/auth/authContext";
 function App() {
@@ -45,6 +46,9 @@ function App() {
         </Route>
         <Route exact path="/teachers/:teacherId">
           <InstructorDetail></InstructorDetail>
+        </Route>
+        <Route exact path="/payment/:courId">
+          <Payment></Payment>
         </Route>
         <Route path="/">
           <Home></Home>

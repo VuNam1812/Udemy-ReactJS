@@ -52,6 +52,12 @@ const getMoreInfoCourse = async (course, info = []) => {
         course.teacherName = `${teacher.firstName} ${teacher.lastName}`;
         course.teacherId = teacher.id;
         break;
+
+      case "teacherImage":
+        const teacherinfo = await userModel.single(course.id_owner);
+        course.teacherImage = teacherinfo.srcImage;
+        break;
+
       case "catName":
         const cat = await cateModel.single(course.id_cat);
         course.catName = cat.fullName;

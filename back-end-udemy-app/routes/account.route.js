@@ -6,6 +6,7 @@ const randomstring = require("randomstring");
 const auth = require("../middlewares/auth.mdw");
 const userModel = require("../models/user.model");
 const { route } = require("./auth.route");
+const handleAccount = require('../middlewares/route/account.mdw');
 
 const router = express.Router();
 
@@ -35,7 +36,7 @@ router.post("/", async function (req, res) {
   });
 });
 
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   const allUser = await userModel.all();
 
   res.json({
@@ -43,12 +44,15 @@ router.get("/", auth, async (req, res) => {
   });
 });
 
-router.get("/:id", auth, async (req, res) => {
-  const { userId } = req.params.id;
-  const user = await userModel.single(userId);
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { getInfo } = req.query;
+  const user = await userModel.single(id);
+
+  await handleAccount.getMoreInfoAccount(user, [].concat(getInfo));
 
   res.json({
-    data: [user],
+    data: user,
   });
 });
 

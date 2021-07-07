@@ -1,19 +1,26 @@
 // @flow
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import PropTypes from "prop-types";
 import "./style.scss";
-export const NavTab = ({ headers, blocks, className }) => {
+export const NavTab = ({ headers, blocks, className, onChangeActive }) => {
   const [left, setLeft] = useState(0);
   const [active, setActive] = useState([
     "active",
-    ...new Array(headers.length).fill(""),
+    ...new Array(headers.length-1).fill(""),
   ]);
+
+  useEffect(() => {
+    onChangeActive(0);
+  }, []);
 
   const handleTab = (e) => {
     const index = +e.target.getAttribute("data-id");
     const distance = 100 / headers.length;
     setLeft(index * distance);
-    const newActive = new Array(headers.length).fill("");
+    const newActive = new Array(headers.length-1).fill("");
     newActive[index] = "active";
+    onChangeActive(+index);
     setActive(newActive);
   };
   return (
@@ -46,4 +53,18 @@ export const NavTab = ({ headers, blocks, className }) => {
       </div>
     </div>
   );
+};
+
+NavTab.propTypes = {
+  headers: PropTypes.array,
+  blocks: PropTypes.array,
+  className: PropTypes.string,
+  onChangeActive: PropTypes.func,
+};
+
+NavTab.defaultProps = {
+  headers: [],
+  blocks: [],
+  className: "",
+  onChangeActive: (index) => {},
 };

@@ -28,4 +28,10 @@ module.exports = {
 
     return courses[0];
   },
+
+
+  singleByOwner(id) {
+    return db(TBL_COURSES).where("id_owner", id);
+  }
+
 };

@@ -9,9 +9,9 @@ const accountApi = {
     const url = "accounts";
     return axiosClient.get(url);
   },
-  getSingle: (id) => {
+  getSingle: (id, data) => {
     const url = `accounts/${id}`;
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: {...data}});
   },
 };
 export default accountApi;

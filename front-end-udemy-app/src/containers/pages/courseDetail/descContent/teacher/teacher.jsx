@@ -2,7 +2,10 @@
 import * as React from "react";
 import "./style.scss";
 import teacherImg from "../../../../../public/image/teacher_1.png";
-export const Teacher = (props) => {
+import numeral from "numeral";
+export const Teacher = ({
+  teacher
+}) => {
   return (
     <div className="teacher">
       <div className="teacher-group">
@@ -15,7 +18,14 @@ export const Teacher = (props) => {
           </div>
           <div className="item__content">
             <div className="item__image-teacher">
-              <img src={teacherImg}></img>
+              {teacher.srcImage && (
+                <img
+                  src={`http://localhost:3030/${teacher.srcImage.replaceAll(
+                    "\\",
+                    "/"
+                  )}`}
+                ></img>
+              )}
             </div>
             <div className="teacher-info">
               <div className="teacher-info__contact">
@@ -35,46 +45,40 @@ export const Teacher = (props) => {
               </div>
 
               <div className="teacher-info__intro">
-                <p className="teacher-info__intro-name">Stephane Smith</p>
-                <p className="teacher-info__intro-major">
-                  Certified instructor Architecture & Developer
-                </p>
+                <p className="teacher-info__intro-name">{`${teacher.firstName} ${teacher.lastName}`}</p>
+                <p className="teacher-info__intro-major">{teacher.major || "( Hiện chưa cập nhật chuyên môn )"}</p>
                 <div className="teacher-info__intro-achieve">
                   <div className="achieve-item">
-                    <p className="achieve-item__count">70</p>
+                    <p className="achieve-item__count">
+                      {numeral(teacher.studentCount).format("0,0")}
+                    </p>
                     <p className="achieve-item__text">Học viên</p>
                   </div>
                   <div className="achieve-item">
-                    <p className="achieve-item__count">4</p>
+                    <p className="achieve-item__count">
+                      {numeral(teacher.courseCount).format("0,0")}
+                    </p>
                     <p className="achieve-item__text">Khóa học</p>
                   </div>
                   <div className="achieve-item">
                     <div className="achieve-item__count">
-                      3.5{" "}
+                      {numeral(teacher.rate).format("0,0.(0)")}{" "}
                       <span className="text--smaller">
                         / 5{" "}
                         <i className="icon fa fa-star" aria-hidden="true"></i>
                       </span>
                     </div>
-                    <p className="achieve-item__text">7 lượt đánh giá</p>
+                    <p className="achieve-item__text">
+                      {numeral(teacher.feedbackCount).format("0,0")} lượt đánh
+                      giá
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <p className="item__intro-teacher">
-            Phasellus enim magna, varius et commodo ut, ultricies vitae velit.
-            Ut nulla tellus, eleifend euismod pellentesque vel, sagittis vel
-            justo. In libero urna, venenatis sit amet ornare non, suscipit nec
-            risus. Sed consequat justo non mauris pretium at tempor justo
-            sodales. Quisque tincidunt laoreet malesuada. Cum sociis natoque
-            penatibus et magnis dis parturient montes, nascetur. Phasellus enim
-            magna, varius et commodo ut, ultricies vitae velit. Ut nulla tellus,
-            eleifend euismod pellentesque vel, sagittis vel justo. In libero
-            urna, venenatis sit amet ornare non, suscipit nec risus. Sed
-            consequat justo non mauris pretium at tempor justo sodales. Quisque
-            tincidunt laoreet malesuada. Cum sociis natoque penatibus et magnis
-            dis parturient montes, nascetur.
+            {teacher.teacherDesc || "̣( Hiện chưa có thông tin mô tả )" }
           </p>
         </div>
       </div>
