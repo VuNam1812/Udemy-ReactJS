@@ -20,7 +20,8 @@ router.post("/", validate(userSchema), async function (req, res) {
       authenticated: false,
     });
   }
-  if (!bcrypt.compareSync(req.body.password, user.Password)) {
+
+  if (!bcrypt.compareSync(req.body.password, user.password)) {
     return res.json({
       authenticated: false,
     });
@@ -43,7 +44,7 @@ router.post("/", validate(userSchema), async function (req, res) {
     authenticated: true,
     accountInfo: {
       username: `${user.firstName} ${user.lastName}`,
-      role: user.Permission,
+      role: user.permission,
       imgSrc: user.srcImage,
     },
     accessToken,

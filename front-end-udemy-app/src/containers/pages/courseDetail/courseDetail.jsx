@@ -66,7 +66,10 @@ export const CourseDetail = (props) => {
                 <Introduce course={store.course}></Introduce>,
                 <Teacher teacher={store.teacher}></Teacher>,
                 <Videos lessions={store.lectures}></Videos>,
-                <Feedback rate={store.course.rate} feedbacks={store.feedbacks}></Feedback>,
+                <Feedback
+                  rate={store.course.rate}
+                  feedbacks={store.feedbacks}
+                ></Feedback>,
               ]}
               onChangeActive={handleTabActive}
             ></NavTab>
@@ -109,13 +112,18 @@ export const CourseDetail = (props) => {
                 <div className="sub-desc">
                   <p className="sub-desc__title">Khóa học này bao gồm</p>
                   <div className="sub-desc__detail">
-                    {store.course.duration && (
+                    {store.course.duration ? (
                       <p className="sub-desc__detail-item">
                         <i className="fa fa-clock-o" aria-hidden="true"></i>
                         {new Date(1000 * +store.course.duration)
                           .toISOString()
                           .substr(11, 5)}{" "}
                         giờ
+                      </p>
+                    ) : (
+                      <p className="sub-desc__detail-item">
+                        <i className="fa fa-clock-o" aria-hidden="true"></i>
+                        {new Date(0).toISOString().substr(11, 5)} giờ
                       </p>
                     )}
                     <p className="sub-desc__detail-item">

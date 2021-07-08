@@ -1,5 +1,5 @@
 import "./App.scss";
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import {
   Home,
@@ -49,6 +49,9 @@ function App() {
         </Route>
         <Route exact path="/payment/:courId">
           <Payment></Payment>
+        </Route>
+        <Route exact path="/lessions/:courId/:lessionId">
+          <CourseLession></CourseLession>
         </Route>
         <Route path="/">
           <Home></Home>

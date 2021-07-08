@@ -1,69 +1,70 @@
-// @flow 
-import React from 'react';
+// @flow
+import React, { useReducer, useEffect } from "react";
 
-import { HeaderUpper } from '../../header/HeaderUpper/headerUpper';
-import { Expander } from '../../../components';
-import './style.scss';
+import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
+import { Expander } from "../../../components";
+import "./style.scss";
+
+import { handleCourseLession } from "./middleware/handleCourseLessions";
+import { reducer, LESSION_ACTION } from "./reducer/reducer";
+import { useParams } from "react-router";
+
+import { InfoCourse, LessionVideos, VideoPlayer } from "./pageItem";
+
+const initData = {
+  course: {},
+  lessions: [],
+  active: -1,
+  video: {},
+};
+
 export const CourseLession = (props) => {
-    return (
-        <div className='course-lession'>
-            <HeaderUpper className='header--zoom-80'></HeaderUpper>
-            <div className='lession-content'>
-                <div className='right-content'>
-                    <div className='right-content__video'></div>
-                    <div className='info-lession'>
-                        <ul className='info-lession__header'>
-                            <li className='info-lession__header-item active'>Tổng quan</li>
-                        </ul>
-                        <div className='info-lession__body'>
-                            <p className='info-lession__body-title'>UI/UX Master</p>
+  const [store_lecture, dispatch] = useReducer(reducer, initData);
+  const params = useParams();
+  useEffect(() => {
+    (async () => {
+      dispatch({
+        type: LESSION_ACTION.UPDATE_ACTIVE,
+        payload: +params.lessionId,
+      });
+      await handleCourseLession.loadCourse(params, dispatch);
+      await handleCourseLession.loadLessions(params, dispatch);
+    })();
+  }, [params.courId]);
 
-                            <div className='course-info'>
-                                <div className='course-info__item'>
-                                    <p>Số lượng học sinh: <span className='text--normal'>32</span></p>
-                                    <p>Tổng số bài học: <span className='text--normal'>03</span></p>
-                                    <p>Tổng số giờ học: <span className='text--normal'>07</span></p>
-                                </div>
-                                <div className='course-info__item text--left'>
-                                    <p>Mô tả khóa học</p>
-                                    <p className='text--normal course-info__main'>Blend màu có thể hiểu một cách đơn giản là sự hòa trộn các màu sắc, ánh sáng trong một bức ảnh để tạo nên thông điệp độc đáo mà mỗi chúng ta muốn truyền đạt.</p>
-                                </div>
-                                <div className='course-info__item text--left'>
-                                    <p>Giảng viên</p>
-                                    <p className='course-info__teacher'>Hoàng phúc Photo</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='left-content'>
-                    <div className='lession-videos'>
-                        <Expander className='active' title='UI/UX Master'>
-                            <div className='lecture-video active'>
-                                <p className='lecture-video__name'>Bài 1: Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux 🎉 (2020)</p>
-                                <p className='lecture-video__duration'><i className="icon fa fa-clock-o" aria-hidden="true"></i>00 : 00 : 00</p>
-                            </div>
-                            <div className='lecture-video active'>
-                                <p className='lecture-video__name'>Bài 1: Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux 🎉 (2020)</p>
-                                <p className='lecture-video__duration'><i className="icon fa fa-clock-o" aria-hidden="true"></i>00 : 00 : 00</p>
-                            </div>
-                            <div className='lecture-video active'>
-                                <p className='lecture-video__name'>Bài 1: Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux 🎉 (2020)</p>
-                                <p className='lecture-video__duration'><i className="icon fa fa-clock-o" aria-hidden="true"></i>00 : 00 : 00</p>
-                            </div>
-                            <div className='lecture-video active'>
-                                <p className='lecture-video__name'>Bài 1: Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux 🎉 (2020)</p>
-                                <p className='lecture-video__duration'><i className="icon fa fa-clock-o" aria-hidden="true"></i>00 : 00 : 00</p>
-                            </div>
-                            <div className='lecture-video active'>
-                                <p className='lecture-video__name'>Bài 1: Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux Giới thiệu tổng quan về Redux 🎉 (2020)</p>
-                                <p className='lecture-video__duration'><i className="icon fa fa-clock-o" aria-hidden="true"></i>00 : 00 : 00</p>
-                            </div>
-                        </Expander>
+  useEffect(() => {
+    console.log(store_lecture.active);
+  }, [store_lecture.active]);
 
-                    </div>
-                </div>
-            </div>
+  useEffect(() => {
+    (async () => {
+      await handleCourseLession.loadVideo(
+        params,
+        store_lecture.lessions,
+        dispatch
+      );
+    })();
+  }, [store_lecture.active, store_lecture.lessions]);
+
+  return (
+    <div className="course-lession">
+      <HeaderUpper className="header--zoom-80"></HeaderUpper>
+      <div className="lession-content">
+        <div className="right-content">
+          <VideoPlayer
+            className="right-content__video"
+            video={store_lecture.video}
+          ></VideoPlayer>
+          <InfoCourse course={store_lecture.course}></InfoCourse>
         </div>
-    );
+        <div className="left-content">
+          <LessionVideos
+            active={store_lecture.active}
+            lessions={store_lecture.lessions}
+            dispatch={dispatch}
+          ></LessionVideos>
+        </div>
+      </div>
+    </div>
+  );
 };

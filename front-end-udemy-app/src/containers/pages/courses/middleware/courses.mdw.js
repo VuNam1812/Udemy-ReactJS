@@ -68,7 +68,7 @@ export const handleCoursePage = {
         newCourses = [...courses.sort((a, b) => a.price - b.price)];
         break;
       case 2:
-        newCourses = [...courses.sort((a, b) => -a.rate - b.rate)];
+        newCourses = [...courses.sort((a, b) => -(a.rate - b.rate))];
         break;
       default:
         newCourses = [...courses.sort((a, b) => a.id - b.id)];

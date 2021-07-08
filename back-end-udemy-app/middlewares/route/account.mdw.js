@@ -45,7 +45,6 @@ const getMoreInfoAccount = async (teacher, info = []) => {
         await (async () => {
           const info = await teacherInfo.singleByTeacherId(teacher.id);
           teacher.teacherDesc = info ? info.teacherDesc : '';
-          console.log(teacher.teacherDesc);
         })();
         break;
 

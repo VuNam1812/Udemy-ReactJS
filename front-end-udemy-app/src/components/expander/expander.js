@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 export const Expander = (props) => {
   const [active, setActive] = useState(
-    props.className === "active" ? "" : "active"
+    props.className.search("active") !== -1 ? "" : "active"
   );
   const activeExpander = () => {
     const activeValue = active === "" ? "active" : "";

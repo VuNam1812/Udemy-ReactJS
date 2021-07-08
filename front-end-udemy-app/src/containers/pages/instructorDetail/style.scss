@@ -106,14 +106,28 @@
         .swiper-pagination {
           bottom: 0%;
         }
+
+        .swiper-wrapper{
+          align-items: stretch;
+        }
         .slide-item {
+          height: auto;
           &__card {
+            height: 100%;
             width: 100%;
             display: block;
             font-size: 70%;
           }
         }
       }
+
+      .text-html{
+        text-align: left;
+        width: 60%;
+        margin-left: 2rem;
+        line-height: 1.3rem;
+      }
+
       .block-empty {
         font-style: italic;
         opacity: 0.8;

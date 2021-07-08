@@ -22,6 +22,7 @@ export const reducer = (state, action) => {
         default:
           break;
       }
+      console.log(role);
       return {
         ...state,
         account: {

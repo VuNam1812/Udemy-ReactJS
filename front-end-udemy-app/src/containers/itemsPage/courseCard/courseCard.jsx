@@ -48,7 +48,7 @@ export const CourseCard = ({ course, className }) => {
             </div>
             <div className="info-course">
               <div className="info-course__left">
-                <span className="text--main-color">{course.joinerCount}</span>{" "}
+                <span className="text--main-color">{numeral(course.joinerCount).format('0,0')}</span>{" "}
                 học viên
               </div>
               <div className="info-course__right ">
