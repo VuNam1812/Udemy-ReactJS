@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import "./style.scss";
 import { Modal } from "../../../components";
 import {
@@ -14,54 +14,97 @@ import { Footer } from "../../footer/footer";
 import { InComing } from "../../incoming/inComing";
 import avartar from "../../../public/image/teacher_1.png";
 
-const enumState = {
-  HIDDEN: "hidden",
-  CLOSE: "close",
-  VISIBLE: "visible",
+import { reducer, STUDENT_PROFILE_ACTION, enumState } from "./reducer/reducer";
+import { handleStudentProfile } from "./middleware/handleStudentProfile";
+import { useParams } from "react-router-dom";
+import { authContext } from "../../../contexts/auth/authContext";
+
+const initData = {
+  active: 1,
+  modalState: enumState.HIDDEN,
+  account: {},
+  courseFavorites: [],
+  courseJoin: [],
+  error: {
+    firstName: { isShow: false, message: "* Thông tin không được để trống!!" },
+    lastName: { isShow: false, message: "* Thông tin không được để trống!!" },
+    email: { isShow: false, message: "* Thông tin không được để trống!!" },
+    oldPassword: {
+      isShow: false,
+      message: "* Thông tin không được để trống!!",
+    },
+    newPassword: {
+      isShow: false,
+      message: "* Thông tin không được để trống!!",
+    },
+    confirmNewPassword: {
+      isShow: false,
+      message: "* Thông tin không được để trống!!",
+    },
+  },
 };
 
 export const StudentProfile = (props) => {
-  const [step, setStep] = useState(2);
-  const [modalState, setModalState] = useState(enumState.HIDDEN);
+  const [store, dispatch] = useReducer(reducer, initData);
+  const { dispatch_auth } = useContext(authContext);
+  const params = useParams();
+  useEffect(() => {
+    (async () => {
+      await handleStudentProfile.loadProfile(params, dispatch);
+      await handleStudentProfile.loadCourseJoin(params, dispatch);
+      await handleStudentProfile.loadCourseFavorite(params, dispatch);
+    })();
+  }, []);
 
-  const handleCloseModal = () => {
-    setModalState(enumState.CLOSE);
-  };
-  const handleOpenModal = () => {
-    setModalState(enumState.VISIBLE);
-  };
   return (
     <>
       <HeaderUpper className="header--zoom-80"></HeaderUpper>
       <InComing></InComing>
       <div className="student-profile">
         <div className="wrap">
-          <StudentInfo setStep={setStep} info={infoStudent}></StudentInfo>
+          <StudentInfo
+            dispatchAuth={dispatch_auth}
+            dispatch={dispatch}
+            info={store.account}
+          ></StudentInfo>
           <div className="student-profile__cover">
             <div
               className={`student-profile__course-info ${
-                step === 1 ? "" : "active-tabs-edit"
+                store.active === 1 ? "" : "active-tabs-edit"
               }`}
             >
               <NavTab
                 className="tabs-content--none-shadow student-profile__tabs"
                 headers={["Khóa đang học", "Khóa yêu thích"]}
                 blocks={[
-                  <CourseList courses={dataSet}></CourseList>,
-                  <CourseList courses={dataSet}></CourseList>,
+                  <CourseList type='join' courses={store.courseJoin}></CourseList>,
+                  <CourseList type='favorite' courses={store.courseFavorites}></CourseList>,
                 ]}
               ></NavTab>
               <EditProfile
-                handleOpenModal={handleOpenModal}
-                setStep={setStep}
+                authDispatch={dispatch_auth}
+                error={store.error}
+                dispatch={dispatch}
+                info={store.account}
                 className="student-profile__edit"
               ></EditProfile>
             </div>
           </div>
         </div>
       </div>
-      <Modal state={modalState} onClickOverlay={handleCloseModal}>
-        <ChangePasswordForm></ChangePasswordForm>
+      <Modal
+        state={store.modalState}
+        onClickOverlay={() => {
+          dispatch({
+            type: STUDENT_PROFILE_ACTION.MODAL_CLOSE,
+          });
+        }}
+      >
+        <ChangePasswordForm
+          info={store.account}
+          error={store.error}
+          dispatch={dispatch}
+        ></ChangePasswordForm>
       </Modal>
       <Footer></Footer>
     </>

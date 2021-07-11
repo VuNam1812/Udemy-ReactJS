@@ -13,7 +13,44 @@ const rfTokenSchema = require("../schemas/rfToken.json");
 
 const router = express.Router();
 
-router.post("/", validate(userSchema), async function (req, res) {
+router.get("/", async (req, res) => {
+  if (req.session.user) {
+    const { userId } = req.session.user;
+    const user = await userModel.single(userId);
+    const accessToken = jwt.sign(
+      {
+        userId: user.id,
+        permission: user.permission,
+      },
+      "SECRET_KEY",
+      {
+        expiresIn: 15 * 60, // seconds
+      }
+    );
+
+    res.json({
+      data: {
+        authenticated: true,
+        accountInfo: {
+          id: user.id,
+          username: `${user.firstName} ${user.lastName}`,
+          role: user.permission,
+          srcImage: user.srcImage,
+        },
+        accessToken: accessToken,
+        refreshToken: user.refreshToken,
+      },
+    });
+  }
+
+  res.json({
+    data: {
+      authenticated: false,
+    },
+  });
+});
+
+router.post("/login", validate(userSchema), async function (req, res) {
   const user = await userModel.findByEmail(req.body.email);
   if (user === null) {
     return res.json({
@@ -34,21 +71,38 @@ router.post("/", validate(userSchema), async function (req, res) {
     },
     "SECRET_KEY",
     {
-      expiresIn: 1 * 60, // seconds
+      expiresIn: 15 * 60, // seconds
     }
   );
 
   const refreshToken = randomstring.generate();
   await userModel.updateRefreshToken(user.id, refreshToken);
+
+  req.session.user = {
+    authenticated: true,
+    userId: user.id,
+  };
+
   res.json({
     authenticated: true,
     accountInfo: {
+      id: user.id,
       username: `${user.firstName} ${user.lastName}`,
       role: user.permission,
-      imgSrc: user.srcImage,
+      srcImage: user.srcImage,
     },
     accessToken,
     refreshToken,
+  });
+});
+
+router.post("/logout", (req, res) => {
+  delete req.session.user;
+
+  res.json({
+    authenticated: false,
+    accessToken: "",
+    refreshToken: "",
   });
 });
 

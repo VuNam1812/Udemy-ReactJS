@@ -150,7 +150,6 @@ export const RegisterForm = (props) => {
           items={["Male", "Female", "Other"]}
           value={-1}
           onChange={(e) => {
-            console.log(e.target.value);
             props.dispatch({
               type: props.action.UPDATE_GENDER,
               payload: +e.target.value,

@@ -13,7 +13,7 @@ module.exports = {
       .join("courses", `chapters.id_course`, "courses.id")
       .where("courses.id", id)
       .select(`${TBL_LECTURES}.*`)
-      .select(`courses.id`);
+      .select(`courses.id as id_course`);
   },
 
   allByChapter(id) {

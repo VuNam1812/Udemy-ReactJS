@@ -29,7 +29,6 @@ export const handleAction = {
                   type: AUTH_ACTION.UPDATE_AUTH,
                   payload: true,
                 });
-                console.log(res_login.accountInfo);
                 dispatch({
                   type: AUTH_ACTION.UPDATE_ACCOUNT,
                   payload: res_login.accountInfo,

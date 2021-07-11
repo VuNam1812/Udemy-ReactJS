@@ -11,3 +11,4 @@ export { Select } from "./select/select";
 export { Expander } from "./expander/expander";
 export { Card } from "./card/card";
 export { NavTab } from "./navTab/navTab";
+export { PrivateRoute } from "./privateRoute/privateRoute";

@@ -1,6 +1,6 @@
 import axiosClient from "./axiosClient";
 
-const accountApi = {
+const teacherApi = {
   createAccount: (data) => {
     const url = "teachers";
     return axiosClient.post(url, { ...data });
@@ -18,4 +18,4 @@ const accountApi = {
     return axiosClient.get(url, { params: { ...data } });
   },
 };
-export default accountApi;
+export default teacherApi;

@@ -1,6 +1,6 @@
-const db = require('../utils/db');
+const db = require("../utils/db");
 
-const TBL_USERS = 'users';
+const TBL_USERS = "users";
 
 module.exports = {
   all() {
@@ -17,8 +17,10 @@ module.exports = {
     return users[0];
   },
 
-  async findByEmail(email) {
-    const users = await db(TBL_USERS).where("email", email);
+  async findByEmail(email, except = {}) {
+    const users = await db(TBL_USERS)
+      .where("email", email)
+      .whereNot({ ...except });
     if (users.length === 0) {
       return null;
     }
@@ -44,5 +46,11 @@ module.exports = {
     }
 
     return false;
+  },
+
+  update(id, data) {
+    return db(TBL_USERS)
+      .where("id", id)
+      .update({ ...data });
   },
 };

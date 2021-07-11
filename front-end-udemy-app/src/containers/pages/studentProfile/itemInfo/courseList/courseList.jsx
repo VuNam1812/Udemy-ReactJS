@@ -1,9 +1,9 @@
 // @flow
 import React, { useState, useEffect, useReducer } from "react";
 import { Button } from "../../../../../components";
-import courseImg from "../../../../../public/image/course_1.jpg";
 import "./style.scss";
-
+import numeral from "numeral";
+import { useHistory, Link } from "react-router-dom";
 const ACTION = {
   UPDATE_PAGINATION: 1,
   UPDATE_LIMIT: 2,
@@ -73,8 +73,9 @@ const initObject = {
   directActive: ["active", ""],
 };
 
-export const CourseList = ({ courses }) => {
+export const CourseList = ({ courses, type }) => {
   const [listCourse, dispatch] = useReducer(reducer, initObject);
+  const history = useHistory();
   useEffect(() => {
     setupPagenation(courses.length);
     dispatch({
@@ -84,7 +85,7 @@ export const CourseList = ({ courses }) => {
         courses,
       },
     });
-  }, []);
+  }, [courses]);
 
   useEffect(() => {
     setupPagenation(courses.length);
@@ -115,9 +116,10 @@ export const CourseList = ({ courses }) => {
   const setupPagenation = (length) => {
     const subPage = length % listCourse.limit > 0 ? 1 : 0;
     const numPage = parseInt(length / listCourse.limit) + subPage;
+
     dispatch({
       type: ACTION.INIT_PAGINATION,
-      payload: numPage,
+      payload: numPage ? numPage : 1,
     });
   };
 
@@ -131,7 +133,7 @@ export const CourseList = ({ courses }) => {
 
   return (
     <>
-      <div className='course-list-header'>
+      <div className="course-list-header">
         <div className="pagination-course-list">
           {listCourse.pagination.map((item, index) => {
             return (
@@ -167,59 +169,115 @@ export const CourseList = ({ courses }) => {
           listCourse.directList === 0 ? "list-horizontal" : "list-vertical"
         }`}
       >
-        {listCourse.listRender.map((item) => {
+        {listCourse.listRender.map((course) => {
           return (
             <div className="course-item">
-              <div
-                className="course-item__image"
-                style={{ backgroundImage: `url(${courseImg})` }}
-              ></div>
+              {course.srcImage && (
+                <div
+                  className="course-item__image"
+                  style={{
+                    backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
+                      "\\",
+                      "/"
+                    )}")`,
+                  }}
+                ></div>
+              )}
+
               <div className="block-bottom">
                 <div className="block-bottom__text-left">
-                  <p className="block-bottom__name">Our top courses</p>
-                  <p
-                    className={`block-bottom__desc ${
-                      listCourse.directList === 0 ? "hidden" : ""
-                    }`}
+                  <Link
+                    to={`/courses/${course.id}`}
+                    className="block-bottom__name"
                   >
-                    Blend màu có thể hiểu một cách đơn giản là sự hòa trộn các
-                    màu sắc, ánh sáng trong một bức ảnh để tạo nên thông điệp
-                    độc đáo mà mỗi chúng ta muốn truyền đạt.
-                  </p>
-                  <p className="block-bottom__teacherName">
-                    Giảng viên:{" "}
-                    <span className="text--main-color">Vũ Thành Nam</span>
-                  </p>
-                  <p className="block-bottom__pay-date">
-                    Đã thanh toán:{" "}
-                    <span className="text--main-color">27/06/2021</span>
-                  </p>
-                  <div className="block-bottom__more-info">
-                    <p>
-                      <span className="text--main-color">3</span> Bài học
-                    </p>
-                    <div
-                      className={`rating__stars ${
+                    {course.courName}
+                  </Link>
+                  <div className="block-bottom__block-flex">
+                    <p
+                      className={`block-bottom__desc ${
                         listCourse.directList === 0 ? "hidden" : ""
                       }`}
                     >
-                      <p>
-                        <span className="text--main-color">4.5</span>/5
+                      {course.tinyDes}
+                    </p>
+                    <p className="block-bottom__teacherName">
+                      Giảng viên:{" "}
+                      <Link
+                        to={`/teachers/${course.id_owner}`}
+                        className="text--main-color"
+                      >
+                        {course.teacherName}
+                      </Link>
+                    </p>
+                    {type === "join" ? (
+                      <p className="block-bottom__pay-date">
+                        Đã thanh toán:{" "}
+                        <span className="text--main-color">
+                          {new Date(course.payAt).toLocaleDateString()}
+                        </span>
                       </p>
-                      <div className="stars">
-                        <i className="fa fa-star" aria-hidden="true"></i>
-                        <i className="fa fa-star" aria-hidden="true"></i>
-                        <i className="fa fa-star" aria-hidden="true"></i>
-                        <i className="fa fa-star" aria-hidden="true"></i>
-                        <i className="fa fa-star" aria-hidden="true"></i>
+                    ) : (
+                      <p className="block-bottom__pay-date">
+                        Đã ghi danh:{" "}
+                        <span className="text--main-color">
+                          {numeral(course.joinerCount).format("0,0")}
+                        </span>{" "}
+                        học viên
+                      </p>
+                    )}
+                    <div className="block-bottom__more-info">
+                      <p>
+                        <span className="text--main-color">
+                          {course.lectureCount}
+                        </span>{" "}
+                        Bài học
+                      </p>
+                      <div
+                        className={`rating__stars ${
+                          listCourse.directList === 0 ? "hidden" : ""
+                        }`}
+                      >
+                        <p>
+                          <span className="text--main-color">
+                            {numeral(course.rate).format("0.0")}
+                          </span>
+                          /5
+                        </p>
+                        <div className="stars">
+                          <i className="fa fa-star" aria-hidden="true"></i>
+                          <i className="fa fa-star" aria-hidden="true"></i>
+                          <i className="fa fa-star" aria-hidden="true"></i>
+                          <i className="fa fa-star" aria-hidden="true"></i>
+                          <i className="fa fa-star" aria-hidden="true"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <Button
-                  className="block-bottom__btn-join btn-smaller btn--color-white btn--hover-vertical-change-color-reverser"
-                  content="Tiếp tục học"
-                ></Button>
+                {type === "join" ? (
+                  <Button
+                    className="block-bottom__btn-join btn-smaller btn--color-white btn--hover-vertical-change-color-reverser"
+                    content="Tiếp tục học"
+                    onClick={() => {
+                      history.push(
+                        `/lessions/${course.id}/${course.firstLecture}`
+                      );
+                    }}
+                  ></Button>
+                ) : (
+                  <>
+                    <Button
+                      className="block-bottom__btn-join btn-smaller  btn--hover-vertical-change-color"
+                      content="Ghi danh"
+                      onClick={() => {
+                        history.push(`/payment/${course.id}`);
+                      }}
+                    ></Button>
+                    <div className="block-bottom__btn-remove">
+                      <i className="fa fa-trash fa-lg" aria-hidden="true"></i>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           );

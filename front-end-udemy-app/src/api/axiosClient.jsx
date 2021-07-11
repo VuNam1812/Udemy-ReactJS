@@ -34,7 +34,7 @@ axiosClient.interceptors.response.use(
       if (response.data.accessToken) {
         localStorage.udemyapp_accessToken = response.data.accessToken;
       }
-      if (response.data.accessToken) {
+      if (response.data.refreshToken) {
         localStorage.udemyapp_refreshToken = response.data.refreshToken;
       }
       if (response.data.error && response.data.error === "Token expired") {

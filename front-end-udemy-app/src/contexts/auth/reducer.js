@@ -22,17 +22,34 @@ export const reducer = (state, action) => {
         default:
           break;
       }
-      console.log(role);
+
       return {
         ...state,
         account: {
           ...state.accounts,
+          id: payload.id,
           username: payload.username,
           role: role,
           permission: payload.role,
-          imgSrc: payload.imgSrc.replaceAll("\\", "/"),
+          srcImage: payload.srcImage,
         },
       };
+
+    case AUTH_ACTION.DELETE_ACCOUNT:
+      return {
+        ...state,
+        account: {},
+      };
+
+    case AUTH_ACTION.UPDATE_AVATAR_ACCOUNT:
+      return {
+        ...state,
+        account: {
+          ...state.account,
+          srcImage: payload
+        },
+      };
+
     default:
       return state;
   }
@@ -41,4 +58,6 @@ export const reducer = (state, action) => {
 export const AUTH_ACTION = {
   UPDATE_AUTH: 1,
   UPDATE_ACCOUNT: 2,
+  DELETE_ACCOUNT: 3,
+  UPDATE_AVATAR_ACCOUNT: 4,
 };

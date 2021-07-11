@@ -30,7 +30,7 @@ export const Login = (props) => {
     if (store.login.password && store.login.email) {
       handleAction.checkLogin(store.login, dispatch_auth, history);
     }
-  }, [store.login.password, store.login.email]);
+  }, [store.login]);
 
   return (
     <div className="login">

@@ -6,11 +6,12 @@ import { Categories } from "./categories/categories";
 import { UserAccount } from "./userAccount/userAccount";
 import { authContext } from "../../../contexts/auth/authContext";
 import { useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
 export const HeaderUpper = (props) => {
   const headerUpper = useRef();
   const [height, setHeight] = useState(0);
   const history = useHistory();
-  const { store_auth } = useContext(authContext);
+  const { store_auth, logoutUser } = useContext(authContext);
   const [sticky, setSticky] = useState({
     beginPos: props.offsetTop ? props.offsetTop : 0,
     text: "",
@@ -51,6 +52,23 @@ export const HeaderUpper = (props) => {
     };
   }, []);
 
+  const logout = async () => {
+    const alert = await Swal.fire({
+      icon: "question",
+      text: "Bạn có chắc chắn muốn đăng xuất?",
+      showConfirmButton: true,
+      confirmButtonText: "Xác Nhận",
+      confirmButtonColor: "#00ab15",
+      showCancelButton: true,
+      cancelButtonText: "Hủy bỏ",
+      cancelButtonColor: "#dc3545",
+    });
+
+    if (alert.isConfirmed) {
+      await logoutUser();
+    }
+  };
+
   return (
     <>
       <div
@@ -81,7 +99,10 @@ export const HeaderUpper = (props) => {
                 </div>
               </div>
               {store_auth.auth && (
-                <UserAccount account={store_auth.account}></UserAccount>
+                <UserAccount
+                  account={store_auth.account}
+                  handlelogout={logout}
+                ></UserAccount>
               )}
             </div>
           </div>

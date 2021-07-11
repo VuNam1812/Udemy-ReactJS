@@ -7,6 +7,7 @@ export const RadioButton = (props) => {
 
   useEffect(() => {
     setNewArray(props.value);
+   
   }, [props.value]);
 
   const setNewArray = (index) => {

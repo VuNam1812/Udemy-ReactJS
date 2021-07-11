@@ -38,17 +38,32 @@
           padding-left: 1rem;
           .body-content {
             &__title-course {
+              display: block;
+              text-decoration: none;
               font-weight: bold;
               margin: 0;
               color: $--blue-main;
               font-size: 1rem;
+              transition: all 0.3s;
+              cursor: pointer;
+              &:hover {
+                color: $--green-main;
+              }
             }
 
             &__teacher-name {
+              display: block;
+              text-decoration: none;
               margin: 0;
+              color: $--dark;
               span {
                 font-weight: bold;
                 color: $--green-main;
+                transition: all 0.3s;
+                cursor: pointer;
+                &:hover {
+                  color: $--warning;
+                }
               }
             }
 

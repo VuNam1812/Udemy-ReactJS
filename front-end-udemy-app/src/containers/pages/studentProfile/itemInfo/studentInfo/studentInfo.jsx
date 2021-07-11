@@ -1,18 +1,48 @@
 // @flow
-import * as React from "react";
+import React, { useRef } from "react";
 import { Button } from "../../../../../components";
 import "./style.scss";
-export const StudentInfo = ({ info, setStep }) => {
+import { STUDENT_PROFILE_ACTION } from "../../reducer/reducer";
+import { handleStudentProfile } from "../../middleware/handleStudentProfile";
+export const StudentInfo = ({ info, dispatch, dispatchAuth }) => {
+  const avatar = useRef();
+
+  const handleChangeAvatar = async (e) => {
+    const { files } = e.target;
+    await handleStudentProfile.changeAvatar(
+      files[0],
+      info.srcImage,
+      dispatch,
+      dispatchAuth
+    );
+  };
+
   return (
     <div className="student-info">
       <div className="avatar">
-        <img src={info.avatar}></img>
-        <div className="btn-change-image">
+        {info.srcImage && (
+          <img
+            src={`http://localhost:3030/${info.srcImage.replaceAll("\\", "/")}`}
+          ></img>
+        )}
+        <input
+          ref={avatar}
+          type="file"
+          accept="image/png, image/gif, image/jpeg"
+          onChange={handleChangeAvatar}
+          hidden
+        ></input>
+        <div
+          className="btn-change-image"
+          onClick={() => {
+            avatar.current.click();
+          }}
+        >
           <i className="fa fa-camera" aria-hidden="true"></i>
         </div>
       </div>
       <div className="info">
-        <p className="info__name">{info.name}</p>
+        <p className="info__name">{`${info.firstName} ${info.lastName}`}</p>
         <p className="info__email">{info.email}</p>
         <p className="info__role">
           <i className="fa fa-graduation-cap icon" aria-hidden="true"></i>
@@ -29,7 +59,10 @@ export const StudentInfo = ({ info, setStep }) => {
         className="btn-edit-profile btn--hover-change-color"
         content="Edit profile"
         onClick={() => {
-          setStep(2);
+          dispatch({
+            type: STUDENT_PROFILE_ACTION.UPDATE_ACTIVE,
+            payload: 2,
+          });
         }}
       ></Button>
       <div className="cover--bottom"></div>

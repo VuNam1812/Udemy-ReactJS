@@ -3,24 +3,17 @@ import React from "react";
 import "./style.scss";
 import numeral from "numeral";
 import { Button } from "../../../../components";
-import srcImage from "../../../../public/image/course_1.jpg";
-
+import { Link } from "react-router-dom";
+import { handlePayment } from "../middleware/handlePayment";
 import { PAY_ACTION } from "../reducer/reducer";
 import Swal from "sweetalert2";
-export const ConfirmCourse = (props) => {
-  const handlePayment = () => {
+export const ConfirmCourse = ({ course, account, dispatch }) => {
+  const handlePaymentCourse = () => {
     Swal.fire({
-      title: "Payment...",
-      didOpen: () => {
+      title: "Đang thanh toán...",
+      didOpen: async () => {
         Swal.showLoading();
-        setTimeout(() => {
-          props.dispatch({
-            type: PAY_ACTION.UPDATE_ACTIVE,
-            payload: 2,
-          });
-
-          Swal.close();
-        }, 1000);
+        await handlePayment.paymentCourse(course.id, dispatch);
       },
     });
   };
@@ -30,19 +23,32 @@ export const ConfirmCourse = (props) => {
       <div className="info-payment">
         <p className="info-payment__title">Thông tin Khóa học</p>
         <div className="info-payment__course-pay">
-          <div
-            className="course-pay__image"
-            style={{ backgroundImage: `url(${srcImage})` }}
-          ></div>
+          {course.srcImage && (
+            <div
+              className="course-pay__image"
+              style={{
+                backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
+                  "\\",
+                  "/"
+                )}")`,
+              }}
+            ></div>
+          )}
           <div className="course-pay__body-content">
-            <p className="body-content__title-course">
-              Facebook Ads & Facebook Marketing MASTERY 2021 | Coursenvy ®
-            </p>
-            <p className="body-content__teacher-name">
-              Giảng viên: <span>Hoàng phúc Photo</span>
-            </p>
+            <Link
+              to={`/courses/${course.id}`}
+              className="body-content__title-course"
+            >
+              {course.courName}
+            </Link>
+            <Link
+              to={`/teachers/${course.id}`}
+              className="body-content__teacher-name"
+            >
+              Giảng viên: <span>{course.teacherName}</span>
+            </Link>
             <p className="body-content__price-course">
-              Học phí: <span>{numeral(1200000).format("0,0")} VND</span>
+              Học phí: <span>{numeral(course.price).format("0,0")} VND</span>
             </p>
           </div>
         </div>
@@ -54,20 +60,20 @@ export const ConfirmCourse = (props) => {
         <p className="user-payment__title">Thông tin khách hàng</p>
         <div className="user-payment__info">
           <p className="info__item">
-            <i className="icon fa fa-user-circle-o" aria-hidden="true"></i> Vũ
-            Thành Nam
+            <i className="icon fa fa-user-circle-o" aria-hidden="true"></i>
+            {`${account.firstName} ${account.lastName}`}
           </p>
           <p className="info__item">
-            <i className="icon fa fa-envelope" aria-hidden="true"></i>{" "}
-            vunam1218@gmail.com
+            <i className="icon fa fa-envelope" aria-hidden="true"></i>
+            {account.email}
           </p>
           <p className="info__item">
-            <i className="icon fa fa-phone-square" aria-hidden="true"></i> 0942
-            603 267
+            <i className="icon fa fa-phone-square" aria-hidden="true"></i>
+            {account.phone}
           </p>
         </div>
         <Button
-          onClick={handlePayment}
+          onClick={handlePaymentCourse}
           className="user-payment__btn-pay btn-smaller btn--color-white"
           content="Thanh toán"
         ></Button>
