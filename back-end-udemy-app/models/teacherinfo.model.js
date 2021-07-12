@@ -16,4 +16,10 @@ module.exports = {
 
     return infos[0];
   },
+
+  update(id, data) {
+    return db(TBL_TEACHER_INFOS)
+      .where("id_user", id)
+      .update({ ...data });
+  },
 };

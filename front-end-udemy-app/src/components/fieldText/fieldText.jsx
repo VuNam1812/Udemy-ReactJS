@@ -4,7 +4,6 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import "./style.scss";
 export const FieldText = ({
-  value,
   type,
   className,
   placeHolder,

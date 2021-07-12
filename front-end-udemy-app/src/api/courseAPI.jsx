@@ -35,5 +35,10 @@ const courseApi = {
     const url = `courses/payment`;
     return axiosClient.get(url, { params: { ...data } });
   },
+
+  createCourse: (data) => {
+    const url = "courses";
+    return axiosClient.post(url, { ...data });
+  },
 };
 export default courseApi;

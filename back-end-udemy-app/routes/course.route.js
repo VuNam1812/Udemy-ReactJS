@@ -15,7 +15,8 @@ const joinInCourseModel = require("../models/joinInCourse.model");
 
 const router = express.Router();
 
-const emptyImage = "public/imgs/Users/CourseEmptyImage.jpg";
+const emptyImage = "public/imgs/Courses/CourseEmptyImage.png";
+
 router.get("/", async (req, res) => {
   const { filter } = req.query;
 
@@ -37,6 +38,50 @@ router.get("/", async (req, res) => {
   res.json({
     data: res_data,
   });
+});
+
+router.post("/", auth, async (req, res) => {
+  const { permission, userId } = req.accessTokenPayload;
+
+  if (permission !== 1) {
+    res.json({
+      data: {
+        created: false,
+        err_message: "account permission cannot create course.",
+      },
+    });
+  }
+
+  const newCourse = {
+    ...req.body,
+    id_owner: +userId,
+    srcImage: emptyImage,
+    createAt: moment(new Date()).format("YYYY-MM-DD"),
+    lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
+    joinerCount: 0,
+    feedbackCount: 0,
+    tinyDes: "",
+    fullDes: "",
+    isDelete: 0,
+    isAds: 0,
+    viewCount: 0,
+    status: 0,
+  };
+  try {
+    const ret = await courseModel.add(newCourse);
+    res.json({
+      data: {
+        created: true,
+      },
+    });
+  } catch (error) {
+    res.json({
+      data: {
+        created: false,
+        err_message: "update failed!!",
+      },
+    });
+  }
 });
 
 router.get("/payment", auth, async (req, res) => {
@@ -65,8 +110,6 @@ router.get("/:id", async (req, res) => {
     data: course,
   });
 });
-
-
 
 router.post("/:id/payment", auth, async (req, res) => {
   const { id } = req.params;

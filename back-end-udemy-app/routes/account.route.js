@@ -103,7 +103,6 @@ router.patch("/:id", auth, async (req, res) => {
 
   if (req.body.password)
     req.body.password = bcrypt.hashSync(req.body.password, 10);
-  console.log(req.body);
   try {
     const result = await userModel.update(userId, {
       ...req.body,

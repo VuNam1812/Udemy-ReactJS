@@ -1,5 +1,5 @@
 import "./style.scss";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 export const Select = ({
@@ -16,6 +16,15 @@ export const Select = ({
     value,
     text: value === -1 ? defaultSelected : data[value],
   });
+
+  useEffect(() => {
+    if (value === -1) {
+      setSelected({
+        value,
+        text: defaultSelected,
+      });
+    }
+  }, [value]);
 
   const dropDownFocus = () => {
     setShow(!show);
@@ -50,14 +59,16 @@ export const Select = ({
           {+data.length > 0 &&
             data.map((item, key) => (
               <div
-                className={`drop-down__item ${value === key ? "active" : ''}`} 
+                className={`drop-down__item ${
+                  value === (item.id ? item.id : key) ? "active" : ""
+                }`}
                 onClick={dropDownSelected}
                 role="button"
                 tabIndex={key}
                 data-id={key}
-                value={key}
+                value={item.id ? item.id : key}
               >
-                {item}
+                {item.content ? item.content : item}
               </div>
             ))}
         </div>
@@ -73,7 +84,7 @@ Select.propTypes = {
   name: PropTypes.string,
   data: PropTypes.objectOf(PropTypes.string),
   onChange: PropTypes.func,
-  value: PropTypes.number
+  value: PropTypes.number,
 };
 
 Select.defaultProps = {
@@ -83,5 +94,5 @@ Select.defaultProps = {
   name: "",
   data: [],
   onChange: (e) => {},
-  value: -1
+  value: -1,
 };

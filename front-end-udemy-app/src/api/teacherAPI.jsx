@@ -17,5 +17,10 @@ const teacherApi = {
     const url = `teachers/${id}/courses`;
     return axiosClient.get(url, { params: { ...data } });
   },
+
+  updateInfo: (id, data) => {
+    const url = `teachers/${id}/moreInfo`;
+    return axiosClient.patch(url, { ...data });
+  },
 };
 export default teacherApi;

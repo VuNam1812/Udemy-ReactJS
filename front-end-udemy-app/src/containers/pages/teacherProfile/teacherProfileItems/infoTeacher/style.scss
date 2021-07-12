@@ -5,6 +5,7 @@
   justify-content: space-between;
   padding: 5px;
   .left-block {
+    z-index: 1;
     position: relative;
     background-color: #5fda5f;
     flex: 1 1 0;
@@ -57,6 +58,9 @@
         flex-direction: column;
         width: 100%;
         border-bottom: 10px solid rgba($color: $--gray, $alpha: 0.3);
+        &__flex {
+          display: flex;
+        }
         &__label {
           text-align: left;
           padding-left: 1rem;
@@ -73,7 +77,7 @@
           opacity: 0.7;
           text-align: right;
           float: right;
-          width: 65%;
+          width: 75%;
           outline: none;
           border: none;
           padding: 1rem;
@@ -91,7 +95,8 @@
   }
 
   .right-block {
-    margin-left: 2rem;
+    position: relative;
+    margin-left: 0.5rem;
     flex: 1 1 0;
     display: flex;
     flex-direction: column;
@@ -102,7 +107,20 @@
     box-shadow: 0px 3px 5px rgba($color: $--gray, $alpha: 0.3);
     padding: 1rem;
     box-sizing: border-box;
+    &::before {
+      position: absolute;
 
+      content: "";
+
+      height: 100%;
+      width: 30%;
+
+      left: 0;
+      top: 0;
+
+      background-color: $--white;
+      transform: translateX(-50%);
+    }
     &__tabs {
       .tabs__text-area {
         zoom: 75%;
@@ -114,13 +132,14 @@
           justify-content: space-between;
           display: flex;
           .editorClassName {
+            font-family: "Quicksand" !important;
+
             flex-grow: 1;
             flex-basis: 0px;
             height: auto;
             padding: 0rem 1rem;
           }
         }
-
       }
     }
   }

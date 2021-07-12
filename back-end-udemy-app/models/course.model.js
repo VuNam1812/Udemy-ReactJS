@@ -33,6 +33,10 @@ module.exports = {
     return db(TBL_COURSES).where("id_owner", id);
   },
 
+  add(data) {
+    return db(TBL_COURSES).insert(data);
+  },
+
   update(id, data) {
     return db(TBL_COURSES)
       .where("id", id)

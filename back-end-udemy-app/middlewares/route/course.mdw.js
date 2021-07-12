@@ -69,12 +69,14 @@ const getMoreInfoCourse = async (course, info = []) => {
       case "duration":
         const lectures = await lectureModel.allByCourse(course.id);
         course.duration = +lectures.reduce((a, item) => a + item.duration, 0);
+        break;
 
       case "firstLecture":
         await (async () => {
           const lectures = await lectureModel.allByCourse(course.id);
           course.firstLecture = lectures[0].id;
         })();
+        break;
       default:
         break;
     }

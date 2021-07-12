@@ -9,6 +9,7 @@ const { route } = require("./auth.route");
 const handleAccount = require("../middlewares/route/account.mdw");
 const handleCourse = require("../middlewares/route/course.mdw");
 const courseModel = require("../models/course.model");
+const teacherinfoModel = require("../models/teacherinfo.model");
 
 const router = express.Router();
 
@@ -47,6 +48,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id/courses", async (req, res) => {
   const { id } = req.params;
+
   const { getInfo } = req.query;
 
   const courses = await courseModel.singleByOwner(id);
@@ -58,6 +60,42 @@ router.get("/:id/courses", async (req, res) => {
   res.json({
     data: courses,
   });
+});
+
+router.patch("/:id/moreInfo", auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.accessTokenPayload;
+
+  if (+id !== +userId) {
+    res.json({
+      data: {
+        updated: false,
+        err_message: "Invalid token to update",
+      },
+    });
+  }
+
+  try {
+    teacherinfoModel
+      .update(userId, {
+        ...req.body,
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    res.json({
+      data: {
+        updated: true,
+      },
+    });
+  } catch (error) {
+    res.json({
+      data: {
+        updated: false,
+        err_message: "Update failed",
+      },
+    });
+  }
 });
 
 module.exports = router;
