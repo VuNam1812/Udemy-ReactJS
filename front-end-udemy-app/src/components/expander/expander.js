@@ -14,8 +14,10 @@ export const Expander = (props) => {
   }, [props.className]);
   return (
     <div className={`expander ${props.className}`}>
-      <div className={`expander__title ${active}`} onClick={activeExpander}>
-        <p>{props.title}</p>
+      <div className={`expander__title ${active}`}>
+        <p className="title__name" onClick={activeExpander}>
+          {props.title}
+        </p>
         {props.overideRightComponent ? (
           props.overideRightComponent
         ) : (

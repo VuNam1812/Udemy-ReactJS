@@ -107,7 +107,7 @@
           bottom: 0%;
         }
 
-        .swiper-wrapper{
+        .swiper-wrapper {
           align-items: stretch;
         }
         .slide-item {
@@ -121,11 +121,18 @@
         }
       }
 
-      .text-html{
+      .text-html {
         text-align: left;
         width: 60%;
         margin-left: 2rem;
         line-height: 1.3rem;
+        p span {
+          font-family: "Quicksand" !important;
+        }
+
+        ul {
+          padding-left: 1rem;
+        }
       }
 
       .block-empty {

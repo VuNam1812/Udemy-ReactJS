@@ -111,11 +111,11 @@ export const InstructorDetail = (props) => {
               <div className="instructor__technique">
                 <p className="section-title">Kỹ Năng</p>
                 <div>
-                  {store_page.teacherInfo.technique ? (
+                  {store_page.teacherInfo.techniques ? (
                     <p
                       className="text-html"
                       dangerouslySetInnerHTML={{
-                        __html: store_page.teacherInfo.technique,
+                        __html: store_page.teacherInfo.techniques,
                       }}
                     ></p>
                   ) : (

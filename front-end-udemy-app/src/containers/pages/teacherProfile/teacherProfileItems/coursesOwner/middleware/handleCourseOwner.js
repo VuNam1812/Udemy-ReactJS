@@ -1,8 +1,10 @@
 import { COURSES_OWNER_ACTION } from "../reducer/reducer";
-
+import { EDIT_COURSE_ACTION } from "../reducer/editCourseReducer";
+import { TEACHER_PROFILE_ACTION } from "../../../reducer/reducer";
 import categoryApi from "../../../../../../api/categoryAPI";
-
+import courseApi from "../../../../../../api/courseAPI.jsx";
 import Swal from "sweetalert2";
+import teacherApi from "../../../../../../api/teacherAPI";
 export const handleCourseOwner = {
   handleFilterCharacterCourse: (e, courses, dispatch) => {
     const index = +e.target.getAttribute("data-id");
@@ -49,7 +51,50 @@ export const handleCourseOwner = {
     }
   },
 
-  checkCancel: async () => {
+  updateCourseInfo: async (id, data, ownerDispatch, dispatch) => {
+    const res = await courseApi.uploadInfo(id, data);
+    if (!res.data.updated) {
+      Swal.fire({
+        icon: "error",
+        text: "Cập nhật thất bại!! Vui lòng kiểm tra lại.",
+        showConfirmButton: false,
+        didOpen: () => {
+          setTimeout(() => {
+            Swal.close();
+          }, 1200);
+        },
+      });
+      return false;
+    }
+
+    const courseTarget = await courseApi.getSingle(id, {
+      getInfo: ["duration", "lectureCount"],
+    });
+
+    ownerDispatch({
+      type: COURSES_OWNER_ACTION.UPDATE_COURSE_SELECT,
+      payload: courseTarget.data,
+    });
+
+    dispatch({
+      type: TEACHER_PROFILE_ACTION.UPDATE_SINGLE_COURSE,
+      payload: courseTarget.data,
+    });
+
+    Swal.fire({
+      icon: "success",
+      text: "Cập nhật thành công!!",
+      showConfirmButton: false,
+      didOpen: () => {
+        setTimeout(() => {
+          Swal.close();
+        }, 1000);
+      },
+    });
+    return true;
+  },
+
+  checkCancel: async (id, data, ownerDispatch, dispatch) => {
     const confirm = await Swal.fire({
       icon: "question",
       text: "Mọi thay đổi chưa được cập nhật!!",
@@ -60,8 +105,21 @@ export const handleCourseOwner = {
       confirmButtonColor: "#00ab15",
       cancelButtonColor: "#dc3545",
     });
+    if (!confirm.isConfirmed) {
+      const courseTarget = await courseApi.getSingle(id, {
+        getInfo: ["duration", "lectureCount"],
+      });
 
-    if (confirm.isConfirmed) {
+      dispatch({
+        type: TEACHER_PROFILE_ACTION.UPDATE_SINGLE_COURSE,
+        payload: courseTarget.data,
+      });
+
+      ownerDispatch({
+        type: COURSES_OWNER_ACTION.UPDATE_ACTIVE,
+        payload: 1,
+      });
+    } else {
       Swal.fire({
         text: "Đang cập nhật",
         allowOutsideClick: false,
@@ -70,17 +128,18 @@ export const handleCourseOwner = {
           Swal.showLoading();
 
           //patch course
-
-          Swal.fire({
-            icon: "success",
-            text: "Cập nhật thành công!!",
-            showConfirmButton: false,
-            didOpen: () => {
-              setTimeout(() => {
-                Swal.close();
-              }, 1000);
-            },
-          });
+          const result = await handleCourseOwner.updateCourseInfo(
+            id,
+            data,
+            ownerDispatch,
+            dispatch
+          );
+          if (result) {
+            ownerDispatch({
+              type: COURSES_OWNER_ACTION.UPDATE_ACTIVE,
+              payload: 1,
+            });
+          }
         },
       });
     }
@@ -104,6 +163,115 @@ export const handleCourseOwner = {
     dispatch({
       type: COURSES_OWNER_ACTION.UPDATE_CATEGORIES,
       payload: cats,
+    });
+  },
+
+  checkSubCategories: (categories, id) => {
+    const cat = categories.filter((cat) => {
+      if (cat.isSubCategory && cat.id !== id) {
+        const catTarget = cat.subCategory.filter(
+          (catChild) => catChild.id === id
+        );
+        return catTarget.length;
+      }
+
+      if (cat.id === id) {
+        return true;
+      }
+    });
+
+    return {
+      isSubCategory: cat[0].isSubCategory,
+      parentCat: cat[0].id,
+    };
+  },
+
+  updateCategoryEdit: (dispatch, course, resultCheck) => {
+    dispatch({
+      type: EDIT_COURSE_ACTION.UPDATE_CAT_SELECT,
+      payload: +course.id_cat,
+    });
+
+    dispatch({
+      type: EDIT_COURSE_ACTION.UPDATE_IS_SUBCAT,
+      payload: resultCheck.isSubCategory,
+    });
+
+    dispatch({
+      type: EDIT_COURSE_ACTION.UPDATE_PARENT_CAT,
+      payload: resultCheck.parentCat,
+    });
+
+    if (resultCheck.isSubCategory && course.id_cat !== resultCheck.parentCat) {
+      dispatch({
+        type: EDIT_COURSE_ACTION.UPDATE_CHILDREN_CAT,
+        payload: course.id_cat,
+      });
+    } else {
+      dispatch({
+        type: EDIT_COURSE_ACTION.UPDATE_CHILDREN_CAT,
+        payload: -1,
+      });
+    }
+  },
+
+  changeImageCourse: async (file, course, ownerDispatch, dispatch) => {
+    const formData = new FormData();
+
+    formData.append("srcImage", file);
+    formData.append("currentSrc", course.srcImage);
+
+    const ret = await courseApi.uploadImage(course.id, formData);
+
+    if (!ret.data.updated) {
+      await Swal.fire({
+        icon: "error",
+        text: "Cập nhật thất bại!! Vui lòng thử lại.",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+          setTimeout(() => {
+            Swal.close();
+          }, 1200);
+        },
+      });
+
+      return;
+    }
+
+    const courseTarget = await courseApi.getSingle(course.id, {
+      getInfo: ["duration", "lectureCount"],
+    });
+
+    //update course select
+    ownerDispatch({
+      type: COURSES_OWNER_ACTION.UPDATE_COURSE_SELECT,
+      payload: courseTarget.data,
+    });
+
+    dispatch({
+      type: TEACHER_PROFILE_ACTION.UPDATE_SINGLE_COURSE,
+      payload: courseTarget.data,
+    });
+
+    await Swal.fire({
+      icon: "success",
+      text: "Cập nhật hình ảnh khóa học thành công!!",
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        setTimeout(() => {
+          Swal.close();
+        }, 1300);
+      },
+    });
+  },
+
+  loadLessions: async (id, dispatch) => {
+    const res = await courseApi.getLessions(id);
+    dispatch({
+      type: EDIT_COURSE_ACTION.UPDATE_LESSION,
+      payload: res.data,
     });
   },
 };

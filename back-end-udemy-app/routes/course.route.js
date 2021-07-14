@@ -1,7 +1,10 @@
 const express = require("express");
+const fs = require("fs");
+const moment = require("moment");
+
 const handleCourse = require("../middlewares/route/course.mdw");
 const handleAccount = require("../middlewares/route/account.mdw");
-const moment = require("moment");
+const upload = require("../middlewares/multer.mdw").UploadCourses();
 
 const chapterModel = require("../models/chapter.model");
 const courseModel = require("../models/course.model");
@@ -35,7 +38,7 @@ router.get("/", async (req, res) => {
       break;
   }
 
-  res.json({
+  return res.json({
     data: res_data,
   });
 });
@@ -44,7 +47,7 @@ router.post("/", auth, async (req, res) => {
   const { permission, userId } = req.accessTokenPayload;
 
   if (permission !== 1) {
-    res.json({
+    return res.json({
       data: {
         created: false,
         err_message: "account permission cannot create course.",
@@ -69,13 +72,13 @@ router.post("/", auth, async (req, res) => {
   };
   try {
     const ret = await courseModel.add(newCourse);
-    res.json({
+    return res.json({
       data: {
         created: true,
       },
     });
   } catch (error) {
-    res.json({
+    return res.json({
       data: {
         created: false,
         err_message: "update failed!!",
@@ -89,7 +92,7 @@ router.get("/payment", auth, async (req, res) => {
   const { userId } = req.accessTokenPayload;
   const pay = await joinInCourseModel.singleByIdUserAndCourse(+userId, +courId);
 
-  res.json({
+  return res.json({
     data: {
       paid: pay !== null,
     },
@@ -106,10 +109,49 @@ router.get("/:id", async (req, res) => {
     ["duration", "catName"].concat(getInfo)
   );
 
-  res.json({
+  return res.json({
     data: course,
   });
 });
+
+router.put(
+  "/:id/uploadImage",
+  auth,
+  upload.single("srcImage"),
+  async (req, res) => {
+    const { id } = req.params;
+    let { currentSrc } = req.body;
+    const { permission } = req.accessTokenPayload;
+
+    if (permission !== 1) {
+      return res.json({
+        data: {
+          updated: false,
+          err_message: "Permission invalid!!",
+        },
+      });
+    }
+
+    const result = await courseModel.update(id, {
+      srcImage: req.file.path,
+      lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
+    });
+
+    if (result) {
+      currentSrc = currentSrc.replace("\\/g", "/");
+      if (currentSrc !== emptyImage) {
+        fs.unlink(currentSrc, () => {});
+      }
+    }
+
+    return res.json({
+      data: {
+        updated: true,
+        srcImage: req.file.path,
+      },
+    });
+  }
+);
 
 router.post("/:id/payment", auth, async (req, res) => {
   const { id } = req.params;
@@ -240,6 +282,40 @@ router.get("/:id/feedbacks", async (req, res) => {
   res.json({
     data: course,
   });
+});
+
+router.patch("/:id", auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId, permission } = req.accessTokenPayload;
+
+  const course = await courseModel.single(id);
+
+  if (+course.id_owner !== +userId || +permission !== 1) {
+    return res.json({
+      data: {
+        updated: false,
+        err_message: "permission invalid",
+      },
+    });
+  }
+
+  try {
+    const ret = await courseModel.update(id, {
+      ...req.body,
+      lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
+    });
+    return res.json({
+      data: {
+        updated: true,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      data: {
+        updated: false,
+      },
+    });
+  }
 });
 
 module.exports = router;

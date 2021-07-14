@@ -11,7 +11,7 @@ import { handleTeacheDashboard } from "./middlewares/handleTeacherDashboard";
 const initData = {
   account: {},
   courses: [],
-  active: 2,
+  active: 1,
 };
 
 export const TeacherProfile = (props) => {

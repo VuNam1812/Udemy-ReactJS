@@ -13,6 +13,7 @@ export const InputWithLabel = ({
   register,
   inputClassName,
   error,
+  defauleValue,
   onBlur,
 }) => {
   return (
@@ -30,6 +31,7 @@ export const InputWithLabel = ({
         id={`txt${name}`}
         error={error}
         onBlur={onBlur}
+        defauleValue={defauleValue}
       />
       {children}
     </div>

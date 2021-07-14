@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
       },
       "SECRET_KEY",
       {
-        expiresIn: 15 * 60, // seconds
+        expiresIn: 10 * 60, // seconds
       }
     );
 
@@ -71,7 +71,7 @@ router.post("/login", validate(userSchema), async function (req, res) {
     },
     "SECRET_KEY",
     {
-      expiresIn: 15 * 60, // seconds
+      expiresIn: 10 * 60, // seconds
     }
   );
 
@@ -130,15 +130,23 @@ router.get("/is-available", async function (req, res) {
 
 router.post("/refresh", validate(rfTokenSchema), async function (req, res) {
   const { accessToken, refreshToken } = req.body;
-  const { userId } = jwt.verify(accessToken, "SECRET_KEY", {
+  const { userId, permission } = jwt.verify(accessToken, "SECRET_KEY", {
     ignoreExpiration: true,
   });
 
   const ret = await userModel.isValidRefreshToken(userId, refreshToken);
+
   if (ret === true) {
-    const newAccessToken = jwt.sign({ userId }, "SECRET_KEY", {
-      expiresIn: 60 * 1,
-    });
+    const newAccessToken = jwt.sign(
+      {
+        userId,
+        permission,
+      },
+      "SECRET_KEY",
+      {
+        expiresIn: 60 * 10,
+      }
+    );
     return res.json({
       accessToken: newAccessToken,
     });

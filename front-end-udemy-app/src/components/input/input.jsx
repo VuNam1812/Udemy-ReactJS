@@ -9,6 +9,7 @@ export const Input = ({
   type,
   placeHolder,
   iconStyle,
+  defauleValue,
   name,
   error,
   register,
@@ -31,12 +32,13 @@ export const Input = ({
       <div className="main-content">
         <input
           className="input__text"
+          defaultValue={defauleValue}
           type={`${Type}`}
           placeholder={placeHolder}
           onBlur={onBlur}
           name={name}
           id={`txt${name}`}
-          {...register(name)}
+          {...register(name, { valueAsNumber: type === "number" })}
         />
       </div>
       {flag && (

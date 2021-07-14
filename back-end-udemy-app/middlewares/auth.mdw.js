@@ -10,21 +10,21 @@ module.exports = function auth(req, res, next) {
     } catch (error) {
       switch (error.name) {
         case "TokenExpiredError":
-          res.json({
+          return res.json({
             error: "Token expired",
           });
-          break;
+
         case "JsonWebTokenError":
-          res.json({
+          return res.json({
             error: "Token invalid",
           });
-          break;
+
         default:
-          break;
+          return;
       }
     }
   } else {
-    res.json({
+    return res.json({
       message_err: "access token not found!!",
     });
   }

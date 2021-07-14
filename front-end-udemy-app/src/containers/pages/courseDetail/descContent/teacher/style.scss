@@ -207,6 +207,11 @@
       &__intro-teacher {
         padding: 0rem 1rem 1rem 6rem;
         text-align: justify;
+        .intro-teacher__content{
+          p, span{
+            font-family: 'Quicksand' !important;
+          }
+        }
       }
     }
   }

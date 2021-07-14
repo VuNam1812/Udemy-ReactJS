@@ -27,12 +27,6 @@ app.use(
 
 app.use("/public", express.static("public"));
 
-//require('./middlewares/view.mdw')(app);
-//require('./middlewares/session.mdw')(app);
-//require('./middlewares/locals.mdw')(app);
-//require('./middlewares/routes.mdw')(app);
-//require('./middlewares/error.mdw')(app);
-
 app.use("/api/auth", require("./routes/auth.route"));
 app.use("/api/accounts", require("./routes/account.route"));
 app.use("/api/teachers", require("./routes/teacher.route"));
@@ -40,6 +34,7 @@ app.use("/api/teachers", require("./routes/teacher.route"));
 app.use("/api/categories", require("./routes/category.route"));
 app.use("/api/courses", require("./routes/course.route"));
 app.use("/api/lectures", require("./routes/lecture.route"));
+app.use("/api/chapters", require("./routes/chapter.route"));
 
 app.use(function (req, res, next) {
   res.status(404).send({

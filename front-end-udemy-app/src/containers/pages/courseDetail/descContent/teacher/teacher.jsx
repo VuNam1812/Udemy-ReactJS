@@ -3,9 +3,7 @@ import * as React from "react";
 import "./style.scss";
 import teacherImg from "../../../../../public/image/teacher_1.png";
 import numeral from "numeral";
-export const Teacher = ({
-  teacher
-}) => {
+export const Teacher = ({ teacher }) => {
   return (
     <div className="teacher">
       <div className="teacher-group">
@@ -46,7 +44,9 @@ export const Teacher = ({
 
               <div className="teacher-info__intro">
                 <p className="teacher-info__intro-name">{`${teacher.firstName} ${teacher.lastName}`}</p>
-                <p className="teacher-info__intro-major">{teacher.major || "( Hiện chưa cập nhật chuyên môn )"}</p>
+                <p className="teacher-info__intro-major">
+                  {teacher.major || "( Hiện chưa cập nhật chuyên môn )"}
+                </p>
                 <div className="teacher-info__intro-achieve">
                   <div className="achieve-item">
                     <p className="achieve-item__count">
@@ -77,9 +77,14 @@ export const Teacher = ({
               </div>
             </div>
           </div>
-          <p className="item__intro-teacher">
-            {teacher.teacherDesc || "̣( Hiện chưa có thông tin mô tả )" }
-          </p>
+          <div className="item__intro-teacher">
+            {(
+              <p
+                className="intro-teacher__content"
+                dangerouslySetInnerHTML={{ __html: teacher.teacherDesc }}
+              ></p>
+            ) || "̣( Hiện chưa có thông tin mô tả )"}
+          </div>
         </div>
       </div>
     </div>

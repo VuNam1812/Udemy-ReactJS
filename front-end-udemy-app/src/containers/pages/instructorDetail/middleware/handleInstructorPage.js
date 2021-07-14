@@ -12,6 +12,7 @@ export const handleInstructorPage = {
           "courseCount",
           "rate",
           "teacherDesc",
+          "techniques",
         ],
       })
     ).data;

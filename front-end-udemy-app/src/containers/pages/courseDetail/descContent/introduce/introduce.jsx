@@ -45,7 +45,7 @@ export const Introduce = ({ course, teacher }) => {
         <p className="title--highlight">Mô tả chi tiết</p>
         <div className="content-title">
           {course.fullDes ? (
-            <p dangerouslySetInnerHTML={{ __html: course.fullDes }}></p>
+            <p className='content-title__fullDes' dangerouslySetInnerHTML={{ __html: course.fullDes }}></p>
           ) : (
             <p className="content-title__empty">(Hiện đang trống)</p>
           )}

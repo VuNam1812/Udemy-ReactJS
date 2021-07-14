@@ -20,11 +20,18 @@ export const Select = ({
   useEffect(() => {
     if (value === -1) {
       setSelected({
-        value,
+        ...selected,
         text: defaultSelected,
       });
     }
   }, [value]);
+
+  useEffect(() => {
+    setSelected({
+      ...selected,
+      text: defaultSelected,
+    });
+  }, [defaultSelected]);
 
   const dropDownFocus = () => {
     setShow(!show);

@@ -40,9 +40,10 @@ axiosClient.interceptors.response.use(
       if (response.data.error && response.data.error === "Token expired") {
        
         isTokenExpired = true;
-        const originRequest = response.config;
+        const originRequest = { ...response.config };
         return axiosClient(originRequest);
       }
+      
       return response.data;
     }
   },

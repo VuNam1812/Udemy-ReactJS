@@ -94,8 +94,6 @@ export const InfoTeacher = ({ teacher, className, dispatch }) => {
           const text_intro = draftToHtml(
             convertToRaw(info_store.introEditor.getCurrentContent())
           );
-
-          console.log(JSON.stringify(text_intro));
           try {
             const res_infoMore = await teacherApi.updateInfo(teacher.id, {
               major: data.major,

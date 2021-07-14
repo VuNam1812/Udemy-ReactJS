@@ -20,4 +20,18 @@ module.exports = {
 
     return chaptes[0];
   },
+
+  add(data) {
+    return db(TBL_CHAPTERS).insert(data);
+  },
+
+  update(id, data) {
+    return db(TBL_CHAPTERS)
+      .where("id", id)
+      .update({ ...data });
+  },
+
+  delete(id) {
+    return db(TBL_CHAPTERS).where("id", id).del();
+  },
 };

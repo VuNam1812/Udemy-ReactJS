@@ -7,11 +7,13 @@ import { Button, Modal } from "../../../../../components";
 import numeral from "numeral";
 import { CreateCourse } from "./createCourse/createCourse";
 
+import Swal from "sweetalert2";
+
 import SwiperCore, { Mousewheel, Pagination } from "swiper/core";
 import { reducer, COURSES_OWNER_ACTION, enumState } from "./reducer/reducer";
 
 import { handleCourseOwner } from "./middleware/handleCourseOwner";
-
+import { Link } from "react-router-dom";
 const initData = {
   renderList: [],
   modalState: enumState.HIDDEN,
@@ -49,10 +51,32 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
     coursesOwner_dispatch({
       type: COURSES_OWNER_ACTION.MODAL_OPEN,
     });
-    // coursesOwner_dispatch({
-    //   type: COURSES_OWNER_ACTION.UPDATE_ACTIVE,
-    //   payload: 2,
-    // });
+  };
+
+  const loadCourseEdit = async (e) => {
+    const index = +e.currentTarget.getAttribute("data-id");
+
+    await handleCourseOwner.loadCategories(coursesOwner_dispatch);
+    Swal.fire({
+      text: "Tải dữ liệu",
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+
+        coursesOwner_dispatch({
+          type: COURSES_OWNER_ACTION.UPDATE_COURSE_SELECT,
+          payload: courses.filter((course) => course.id === index)[0],
+        });
+        setTimeout(() => {
+          Swal.close();
+
+          coursesOwner_dispatch({
+            type: COURSES_OWNER_ACTION.UPDATE_ACTIVE,
+            payload: 2,
+          });
+        }, 500);
+      },
+    });
   };
 
   const handleResetCourse = (e) => {
@@ -169,9 +193,12 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
                               )}
                               <div className="slide-item__body">
                                 <div className="slide-item__flex">
-                                  <p className="slide-item__body-title">
+                                  <Link
+                                    to={`/courses/${course.id}`}
+                                    className="slide-item__body-title"
+                                  >
                                     {course.courName}
-                                  </p>
+                                  </Link>
                                   <div>
                                     <div className="slide-item__body-time">
                                       {course.createAt && (
@@ -246,9 +273,11 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
                                   </div>
                                 </div>
                                 <Button
+                                  dataId={course.id}
                                   bodyClassName="slide-item__body-content-btn"
                                   className="btn--square slide-item__body-btn btn--hover-horizontal-change-color"
                                   content="Chỉnh sửa"
+                                  onClick={loadCourseEdit}
                                 ></Button>
                               </div>
                             </div>
@@ -263,7 +292,8 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
           </div>
         </div>
         <EditCourse
-          course={store.courseSeleted}
+          categories={store.categories}
+          course={store.courseSelect}
           dispatch={dispatch}
           courseOwnerDispatch={coursesOwner_dispatch}
         ></EditCourse>

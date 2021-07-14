@@ -35,10 +35,19 @@ const courseApi = {
     const url = `courses/payment`;
     return axiosClient.get(url, { params: { ...data } });
   },
-
   createCourse: (data) => {
     const url = "courses";
     return axiosClient.post(url, { ...data });
+  },
+
+  uploadInfo: (id, data) => {
+    const url = `courses/${id}`;
+    return axiosClient.patch(url, { ...data });
+  },
+
+  uploadImage: (id, data) => {
+    const url = `courses/${id}/uploadImage`;
+    return axiosClient.put(url, data);
   },
 };
 export default courseApi;

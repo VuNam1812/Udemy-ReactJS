@@ -83,6 +83,12 @@
       font-style: italic;
     }
 
+    &__fullDes {
+      p, span {
+        font-family: "Quicksand" !important;
+      }
+    }
+
     .mini-teacher-card {
       width: fit-content;
       margin-right: 1.5rem;
