@@ -28,14 +28,14 @@ router.post("/", async function (req, res) {
   };
 
   const accountID = await userModel.add(user);
-  res.status(200).json({
+  return res.status(200).json({
     id: accountID,
   });
 });
 
 router.get("/", async (req, res) => {
   const allUser = await userModel.all();
-  res.json({
+  return res.json({
     data: [...allUser],
   });
 });
@@ -46,7 +46,7 @@ router.get("/available", auth, async (req, res) => {
 
   const ret = await userModel.findByEmail(email, { id: userId });
 
-  res.json({
+  return res.json({
     data: {
       available: ret !== null,
     },
@@ -67,7 +67,7 @@ router.get("/verify", auth, async (req, res) => {
     });
   }
 
-  res.json({
+  return res.json({
     data: {
       result: true,
     },
@@ -84,7 +84,7 @@ router.get("/:id", async (req, res) => {
   ["rfToken", "password"].map((item) => {
     delete user[item];
   });
-  res.json({
+  return res.json({
     data: user,
   });
 });
@@ -93,7 +93,7 @@ router.patch("/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
   if (+id !== +userId) {
-    res.json({
+    return res.json({
       data: {
         err_message: "Token invalid to update",
         updated: false,
@@ -101,19 +101,20 @@ router.patch("/:id", auth, async (req, res) => {
     });
   }
 
+
   if (req.body.password)
     req.body.password = bcrypt.hashSync(req.body.password, 10);
   try {
     const result = await userModel.update(userId, {
       ...req.body,
     });
-    res.json({
+    return res.json({
       data: {
         updated: true,
       },
     });
   } catch (error) {
-    res.json({
+    return res.json({
       data: {
         updated: false,
         err_message: "Update failed",
@@ -132,12 +133,12 @@ router.put("/upload", auth, upload.single("srcImage"), async (req, res) => {
 
   if (result) {
     currentSrc = currentSrc.replace("\\/g", "/");
-    if (currentSrc !== EmptyImage) {
+    if (currentSrc !== EmptyImage && fs.existsSync(currentSrc)) {
       fs.unlink(currentSrc, () => {});
     }
   }
 
-  res.json({
+  return res.json({
     data: {
       srcImage: req.file.path,
     },

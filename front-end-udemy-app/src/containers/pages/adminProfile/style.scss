@@ -2,7 +2,7 @@
 .admin-profile {
   min-height: 100vh;
   background-color: aliceblue;
-  &__bg{
+  &__bg {
     z-index: 1;
   }
   &__body {
@@ -13,7 +13,7 @@
     .wrap {
       z-index: 2;
       position: relative;
-      max-width: 55rem;
+      max-width: 60rem;
     }
   }
 }

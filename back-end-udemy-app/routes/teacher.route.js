@@ -33,16 +33,25 @@ router.post("/", async function (req, res) {
   };
 
   const accountID = await userModel.add(user);
-  res.status(200).json({
+  return res.status(200).json({
     id: accountID,
   });
 });
 
 router.get("/", async (req, res) => {
-  const allUser = await userModel.all();
+  const allUser = await userModel.all({
+    permission: 1,
+  });
 
-  res.json({
-    data: [...allUser],
+  allUser.forEach((teacher) => {
+    delete teacher.rfToken;
+    delete teacher.password;
+  });
+
+  return res.json({
+    data: {
+      all: [...allUser],
+    },
   });
 });
 
@@ -57,7 +66,7 @@ router.get("/:id/courses", async (req, res) => {
     await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
   }
 
-  res.json({
+  return res.json({
     data: courses,
   });
 });
@@ -67,7 +76,7 @@ router.patch("/:id/moreInfo", auth, async (req, res) => {
   const { userId } = req.accessTokenPayload;
 
   if (+id !== +userId) {
-    res.json({
+    return res.json({
       data: {
         updated: false,
         err_message: "Invalid token to update",
@@ -83,13 +92,13 @@ router.patch("/:id/moreInfo", auth, async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-    res.json({
+    return res.json({
       data: {
         updated: true,
       },
     });
   } catch (error) {
-    res.json({
+    return res.json({
       data: {
         updated: false,
         err_message: "Update failed",

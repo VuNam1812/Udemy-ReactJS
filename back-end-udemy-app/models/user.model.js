@@ -3,8 +3,10 @@ const db = require("../utils/db");
 const TBL_USERS = "users";
 
 module.exports = {
-  all() {
-    return db(TBL_USERS);
+  all(filter = {}, filterNot = { id: 0 }) {
+    return db(TBL_USERS)
+      .where({ ...filter })
+      .whereNot({ ...filterNot });
   },
 
   async single(id) {

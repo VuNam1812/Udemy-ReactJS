@@ -2,7 +2,6 @@
 import React, { useReducer } from "react";
 import { reducer, AUTH_ACTION } from "./reducer";
 import authApi from "../../api/authAPI";
-import accountApi from "../../api/accountAPI";
 export const authContext = React.createContext();
 
 const initData = {
@@ -20,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         type: AUTH_ACTION.UPDATE_AUTH,
         payload: res.authenticated,
       });
-
+      console.log(res.accountInfo);
       dispatch_auth({
         type: AUTH_ACTION.UPDATE_ACCOUNT,
         payload: res.accountInfo,
@@ -35,7 +34,7 @@ export const AuthProvider = ({ children }) => {
         type: AUTH_ACTION.UPDATE_AUTH,
         payload: res.authenticated,
       });
-
+      
       dispatch_auth({
         type: AUTH_ACTION.DELETE_ACCOUNT,
       });

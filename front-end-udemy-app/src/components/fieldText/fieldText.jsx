@@ -1,12 +1,13 @@
 // @flow
 import * as React from "react";
-
+import { DatePickerComponent } from "@syncfusion/ej2-react-calendars";
 import PropTypes from "prop-types";
 import "./style.scss";
 export const FieldText = ({
   type,
   className,
   placeHolder,
+  format,
   label,
   onBlur,
   readOnly,
@@ -17,17 +18,36 @@ export const FieldText = ({
 }) => {
   return (
     <div className={`field-text ${className}`}>
-      <input
-        className="field-text__input"
-        defaultValue={defaultValue}
-        type={type}
-        name={name}
-        onBlur={onBlur}
-        placeholder={placeHolder}
-        readOnly={readOnly}
-        {...register(name)}
-      ></input>
-      <p className="field-text__label">{label}</p>
+      {type === "date" ? (
+        <>
+          <DatePickerComponent
+            className="field-text__date-time"
+            value={defaultValue}
+            format="dd-MM-yyyy"
+            type={type}
+            name={name}
+            onBlur={onBlur}
+            placeholder={placeHolder}
+            readOnly={readOnly}
+            {...register(name)}
+          ></DatePickerComponent>
+          <p className="field-text__label">{label}</p>
+        </>
+      ) : (
+        <>
+          <input
+            className="field-text__input"
+            defaultValue={defaultValue}
+            type={type}
+            name={name}
+            onBlur={onBlur}
+            placeholder={placeHolder}
+            readOnly={readOnly}
+            {...register(name)}
+          ></input>
+          <p className="field-text__label">{label}</p>
+        </>
+      )}
       {error.isShow && (
         <span className="field-text__error">{error.message}</span>
       )}

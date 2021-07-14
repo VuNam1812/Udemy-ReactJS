@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
       }
     );
 
-    res.json({
+    return res.json({
       data: {
         authenticated: true,
         accountInfo: {
@@ -43,7 +43,7 @@ router.get("/", async (req, res) => {
     });
   }
 
-  res.json({
+  return res.json({
     data: {
       authenticated: false,
     },
@@ -83,7 +83,7 @@ router.post("/login", validate(userSchema), async function (req, res) {
     userId: user.id,
   };
 
-  res.json({
+  return res.json({
     authenticated: true,
     accountInfo: {
       id: user.id,
@@ -99,7 +99,7 @@ router.post("/login", validate(userSchema), async function (req, res) {
 router.post("/logout", (req, res) => {
   delete req.session.user;
 
-  res.json({
+  return res.json({
     authenticated: false,
     accessToken: "",
     refreshToken: "",
@@ -111,7 +111,7 @@ router.get("/is-confirmEmail", async function (req, res) {
   if (code === req.session.codeConfirm) {
     return res.status(200).json({ status: true });
   }
-  res.status(200).json({ status: false });
+  return res.status(200).json({ status: false });
 });
 
 router.get("/is-available", async function (req, res) {
@@ -125,7 +125,7 @@ router.get("/is-available", async function (req, res) {
     });
   }
 
-  res.status(200).json({ status: false });
+  return res.status(200).json({ status: false });
 });
 
 router.post("/refresh", validate(rfTokenSchema), async function (req, res) {
@@ -152,7 +152,7 @@ router.post("/refresh", validate(rfTokenSchema), async function (req, res) {
     });
   }
 
-  res.status(400).json({
+  return res.status(400).json({
     message: "Invalid refresh token.",
   });
 });

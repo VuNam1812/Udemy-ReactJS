@@ -74,7 +74,6 @@ export const Register = (props) => {
             const res_account = await accountApi.createAccount(
               register.account
             );
-            console.log(res_account);
             res_account.id
               ? Swal.fire({
                   icon: "success",

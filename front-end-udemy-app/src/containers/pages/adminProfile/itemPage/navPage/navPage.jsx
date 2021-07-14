@@ -2,14 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { Logo } from "../../../../../components";
-
-const ACTION = {
-  ACTIVE_DASHBOARD: 1,
-  ACTIVE_COURSES: 2,
-  ACTIVE_CATEGORIES: 3,
-  ACTIVE_ACCOUNTS: 4,
-};
-
+import { ADMIN_PROFILE_ACTION } from "../../reducer/reducer";
 export const NavPage = (props) => {
   const [active, setActive] = useState(
     new Array(4).fill(null).map((item, index) => (index === 0 ? "active" : ""))
@@ -36,7 +29,7 @@ export const NavPage = (props) => {
             className={`nav-group__item ${active[0]}`}
             onClick={(e) => {
               props.dispatch({
-                type: ACTION.ACTIVE_DASHBOARD,
+                type: ADMIN_PROFILE_ACTION.ACTIVE_DASHBOARD,
               });
             }}
           >
@@ -46,7 +39,7 @@ export const NavPage = (props) => {
             className={`nav-group__item ${active[1]}`}
             onClick={(e) => {
               props.dispatch({
-                type: ACTION.ACTIVE_COURSES,
+                type: ADMIN_PROFILE_ACTION.ACTIVE_COURSES,
               });
             }}
           >
@@ -56,7 +49,7 @@ export const NavPage = (props) => {
             className={`nav-group__item ${active[2]}`}
             onClick={(e) => {
               props.dispatch({
-                type: ACTION.ACTIVE_CATEGORIES,
+                type: ADMIN_PROFILE_ACTION.ACTIVE_CATEGORIES,
               });
             }}
           >
@@ -66,7 +59,7 @@ export const NavPage = (props) => {
             className={`nav-group__item ${active[3]}`}
             onClick={(e) => {
               props.dispatch({
-                type: ACTION.ACTIVE_ACCOUNTS,
+                type: ADMIN_PROFILE_ACTION.ACTIVE_ACCOUNTS,
               });
             }}
           >

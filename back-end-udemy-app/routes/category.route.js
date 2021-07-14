@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
       res_data.all = (await handleCategory.getCategoryByFilter()).all;
       break;
   }
-  res.json({
+  return res.json({
     data: res_data,
   });
 });
@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const cat = await categoryModel.single(id);
-  res.json({
+  return res.json({
     data: cat,
   });
 });
@@ -57,7 +57,7 @@ router.get("/:id/courses", async (req, res) => {
     ]);
   }
 
-  res.json({
+  return res.json({
     data: [...courses],
   });
 });

@@ -1,86 +1,52 @@
 // @flow
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useContext, useEffect, useReducer } from "react";
 import { Select } from "../../../../../components";
 import "./style.scss";
-import courseImage from "../../../../../public/image/course_1.jpg";
-
-const ACTION = {
-  UPDATE_PAGINATION: 1,
-  UPDATE_LISTRENDER: 3,
-  INIT_PAGINATION: 4,
-};
-
-const reducer = (state, action) => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case ACTION.INIT_PAGINATION:
-      let pageInit = new Array(+payload).fill(null).map((index) => ({
-        active: "",
-      }));
-      pageInit[0].active = "pagination__item--active";
-      return {
-        ...state,
-        pagination: [...pageInit],
-      };
-    case ACTION.UPDATE_PAGINATION:
-      let page = new Array(state.pagination.length).fill(null).map(() => ({
-        active: "",
-      }));
-      page[+payload - 1].active = "pagination__item--active";
-      return {
-        ...state,
-        pagination: [...page],
-      };
-    case ACTION.UPDATE_LISTRENDER:
-      return {
-        ...state,
-        listRender: [
-          ...payload.courses.slice(
-            (payload.page - 1) * state.limit,
-            payload.page * state.limit
-          ),
-        ],
-      };
-
-    default:
-      return state;
-  }
-};
+import { categoryContext } from "../../../../../contexts/categories/categoryContext";
+import { reducer, COURSES_ADMIN_ACTION } from "./reducer/reducer";
+import numeral from "numeral";
 
 const initObject = {
   pagination: [],
   limit: 8,
   listRender: [],
+  filterSelected: -1,
+  parentCatSelect: -1,
+  isSubCategory: false,
+  catSelected: -1,
+  teacherSelected: -1,
+  currentCourses: [],
 };
 
-export const Courses = (props) => {
-  const [filterSelected, setFilterSelected] = useState(-1);
-  const [subfilterCate, setSubfilterCate] = useState([]);
+export const Courses = ({ courses, teachers }) => {
   const [listCourse, dispatch] = useReducer(reducer, initObject);
-
+  const { store_cat } = useContext(categoryContext);
   useEffect(() => {
-    setupPagenation(dataSet.length);
+    setupPagenation(courses.length);
     dispatch({
-      type: ACTION.UPDATE_LISTRENDER,
+      type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
       payload: {
         page: 1,
-       courses:  dataSet,
+        courses: courses,
       },
     });
-  }, []);
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_CURRENT_COURSES,
+      payload: courses,
+    });
+  }, [courses]);
 
   const handleLoadPagination = (e) => {
     const index = +e.target.getAttribute("data-id");
     dispatch({
-      type: ACTION.UPDATE_PAGINATION,
+      type: COURSES_ADMIN_ACTION.UPDATE_PAGINATION,
       payload: +index,
     });
     dispatch({
-      type: ACTION.UPDATE_LISTRENDER,
+      type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
       payload: {
         page: +index,
-        courses: dataSet,
+        courses: listCourse.currentCourses,
       },
     });
   };
@@ -89,54 +55,166 @@ export const Courses = (props) => {
     const subPage = length % listCourse.limit > 0 ? 1 : 0;
     const numPage = parseInt(length / listCourse.limit) + subPage;
     dispatch({
-      type: ACTION.INIT_PAGINATION,
-      payload: numPage,
+      type: COURSES_ADMIN_ACTION.INIT_PAGINATION,
+      payload: numPage ? numPage : 1,
     });
   };
+
+  const getParentCat = () => {
+    return store_cat.data.map((cat) => {
+      return {
+        id: cat.id,
+        content: cat.catName,
+      };
+    });
+  };
+
+  const getChildrenCat = () => {
+    return store_cat.data
+      .filter((cat) => cat.id === listCourse.parentCatSelect)[0]
+      .subCategory.map((cat) => {
+        return {
+          id: cat.id,
+          content: cat.catName,
+        };
+      });
+  };
+
+  const handleFilterMain = (e) => {
+    const index = +e.target.value;
+
+    dispatch({
+      type: COURSES_ADMIN_ACTION.RESET_FILTER,
+    });
+
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
+      payload: {
+        page: 1,
+        courses: courses,
+      },
+    });
+
+    setupPagenation(courses.length);
+
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_FILTER_SELECTED,
+      payload: +index,
+    });
+  };
+
+  const handleFilterParentCat = (e) => {
+    const index = +e.target.value;
+
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_PARENT_CAT_SELECTED,
+      payload: index,
+    });
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_SUB_CATEGORY,
+      payload: store_cat.data.filter((cat) => cat.id === index)[0]
+        .isSubCategory,
+    });
+    handleFilterCatSelected(e);
+  };
+
+  const handleFilterCatSelected = (e) => {
+    const index = +e.target.value;
+    let catTarget = [index];
+    if (
+      store_cat.data.filter((cat) => cat.id === index)[0]?.subCategory?.length
+    ) {
+      catTarget = [
+        ...catTarget,
+        ...store_cat.data
+          .filter((cat) => cat.id === index)[0]
+          .subCategory.map((cat) => cat.id),
+      ];
+    }
+
+    const newCourse = courses.filter((course) =>
+      catTarget.includes(course.id_cat)
+    );
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
+      payload: {
+        page: 1,
+        courses: newCourse,
+      },
+    });
+
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_CURRENT_COURSES,
+      payload: newCourse,
+    });
+
+    setupPagenation(newCourse.length);
+  };
+
+  const handleFilterTeacherSelected = (e) => {
+    const index = +e.target.value;
+    const newCourse = courses.filter((course) => course.id_owner === +index);
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
+      payload: {
+        page: 1,
+        courses: newCourse,
+      },
+    });
+
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_CURRENT_COURSES,
+      payload: newCourse,
+    });
+
+    setupPagenation(newCourse.length);
+  };
+
   return (
     <div className="courses">
       <div className="courses__filter">
         <Select
-          value={filterSelected}
-          onChange={(e) => {
-            setFilterSelected(+e.target.value);
-          }}
+          value={listCourse.filterSelected}
+          onChange={handleFilterMain}
           defaultSelected="--- Bộ lọc ---"
           data={[
-            "--- None ---",
+            "--- Bộ lọc ---",
             "--- Lọc theo giảng viên ---",
             "--- Lọc theo danh mục ---",
           ]}
           className="select--bottom select--shadow filter__main"
         ></Select>
-        <div className="filter__sub-filter">
-          {filterSelected === 1 && (
-            <div className="sub-filter__teacher">
+        {listCourse.filterSelected === 1 && (
+          <Select
+            onChange={handleFilterTeacherSelected}
+            data={teachers.map((teacher) => {
+              return {
+                id: teacher.id,
+                content: `${teacher.firstName} ${teacher.lastName}`,
+              };
+            })}
+            defaultSelected="--- Chọn Giảng viên ---"
+            className="select--bottom select--shadow filter__sub-filter-item"
+          ></Select>
+        )}
+        {listCourse.filterSelected === 2 && (
+          <>
+            <Select
+              onChange={handleFilterParentCat}
+              data={getParentCat()}
+              defaultSelected="--- Chọn danh mục ---"
+              className="select--bottom select--shadow filter__sub-filter-item"
+            ></Select>
+            {listCourse.isSubCategory && (
               <Select
-                defaultSelected="--- Chọn Giảng viên ---"
-                className="select--bottom select--shadow"
-              ></Select>
-            </div>
-          )}
-          {filterSelected === 2 && (
-            <div className="sub-filter__categories">
-              <Select
-                onChange={(e) => {
-                  setSubfilterCate(+e.target.value === 0 ? ["", "", ""] : []);
-                }}
-                data={["--- CNTT và Phần Mềm ---", "--- Kinh doanh ---"]}
+                data={getChildrenCat()}
+                onChange={handleFilterCatSelected}
                 defaultSelected="--- Chọn danh mục ---"
-                className="select--bottom select--shadow sub-filter__categories-item"
+                className="select--bottom select--shadow filter__sub-filter-item"
               ></Select>
-              {subfilterCate.length > 0 && (
-                <Select
-                  defaultSelected="--- Chọn danh mục ---"
-                  className="select--bottom select--shadow sub-filter__categories-item"
-                ></Select>
-              )}
-            </div>
-          )}
-        </div>
+            )}
+          </>
+        )}
       </div>
       <div className="courses__pagination">
         {listCourse.pagination.map((item, index) => {
@@ -152,16 +230,23 @@ export const Courses = (props) => {
         })}
       </div>
       <div className="courses__group">
-        {listCourse.listRender.map((item, index) => {
+        {listCourse.listRender.map((course, index) => {
           return (
             <div className="courses__item">
-              <div
-                className="item__image"
-                style={{ backgroundImage: `url(${courseImage})` }}
-              ></div>
+              {course.srcImage && (
+                <div
+                  className="item__image"
+                  style={{
+                    backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
+                      "\\",
+                      "/"
+                    )}")`,
+                  }}
+                ></div>
+              )}
               <div className="item__info-course">
                 <div className="info-course__header">
-                  <div className="info-course__name">Our top course</div>
+                  <div className="info-course__name">{course.courName}</div>
                   <div>
                     <i
                       class="icon icon-success fa fa-unlock-alt fa-2x"
@@ -169,18 +254,21 @@ export const Courses = (props) => {
                     ></i>
                   </div>
                 </div>
-                <div className="info-course__categories">
-                  CNTT & Phần mềm - Lập trình web
-                </div>
+                <div className="info-course__categories">{course.catName}</div>
                 <div className="info-course__teacher">
-                  Giảng viên: <span className="text-main"> Vũ Thành Nam</span>
+                  Giảng viên:{" "}
+                  <span className="text-main">{course.teacherName}</span>
                 </div>
                 <div className="info--block-flex">
                   <div className="info-course__lecture">
-                    <span className="text-main">12</span> Bài giảng
+                    <span className="text-main">{course.lectureCount}</span> Bài
+                    giảng
                   </div>
                   <div className="info-course__price">
-                    <span className="text-danger">160,000 VND</span>
+                    <span className="text-danger">
+                      {numeral(course.price ? course.price : 0).format("0,0")}{" "}
+                      VND
+                    </span>
                   </div>
                 </div>
               </div>
@@ -191,5 +279,3 @@ export const Courses = (props) => {
     </div>
   );
 };
-
-const dataSet = new Array(30).fill(null).map(() => "");

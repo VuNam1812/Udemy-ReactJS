@@ -1,34 +1,133 @@
 // @flow
-import React, { useState } from "react";
-import { Button, FieldText, RadioButton } from "../../../../../components";
+import React, { useReducer, useEffect, useContext, useRef } from "react";
+import {
+  Button,
+  FieldText,
+  RadioButton,
+  Modal,
+} from "../../../../../components";
 import "./style.scss";
-import teacherImage from "../../../../../public/image/teacher_1.png";
-export const AdminInfo = (props) => {
-  const [active, setActive] = useState("mini-show");
+import { authContext } from "../../../../../contexts/auth/authContext";
+import { useForm } from "react-hook-form";
+import { reducer, ADMIN_INFO_ACTION, enumState } from "./reducer/reducer";
+import { handleAdminInfo } from "./middlewares/handleAdminInfo";
+import { ChangePasswordForm } from "../../../studentProfile/itemInfo";
+
+const inidData = {
+  active: "mini-show",
+  modalState: enumState.HIDDEN,
+  error: {
+    firstName: {
+      isShow: false,
+      message: "*Hiện đang trống thông tin",
+    },
+    lastName: {
+      isShow: false,
+      message: "*Hiện đang trống thông tin",
+    },
+    emailName: {
+      isShow: false,
+      message: "*Hiện đang trống thông tin",
+    },
+    oldPassword: {
+      isShow: false,
+      message: "* Thông tin không được để trống!!",
+    },
+    newPassword: {
+      isShow: false,
+      message: "* Thông tin không được để trống!!",
+    },
+    confirmNewPassword: {
+      isShow: false,
+      message: "* Thông tin không được để trống!!",
+    },
+  },
+};
+
+export const AdminInfo = ({ account, adminProfileDispatch }) => {
+  const [store, dispatch] = useReducer(reducer, inidData);
+  const { dispatch_auth } = useContext(authContext);
+  const avatar = useRef();
+  const form = useRef();
+  const { register, setValue, getValues } = useForm();
+
+  useEffect(() => {
+    if (Object.keys(account).length) {
+      ["firstName", "lastName", "phone", "dob", "email", "gender"].map(
+        (item) => {
+          setValue(
+            item,
+            typeof account[item] === "number" ? +account[item] : account[item]
+          );
+        }
+      );
+    }
+  }, [account]);
+
+  const handleChangeAvatar = async (e) => {
+    if (e.target.files.length === 0) return;
+
+    handleAdminInfo.changeAvatar(account, e.target.files[0], dispatch_auth);
+  };
+
+  const handleCancelUpdate = async () => {
+    console.log(getValues());
+    const result = await handleAdminInfo.checkCancelUpdate(dispatch);
+
+    if (!result) {
+      form.current.reset();
+      return;
+    }
+
+    if (handleAdminInfo.validateField(getValues(), dispatch)) return;
+    handleAdminInfo.updateInfoAccount(account.id, getValues(), dispatch_auth);
+  };
+
   return (
-    <div className={`admin-info ${active}`}>
+    <div className={`admin-info ${store.active}`}>
       <div className="admin-info__content">
         <div className="content-view">
           <div className="content-view__image">
-            <img src={teacherImage}></img>
-            <div className="image__change-avatar">
+            {account.srcImage && (
+              <img
+                src={`http://localhost:3030/${account.srcImage.replaceAll(
+                  "\\",
+                  "/"
+                )}`}
+              ></img>
+            )}
+            <input
+              type="file"
+              ref={avatar}
+              onChange={handleChangeAvatar}
+              hidden
+            ></input>
+            <div
+              className="image__change-avatar"
+              onClick={() => {
+                avatar.current.click();
+              }}
+            >
               <i className="icon fa fa-camera" aria-hidden="true"></i>
             </div>
           </div>
           <div className="content-view__info">
-            <p className="info__name">Admin</p>
-            <p className="info__email">admin@gmail.com</p>
+            <p className="info__name">{`${account.firstName} ${account.lastName}`}</p>
+            <p className="info__email">{account.email}</p>
             <p className="info__role">
               <i className="icon fa fa-user-circle-o" aria-hidden="true"></i>
               Quản trị viên
             </p>
           </div>
           <Button
-            className="content-view__btn-edit btn--square"
+            className="content-view__btn-edit btn--square btn--hover-horizontal-change-color"
             bodyClassName="btn-edit__body"
-            content="Edit"
+            content="Chỉnh sửa"
             onClick={() => {
-              setActive("show-full");
+              dispatch({
+                type: ADMIN_INFO_ACTION.UPDATE_ACTIVE,
+                payload: "show-full",
+              });
             }}
           ></Button>
         </div>
@@ -36,48 +135,110 @@ export const AdminInfo = (props) => {
           <div className="content-edit__header">
             <p>Thông tin tài khoản</p>
           </div>
-          <div className="content-edit__body">
+          <form ref={form} className="content-edit__body">
             <div className="block-flex">
               <FieldText
-                placeHolder="First Name"
-                label="First Name"
+                placeHolder="Họ"
+                label="Họ"
+                name="firstName"
+                defaultValue={account.firstName}
+                register={register}
+                error={store.error.firstName}
               ></FieldText>
-              <FieldText placeHolder="Last Name" label="Last Name"></FieldText>
+              <FieldText
+                placeHolder="Tên"
+                label="Tên"
+                name="lastName"
+                defaultValue={account.lastName}
+                register={register}
+                error={store.error.lastName}
+              ></FieldText>
             </div>
-            <FieldText placeHolder="Email" label="Email"></FieldText>
             <FieldText
-              placeHolder="Phone number"
-              label="Phone number"
+              placeHolder="Email"
+              label="Email"
+              name="email"
+              defaultValue={account.email}
+              register={register}
+              error={store.error.email}
+            ></FieldText>
+            <FieldText
+              placeHolder="Ngày sinh"
+              label="Ngày sinh"
+              name="dob"
+              type="date"
+              register={register}
+              defaultValue={account.dob}
+              error={store.error.dob}
+            ></FieldText>
+            <FieldText
+              placeHolder="Số điện thoại"
+              label="Số điện thoại"
+              name="phone"
+              defaultValue={account.phone}
+              register={register}
             ></FieldText>
             <div className="body__change-password">
               <FieldText
-                placeHolder="Password"
-                label="Password"
+                placeHolder="Mật khẩu"
+                label="Mật khẩu"
                 type="password"
-                value="******************"
+                defaultValue="******************"
+                readOnly={true}
               ></FieldText>
-              <div className="change-password__link">Đổi mật khẩu</div>
+              <div
+                className="change-password__link"
+                onClick={() => {
+                  dispatch({
+                    type: ADMIN_INFO_ACTION.MODAL_OPEN,
+                  });
+                }}
+              >
+                Đổi mật khẩu
+              </div>
+              <Modal
+                state={store.modalState}
+                onClickOverlay={() => {
+                  dispatch({
+                    type: ADMIN_INFO_ACTION.MODAL_CLOSE,
+                  });
+                }}
+              >
+                <ChangePasswordForm
+                  info={account}
+                  error={store.error}
+                  dispatch={dispatch}
+                ></ChangePasswordForm>
+              </Modal>
             </div>
             <RadioButton
-              items={dataSet}
-              value="0"
-              onChange={() => {}}
+              items={["Nam", "Nữ", "Khác"]}
+              value={account.gender}
+              onChange={(e) => {
+                setValue("gender", +e.target.value);
+              }}
             ></RadioButton>
-          </div>
+          </form>
           <div className="content-edit__btn-group">
             <Button
-              className="admin-info__btn-edit btn--color-white"
-              content="Cancel"
+              className="admin-info__btn-edit btn--color-white "
+              content="Đóng"
+              onClick={handleCancelUpdate}
+            ></Button>
+            <Button
+              content="Cập nhật"
+              className="btn--hover-change-color"
               onClick={() => {
-                setActive("mini-show");
+                handleAdminInfo.updateInfoAccount(
+                  account.id,
+                  getValues(),
+                  dispatch_auth
+                );
               }}
             ></Button>
-            <Button content="Save"></Button>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-const dataSet = ["Male", "Female", "Other"];

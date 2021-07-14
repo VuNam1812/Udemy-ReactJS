@@ -52,6 +52,7 @@ export const RegisterForm = (props) => {
     if (!(await handleValidate.validateEmail(data.email, dispatch_error)))
       return;
     delete data.confirmPassword;
+
     props.dispatch({
       type: props.action.UPDATE_DATA,
       payload: data,

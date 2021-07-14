@@ -202,7 +202,7 @@ router.get("/:id/lessions", async (req, res) => {
     chapter["lectures"] = await lectureModel.allByChapter(chapter.id);
   }
 
-  res.json({
+  return res.json({
     data: chapters,
   });
 });
@@ -212,7 +212,7 @@ router.get("/:id/coursesJoin", auth, async (req, res) => {
   const { userId } = req.accessTokenPayload;
   const { getInfo } = req.query;
   if (+id !== +userId) {
-    res.json({
+    return res.json({
       data: {
         error_message: "Access Token Invalid.",
       },
@@ -225,7 +225,7 @@ router.get("/:id/coursesJoin", auth, async (req, res) => {
     await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
   }
 
-  res.json({
+  return res.json({
     data: courses,
   });
 });
@@ -236,7 +236,7 @@ router.get("/:id/coursesFavorite", auth, async (req, res) => {
   const { getInfo } = req.query;
 
   if (+id !== +userId) {
-    res.json({
+    return res.json({
       data: {
         error_message: "Access Token Invalid.",
       },
@@ -249,7 +249,7 @@ router.get("/:id/coursesFavorite", auth, async (req, res) => {
     await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
   }
 
-  res.json({
+  return res.json({
     data: courses,
   });
 });
@@ -279,7 +279,7 @@ router.get("/:id/feedbacks", async (req, res) => {
     ];
   }
 
-  res.json({
+  return res.json({
     data: course,
   });
 });

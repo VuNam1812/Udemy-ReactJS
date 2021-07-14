@@ -58,7 +58,7 @@ router.post("/", auth, upload.single("src"), async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const lecture = await lectureModel.single(id);
-  res.json({
+  return res.json({
     data: lecture,
   });
 });
@@ -121,7 +121,7 @@ router.get("/:id/courses", async (req, res) => {
     ]);
   }
 
-  res.json({
+  return res.json({
     data: [...courses],
   });
 });
