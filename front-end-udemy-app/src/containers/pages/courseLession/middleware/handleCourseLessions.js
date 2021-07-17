@@ -42,4 +42,18 @@ export const handleCourseLession = {
       });
     }
   },
+
+  checkAccountPayment: async (data, auth, history) => {
+    const ret = await courseApi.checkPaid({
+      courId: data.courId,
+    });
+    if (!ret.data.paid) {
+      if (auth) {
+        history.push(`/payment/${data.courId}`);
+        return;
+      }
+      history.push("/login");
+      return;
+    }
+  },
 };

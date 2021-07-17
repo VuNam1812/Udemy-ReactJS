@@ -1,6 +1,7 @@
 // @flow
 import React from "react";
 import { Button, Card } from "../../../components";
+import { Link } from "react-router-dom";
 import "./style.scss";
 import numeral from "numeral";
 export const CourseCard = ({ course, className }) => {
@@ -48,7 +49,9 @@ export const CourseCard = ({ course, className }) => {
             </div>
             <div className="info-course">
               <div className="info-course__left">
-                <span className="text--main-color">{numeral(course.joinerCount).format('0,0')}</span>{" "}
+                <span className="text--main-color">
+                  {numeral(course.joinerCount).format("0,0")}
+                </span>{" "}
                 học viên
               </div>
               <div className="info-course__right ">
@@ -60,9 +63,9 @@ export const CourseCard = ({ course, className }) => {
             <div className="btn-group">
               <Button
                 className=" btn--hover-horizontal-change-color"
-                content="Add Favorite"
+                content="Thêm vào yêu thích"
               ></Button>
-              <Button className="btn--color-white" content="Know more"></Button>
+              <Button className="btn--color-white" content="Chi tiết"></Button>
             </div>
           </div>
         </div>
@@ -83,9 +86,11 @@ export const CourseCard = ({ course, className }) => {
         <div className="item__body">
           <div className="item__title">
             <div className="title-main">
-              <h3 className="title-main__course-name">{course.courName}</h3>
+              <Link to={`/courses/${course.id}`} className="title-main__course-name">{course.courName}</Link>
               <h3 className="title-main__title-cate">{course.catName}</h3>
-              <p className="title-main__title-teacher">{course.teacherName}</p>
+              <Link to={`/teachers/${course.id_owner}`} className="title-main__title-teacher">
+                {course.teacherName}
+              </Link>
             </div>
             <h3 className="item__title-course-price">
               {numeral(course.price).format("0,0")} VND

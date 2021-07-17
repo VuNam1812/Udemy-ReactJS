@@ -4,8 +4,9 @@ import { Select } from "../../../../../components";
 import "./style.scss";
 import { categoryContext } from "../../../../../contexts/categories/categoryContext";
 import { reducer, COURSES_ADMIN_ACTION } from "./reducer/reducer";
+import { Link } from "react-router-dom";
+import { handleAdminCourse } from "./middlewares/handleAdminCourse";
 import numeral from "numeral";
-
 const initObject = {
   pagination: [],
   limit: 8,
@@ -18,7 +19,7 @@ const initObject = {
   currentCourses: [],
 };
 
-export const Courses = ({ courses, teachers }) => {
+export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
   const [listCourse, dispatch] = useReducer(reducer, initObject);
   const { store_cat } = useContext(categoryContext);
   useEffect(() => {
@@ -98,6 +99,11 @@ export const Courses = ({ courses, teachers }) => {
     setupPagenation(courses.length);
 
     dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_CURRENT_COURSES,
+      payload: courses,
+    });
+
+    dispatch({
       type: COURSES_ADMIN_ACTION.UPDATE_FILTER_SELECTED,
       payload: +index,
     });
@@ -170,6 +176,14 @@ export const Courses = ({ courses, teachers }) => {
     setupPagenation(newCourse.length);
   };
 
+  const handleDisableCourse = async (e) => {
+    const courId = +e.currentTarget.getAttribute("data-id");
+    await handleAdminCourse.disableCourse(
+      courses.filter((course) => course.id === courId)[0],
+      adminProfileDispatch
+    );
+  };
+
   return (
     <div className="courses">
       <div className="courses__filter">
@@ -234,22 +248,30 @@ export const Courses = ({ courses, teachers }) => {
           return (
             <div className="courses__item">
               {course.srcImage && (
-                <div
-                  className="item__image"
-                  style={{
-                    backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                      "\\",
-                      "/"
-                    )}")`,
-                  }}
-                ></div>
+                <div className='item__cover'>
+                  <div
+                    className="item__image"
+                    style={{
+                      backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
+                        "\\",
+                        "/"
+                      )}")`,
+                    }}
+                  ></div>
+                </div>
               )}
               <div className="item__info-course">
                 <div className="info-course__header">
-                  <div className="info-course__name">{course.courName}</div>
-                  <div>
+                  <Link to={`/courses/${course.id}`} className="info-course__name">{course.courName}</Link>
+                  <div
+                    data-id={course.id}
+                    className="info-course__status"
+                    onClick={handleDisableCourse}
+                  >
                     <i
-                      class="icon icon-success fa fa-unlock-alt fa-2x"
+                      class={`icon icon-success fa fa-${
+                        !course.isDelete ? "unlock-alt" : "lock disabled"
+                      } fa-2x`}
                       aria-hidden="true"
                     ></i>
                   </div>
@@ -257,7 +279,7 @@ export const Courses = ({ courses, teachers }) => {
                 <div className="info-course__categories">{course.catName}</div>
                 <div className="info-course__teacher">
                   Giảng viên:{" "}
-                  <span className="text-main">{course.teacherName}</span>
+                  <Link to={`/teachers/${course.id_owner}`} className="text-main">{course.teacherName}</Link>
                 </div>
                 <div className="info--block-flex">
                   <div className="info-course__lecture">

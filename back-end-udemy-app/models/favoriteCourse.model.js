@@ -16,10 +16,11 @@ module.exports = {
       .select(`${TBL_FAVORITELIST}.id as id_favorite`);
   },
 
-  async single(id) {
-    const chaptes = await db(TBL_FAVORITELIST)
-      .where("id", id)
-      .where("id_Delete", 0);
+  async single(filter = {}) {
+    const chaptes = await db(TBL_FAVORITELIST).where({
+      ...filter,
+      isDelete: 0,
+    });
 
     if (chaptes.length === 0) {
       return null;
@@ -32,5 +33,9 @@ module.exports = {
     return db(TBL_FAVORITELIST)
       .where("id", id)
       .update({ ...data });
+  },
+
+  add(data) {
+    return db(TBL_FAVORITELIST).insert({ ...data });
   },
 };

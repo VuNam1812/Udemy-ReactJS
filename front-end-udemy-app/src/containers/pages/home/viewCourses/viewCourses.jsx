@@ -1,6 +1,7 @@
 // @flow
 import React, { useState, useEffect } from "react";
 import "./style.scss";
+import { Link } from "react-router-dom";
 let exists = [];
 export const ViewCourses = (props) => {
   const [rotate, setRotate] = useState(true);
@@ -132,9 +133,12 @@ export const ViewCourses = (props) => {
         </div>
 
         <div className="course-preview">
-          <p className="course-preview__name">
+          <Link
+            to={`/courses/${props.courses[active]?.id}`}
+            className="course-preview__name"
+          >
             {props.courses[active] && props.courses[active].courName}
-          </p>
+          </Link>
           <p className="course-preview__category">
             {props.courses[active] && props.courses[active].catName}
           </p>

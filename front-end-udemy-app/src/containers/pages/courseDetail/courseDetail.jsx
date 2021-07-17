@@ -1,36 +1,59 @@
 // @flow
-import React, { useReducer, useEffect } from "react";
-import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
+import React, { useReducer, useEffect, useContext } from "react";
+import { Header } from "../../header/header";
 import { Footer } from "../../footer/footer";
 import { ReadyJoin } from "../home/readyJoin/readyJoin";
 import { InComing } from "../../incoming/inComing";
 import { Introduce, Videos, Teacher, Feedback } from "./descContent";
+import { CourseCat } from "./courseCat/courseCat";
 
 import { Button, NavTab } from "../../../components";
 import "./style.scss";
 
-import numeral from "numeral";
-import { reducer, COURSE_DETAIL_ACTION } from "./reducer/reducer";
-import { handleCourseDetail } from "./middleware/handleCourseDetal";
-import { useParams } from "react-router-dom";
+import { authContext } from "../../../contexts/auth/authContext";
 
+import numeral from "numeral";
+import { reducer } from "./reducer/reducer";
+import { handleCourseDetail } from "./middleware/handleCourseDetal";
+import { useParams, useHistory } from "react-router-dom";
+import $ from "jquery";
 const initData = {
   course: {},
   teacher: {},
   lectures: [],
   feedbacks: {},
   activeTab: 0,
+  coursesCat: [],
+  paid: false,
+  inFavoriteList: false,
 };
 
 export const CourseDetail = (props) => {
   const [store, dispatch] = useReducer(reducer, initData);
+  const { store_auth } = useContext(authContext);
   const params = useParams();
+  const history = useHistory();
+  useEffect(() => {
+    $("html,body").animate({ scrollTop: 0 }, 500);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await handleCourseDetail.loadCourseCat(store.course, dispatch);
+    })();
+  }, [store.course]);
 
   const handleTabActive = async (index) => {
     switch (index) {
       case 0:
-        if (Object.keys(store.course).length !== 0) return;
+        if (Object.keys(store.course).length !== 0 ) return;
         await handleCourseDetail.loadCourse(params, dispatch);
+        await handleCourseDetail.checkPaid(params, dispatch);
+        await handleCourseDetail.checkFavoriteList(
+          params,
+          store_auth.account,
+          dispatch
+        );
         break;
       case 1:
         if (Object.keys(store.teacher).length !== 0) return;
@@ -52,9 +75,20 @@ export const CourseDetail = (props) => {
     }
   };
 
+  const handleAddFavoriteList = async () => {
+    if (!store_auth.auth) {
+      history.push("/login");
+      return;
+    }
+    await handleCourseDetail.handleCourseFavorite(
+      store.course,
+      store.inFavoriteList,
+      dispatch
+    );
+  };
   return (
     <div className="course-detail">
-      <HeaderUpper className="header--zoom-80"></HeaderUpper>
+      <Header></Header>
       <InComing></InComing>
       <div className="wrap">
         <div className="course-detail__body">
@@ -65,7 +99,11 @@ export const CourseDetail = (props) => {
               blocks={[
                 <Introduce course={store.course}></Introduce>,
                 <Teacher teacher={store.teacher}></Teacher>,
-                <Videos lessions={store.lectures}></Videos>,
+                <Videos
+                  paid={store.paid}
+                  course={store.course}
+                  lessions={store.lectures}
+                ></Videos>,
                 <Feedback
                   rate={store.course.rate}
                   feedbacks={store.feedbacks}
@@ -100,13 +138,33 @@ export const CourseDetail = (props) => {
                     {numeral(store.course.price).format("0,0")} VND
                   </p>
                   <Button
-                    className="join-course__add-fav-btn btn-smaller btn--hover-horizontal-change-color"
-                    content="Thêm vào yêu thích!"
+                    onClick={handleAddFavoriteList}
+                    className={`join-course__add-fav-btn btn-smaller btn--hover-change-color ${
+                      store.inFavoriteList ? "added" : ""
+                    }`}
+                    content={`${
+                      store.inFavoriteList ? "Đã thêm" : "Thêm"
+                    } vào yêu thích`}
                   ></Button>
-                  <Button
-                    className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
-                    content="Ghi danh"
-                  ></Button>
+                  {store.paid ? (
+                    <Button
+                      className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
+                      content="Tiếp tục học"
+                      onClick={() => {
+                        history.push(
+                          `/lessions/${store.course.id}/${store.course.firstLecture}`
+                        );
+                      }}
+                    ></Button>
+                  ) : (
+                    <Button
+                      className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
+                      content="Ghi danh"
+                      onClick={() => {
+                        history.push(`/payment/${store.course.id}`);
+                      }}
+                    ></Button>
+                  )}
                 </div>
 
                 <div className="sub-desc">
@@ -140,6 +198,9 @@ export const CourseDetail = (props) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="wrap">
+        <CourseCat courses={store.coursesCat}></CourseCat>
       </div>
 
       <ReadyJoin></ReadyJoin>

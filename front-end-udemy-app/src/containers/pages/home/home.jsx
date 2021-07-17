@@ -16,6 +16,8 @@ import categoryApi from "../../../api/categoryAPI";
 import courseApi from "../../../api/courseAPI";
 import { reducer, HOME_ACTION } from "./reducer/reducer";
 
+import $ from "jquery";
+
 const initData = {
   topRate: [],
   topView: [],
@@ -44,6 +46,8 @@ export const Home = (props) => {
         payload: category_filter.data,
       });
     })();
+
+    $("html,body").animate({ scrollTop: 0 }, 500);
   }, []);
 
   return (

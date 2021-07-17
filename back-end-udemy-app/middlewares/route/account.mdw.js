@@ -5,11 +5,11 @@ const chapterModel = require("../../models/chapter.model");
 const lectureModel = require("../../models/lecture.model");
 const feedbackModel = require("../../models/feedback.model");
 const teacherInfo = require("../../models/teacherinfo.model");
+const joinInCourseModal = require("../../models/joinInCourse.model");
 
 const getMoreInfoAccount = async (teacher, info = []) => {
   for (const item_info of info) {
     if (info.length === 0) return;
-
     switch (item_info) {
       case "studentCount":
         await (async () => {
@@ -62,6 +62,13 @@ const getMoreInfoAccount = async (teacher, info = []) => {
         })();
         break;
 
+      case "paidCourseCount":
+        await (async () => {
+          const paid = await joinInCourseModal.allByUser(teacher.id);
+          
+          teacher.paidCourseCount = paid ? paid.length : 0;
+        })();
+        break;
       default:
         break;
     }
@@ -71,9 +78,9 @@ const getMoreInfoAccount = async (teacher, info = []) => {
 const getBasicInfoAccount = async (id, info = []) => {
   const user = await userModel.single(id);
 
-  ['password', 'rfToken', 'permission', 'email'].map(item => {
+  ["password", "rfToken", "permission", "email"].map((item) => {
     delete user[item];
-  })
+  });
 
   return user;
 };

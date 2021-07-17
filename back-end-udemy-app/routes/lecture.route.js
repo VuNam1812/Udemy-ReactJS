@@ -76,7 +76,7 @@ router.patch("/:id", auth, upload.single("src"), async (req, res) => {
     });
   }
   try {
-    if (req.file.path) {
+    if (req.file?.path) {
       const oldPath = (await lectureModel.single(id)).src;
       if (oldPath.length !== 0 && req.file.path !== oldPath) {
         fs.unlink(oldPath.replace("\\/g", "/"), () => {});

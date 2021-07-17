@@ -1,10 +1,44 @@
 // @flow
-import * as React from "react";
-import { Expander } from "../../../../../components";
+import React, { useState } from "react";
+import { Expander, Modal } from "../../../../../components";
+import ReactPlayer from "react-player";
 import "./style.scss";
-export const Videos = ({ lessions }) => {
+import { useHistory } from "react-router-dom";
+export const Videos = ({ course, lessions, paid }) => {
+  const history = useHistory();
+  const [urlSeleted, setUrlSeleted] = useState("");
+  const [stateModal, setStateModel] = useState("hidden");
+  const handleVideoLecture = (lecture) => {
+    if (paid) {
+      history.push(`/lessions/${course.id}/${lecture.id}`);
+    } else {
+      if (lecture.isCanPreview) {
+        setStateModel("visible");
+        setUrlSeleted(
+          `http://localhost:3030/${lecture.src?.replaceAll("\\", "/")}`
+        );
+      } else {
+        setUrlSeleted("");
+      }
+    }
+  };
+
   return (
     <div className="videos">
+      <Modal
+        state={stateModal}
+        onClickOverlay={() => {
+          setStateModel("close");
+        }}
+      >
+        <div className="preview-lession">
+          <ReactPlayer
+            controls={true}
+            url={urlSeleted}
+            className={`preview-lession__clip`}
+          ></ReactPlayer>
+        </div>
+      </Modal>
       {lessions.length &&
         lessions.map((lession) => {
           return (
@@ -13,8 +47,11 @@ export const Videos = ({ lessions }) => {
                 lession.lectures.map((lecture, index) => {
                   return (
                     <div
+                      onClick={() => {
+                        handleVideoLecture(lecture);
+                      }}
                       className={`lecture-video ${
-                        lecture.isCanPreview ? "" : "disabled"
+                        lecture.isCanPreview || paid ? "" : "disabled"
                       }`}
                     >
                       <p className="lecture-video__name">

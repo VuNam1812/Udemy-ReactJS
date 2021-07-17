@@ -51,7 +51,7 @@ export const Payment = (props) => {
               account={store.user}
               dispatch={dispatch}
             ></ConfirmCourse>
-            <CompletePayment></CompletePayment>
+            <CompletePayment course={store.course}></CompletePayment>
           </div>
         </div>
       </div>

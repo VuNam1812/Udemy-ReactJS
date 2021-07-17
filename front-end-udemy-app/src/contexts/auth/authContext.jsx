@@ -13,13 +13,12 @@ export const AuthProvider = ({ children }) => {
   const [store_auth, dispatch_auth] = useReducer(reducer, initData);
 
   const checkAuth = async () => {
-    const res = (await authApi.checkAuth()).data;
+    const res = (await authApi.checkAuth());
     if (res.authenticated) {
       dispatch_auth({
         type: AUTH_ACTION.UPDATE_AUTH,
         payload: res.authenticated,
       });
-      console.log(res.accountInfo);
       dispatch_auth({
         type: AUTH_ACTION.UPDATE_ACCOUNT,
         payload: res.accountInfo,
@@ -29,12 +28,12 @@ export const AuthProvider = ({ children }) => {
 
   const logoutUser = async () => {
     const res = await authApi.logout();
+
     if (!res.authenticated) {
       dispatch_auth({
         type: AUTH_ACTION.UPDATE_AUTH,
         payload: res.authenticated,
       });
-      
       dispatch_auth({
         type: AUTH_ACTION.DELETE_ACCOUNT,
       });

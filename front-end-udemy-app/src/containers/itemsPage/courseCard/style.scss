@@ -4,6 +4,16 @@
   box-sizing: border-box;
   border-radius: 0.75rem;
 
+  &.card--zoom-80 {
+    .cover-image {
+      zoom: 80%;
+    }
+
+    .item__body {
+      zoom: 80%;
+    }
+  }
+
   &.item--fill-max {
     .item {
       height: 100%;
@@ -78,6 +88,12 @@
           font-family: "Montserrat";
           opacity: 0.8;
           font-size: 1rem;
+          text-decoration: none;
+          color: $--text-color-bold;
+          transition: all 0.3s;
+          &:hover {
+            color: $--green-main;
+          }
         }
         &__title-cate {
           margin: 0;
@@ -91,10 +107,15 @@
           overflow: hidden;
           margin: 0.5rem 0;
           color: $--blue-main;
+          text-decoration: none;
           font-weight: bold;
           display: -webkit-box;
           -webkit-line-clamp: 4;
           -webkit-box-orient: vertical;
+          transition: all 0.3s;
+          &:hover {
+            color: $--danger;
+          }
         }
       }
 

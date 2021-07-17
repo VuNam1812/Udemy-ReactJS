@@ -3,8 +3,13 @@ const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth.mdw");
+
 const userModel = require("../models/user.model");
+const favoriteCourseModel = require("../models/favoriteCourse.model");
+const joinModel = require("../models/joinInCourse.model");
+
 const handleAccount = require("../middlewares/route/account.mdw");
+const handleCourse = require("../middlewares/route/course.mdw");
 
 const fs = require("fs");
 
@@ -34,7 +39,15 @@ router.post("/", async function (req, res) {
 });
 
 router.get("/", async (req, res) => {
-  const allUser = await userModel.all();
+  const { getInfo } = req.query;
+  const allUser = await userModel.all({ permission: 2 });
+  for (const user of allUser) {
+    delete user.rfToken;
+    delete user.password;
+
+    await handleAccount.getMoreInfoAccount(user, [].concat(getInfo));
+  }
+
   return res.json({
     data: [...allUser],
   });
@@ -74,6 +87,54 @@ router.get("/verify", auth, async (req, res) => {
   });
 });
 
+router.get("/:id/coursesJoin", auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.accessTokenPayload;
+  const { getInfo } = req.query;
+  if (+id !== +userId) {
+    return res.json({
+      data: {
+        error_message: "Access Token Invalid.",
+      },
+    });
+  }
+
+  const courses = await joinModel.allByUser(userId);
+
+  for (const course of courses) {
+    await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
+  }
+
+  return res.json({
+    data: courses,
+  });
+});
+
+router.get("/:id/coursesFavorite", auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.accessTokenPayload;
+  const { getInfo } = req.query;
+
+
+  if (+id !== +userId) {
+    return res.json({
+      data: {
+        error_message: "Access Token Invalid.",
+      },
+    });
+  }
+
+  const courses = await favoriteCourseModel.allByUser(userId);
+
+  for (const course of courses) {
+    await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
+  }
+
+  return res.json({
+    data: courses,
+  });
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const { getInfo } = req.query;
@@ -89,6 +150,37 @@ router.get("/:id", async (req, res) => {
   });
 });
 
+router.patch("/:id/active", auth, async (req, res) => {
+  const { id } = req.params;
+  const { permission } = req.accessTokenPayload;
+
+  if (permission !== 0) {
+    return res.json({
+      data: {
+        updated: false,
+        err_message: "permission invalid",
+      },
+    });
+  }
+
+  try {
+    const ret = await userModel.update(id, {
+      status: req.body.status,
+    });
+    return res.json({
+      data: {
+        updated: true,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      data: {
+        updated: false,
+      },
+    });
+  }
+});
+
 router.patch("/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
@@ -100,7 +192,6 @@ router.patch("/:id", auth, async (req, res) => {
       },
     });
   }
-
 
   if (req.body.password)
     req.body.password = bcrypt.hashSync(req.body.password, 10);

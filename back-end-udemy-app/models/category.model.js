@@ -21,13 +21,37 @@ module.exports = {
       .orWhere(`${TBL_CATEGORIES}.id_parentCat`, id);
   },
 
-  async single(id) {
-    const users = await db(TBL_CATEGORIES).where("id", id);
+  async singleByCatName(name) {
+    const cats = await db(TBL_CATEGORIES).where("catName", `N'%${name}%'`);
 
-    if (users.length === 0) {
+    if (cats.length === 0) {
       return null;
     }
 
-    return users[0];
+    return cats[0];
+  },
+
+  async single(id) {
+    const cats = await db(TBL_CATEGORIES).where("id", id);
+
+    if (cats.length === 0) {
+      return null;
+    }
+
+    return cats[0];
+  },
+
+  add(data) {
+    return db(TBL_CATEGORIES).insert({ ...data });
+  },
+
+  update(id, data) {
+    return db(TBL_CATEGORIES)
+      .where("id", id)
+      .update({ ...data });
+  },
+
+  delete(id) {
+    return db(TBL_CATEGORIES).where("id", id).del();
   },
 };

@@ -70,13 +70,22 @@
       background-color: $--white;
       border-radius: 0.3rem;
       padding: 0.25rem;
+      &:hover {
+        .item__image {
+          transform: rotateZ(5deg) scale(1.15);
+        }
+      }
       .item {
+        &__cover {
+          overflow: hidden;
+        }
         &__image {
           border-radius: 0.3rem 0.3rem 0rem 0rem;
           background-position: 50% 100%;
           background-size: cover;
           background-repeat: no-repeat;
           height: 8rem;
+          transition: all 0.3s;
         }
 
         &__info-course {
@@ -110,6 +119,9 @@
               margin-bottom: 0.25rem;
               zoom: 70%;
               .icon {
+                &.disabled {
+                  color: $--danger;
+                }
                 cursor: pointer;
                 transition: all 0.3s;
                 &:hover {
@@ -125,6 +137,11 @@
               font-weight: 900;
               color: $--blue-main;
               font-family: "Montserrat";
+              text-decoration: none;
+              cursor: pointer;
+              &:hover {
+                color: $--green-main;
+              }
             }
 
             &__categories {
@@ -136,6 +153,12 @@
             &__teacher {
               margin-top: 0.25rem;
               font-size: 0.8rem;
+              .text-main {
+                text-decoration: none;
+                &:hover {
+                  color: $--blue-main;
+                }
+              }
             }
 
             &__price {

@@ -3,12 +3,11 @@ import * as React from "react";
 
 import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
 import { Footer } from "../../footer/footer";
-import teacherImg from "../../../public/image/teacher_1.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Mousewheel, Pagination } from "swiper/core";
 import { CourseCard } from "../../itemsPage";
 
-import { reducer, INSTRUCTOR_DETAIL_ACTION } from "./reducer/reducer";
+import { reducer } from "./reducer/reducer";
 import { handleInstructorPage } from "./middleware/handleInstructorPage";
 import "./style.scss";
 import { useReducer, useEffect } from "react";

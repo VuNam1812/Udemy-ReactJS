@@ -11,8 +11,8 @@ export const Header = (props) => {
         <HeaderTop className="header--zoom-80"></HeaderTop>
       )}
       <HeaderUpper
-        className={store_auth.auth ? "header--zoom-80" : ""}
-        offsetTop={store_auth.auth ? 0 : 84}
+        className={"header--zoom-80"}
+        offsetTop={store_auth.auth ? 0 : 67.19}
       ></HeaderUpper>
     </div>
   );

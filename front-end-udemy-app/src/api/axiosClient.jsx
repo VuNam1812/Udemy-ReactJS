@@ -16,11 +16,13 @@ axiosClient.defaults.withCredentials = true;
 
 axiosClient.interceptors.request.use(async (config) => {
   if (isTokenExpired) {
-    refreshTokenRequest = refreshTokenRequest ? refreshTokenRequest : refreshAccessToken();
+    refreshTokenRequest = refreshTokenRequest
+      ? refreshTokenRequest
+      : refreshAccessToken();
 
     const newToken = await refreshTokenRequest;
     localStorage.udemyapp_accessToken = newToken;
-    
+
     refreshTokenRequest = null;
 
     isTokenExpired = false;
@@ -38,25 +40,22 @@ axiosClient.interceptors.response.use(
         localStorage.udemyapp_refreshToken = response.data.refreshToken;
       }
       if (response.data.error && response.data.error === "Token expired") {
-       
         isTokenExpired = true;
         const originRequest = { ...response.config };
         return axiosClient(originRequest);
       }
-      
+
       return response.data;
     }
   },
   (error) => {
-    
     throw error;
   }
 );
 
 const refreshAccessToken = async () => {
   const url = "http://localhost:3030/api/auth/refresh";
-  const newToken = await axios.post(url,
-    {
+  const newToken = await axios.post(url, {
     accessToken: localStorage.udemyapp_accessToken,
     refreshToken: localStorage.udemyapp_refreshToken,
   });

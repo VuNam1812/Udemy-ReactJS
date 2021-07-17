@@ -17,17 +17,14 @@ const courseApi = {
     const url = `courses/${id}/feedbacks`;
     return axiosClient.get(url);
   },
-  getCourseJoin: (id, data = {}) => {
-    const url = `courses/${id}/coursesJoin`;
-    return axiosClient.get(url, { params: { ...data } });
-  },
-  getCourseFavorite: (id, data = {}) => {
-    const url = `courses/${id}/coursesFavorite`;
-    return axiosClient.get(url, { params: { ...data } });
-  },
 
   paymentCourse: (id) => {
     const url = `courses/${id}/payment`;
+    return axiosClient.post(url);
+  },
+
+  addFavoriteList: (id) => {
+    const url = `courses/${id}/favorite`;
     return axiosClient.post(url);
   },
 
@@ -40,6 +37,11 @@ const courseApi = {
     return axiosClient.post(url, { ...data });
   },
 
+  deleteFavoriteList: (id) => {
+    const url = `courses/${id}/favorite`;
+    return axiosClient.delete(url);
+  },
+
   uploadInfo: (id, data) => {
     const url = `courses/${id}`;
     return axiosClient.patch(url, { ...data });
@@ -48,6 +50,11 @@ const courseApi = {
   uploadImage: (id, data) => {
     const url = `courses/${id}/uploadImage`;
     return axiosClient.put(url, data);
+  },
+
+  updateActive: (id, data) => {
+    const url = `courses/${id}/active`;
+    return axiosClient.patch(url, { ...data });
   },
 };
 export default courseApi;

@@ -18,12 +18,12 @@ const initState = {
   account: {},
   courses: [],
   teachers: [],
-  user: [],
+  users: [],
 };
 
 export const AdminProfile = (props) => {
   const [store_adminProfile, dispatch] = useReducer(reducer, initState);
-  const { store_auth } = useContext(authContext);
+  const { store_auth, logoutUser } = useContext(authContext);
   useEffect(() => {
     (async () => {
       await handleAdminProfile.loadAccount(store_auth.account, dispatch);
@@ -40,6 +40,10 @@ export const AdminProfile = (props) => {
             await handleAdminProfile.loadTeachers(dispatch);
           break;
         case 4:
+          if (Object.keys(store_adminProfile.teachers).length === 0)
+            await handleAdminProfile.loadTeachers(dispatch);
+          if (Object.keys(store_adminProfile.users).length === 0)
+            await handleAdminProfile.loadUsers(dispatch);
           break;
         default:
           break;
@@ -50,7 +54,11 @@ export const AdminProfile = (props) => {
   return (
     <div className="admin-profile">
       <Background className="admin-profile__bg"></Background>
-      <NavPage activeItem={store_adminProfile} dispatch={dispatch}></NavPage>
+      <NavPage
+        logoutUser={logoutUser}
+        activeItem={store_adminProfile}
+        dispatch={dispatch}
+      ></NavPage>
       <AdminInfo
         account={store_adminProfile.account}
         adminProfileDispatch={dispatch}
@@ -66,12 +74,19 @@ export const AdminProfile = (props) => {
                   <Courses
                     teachers={store_adminProfile.teachers}
                     courses={store_adminProfile.courses}
+                    adminProfileDispatch={dispatch}
                   ></Courses>
                 );
               case 3:
                 return <Categories></Categories>;
               case 4:
-                return <Accounts></Accounts>;
+                return (
+                  <Accounts
+                    teachers={store_adminProfile.teachers}
+                    users={store_adminProfile.users}
+                    adminProfileDispatch={dispatch}
+                  ></Accounts>
+                );
               default:
                 return <></>;
             }

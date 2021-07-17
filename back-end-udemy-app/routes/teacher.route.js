@@ -13,9 +13,6 @@ const teacherinfoModel = require("../models/teacherinfo.model");
 
 const router = express.Router();
 
-//const authMdw = require("../../middlewares/auth.mdw");
-
-//const upload = require('../../middlewares/multer.mdw').UploadUser();
 const EmptyImage = "public/imgs/Users/UserEmptyImage.jpg";
 
 router.post("/", async function (req, res) {
@@ -39,14 +36,18 @@ router.post("/", async function (req, res) {
 });
 
 router.get("/", async (req, res) => {
+  const { getInfo } = req.query;
   const allUser = await userModel.all({
     permission: 1,
   });
 
-  allUser.forEach((teacher) => {
-    delete teacher.rfToken;
-    delete teacher.password;
-  });
+  for (const user of allUser) {
+    delete user.rfToken;
+    delete user.password;
+
+    await handleAccount.getMoreInfoAccount(user, [].concat(getInfo));
+  }
+
 
   return res.json({
     data: {
@@ -85,13 +86,9 @@ router.patch("/:id/moreInfo", auth, async (req, res) => {
   }
 
   try {
-    teacherinfoModel
-      .update(userId, {
-        ...req.body,
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await teacherinfoModel.update(userId, {
+      ...req.body,
+    });
     return res.json({
       data: {
         updated: true,

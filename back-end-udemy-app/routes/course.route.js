@@ -90,6 +90,7 @@ router.post("/", auth, async (req, res) => {
 router.get("/payment", auth, async (req, res) => {
   const { courId } = req.query;
   const { userId } = req.accessTokenPayload;
+
   const pay = await joinInCourseModel.singleByIdUserAndCourse(+userId, +courId);
 
   return res.json({
@@ -171,15 +172,6 @@ router.post("/:id/payment", auth, async (req, res) => {
       joinerCount: (await courseModel.single(+id)).joinerCount + 1,
     });
 
-    const favorites = await favoriteCourseModel.allByUser(+userId);
-
-    await favoriteCourseModel.update(
-      favorites.filter((value) => value.id === +id)[0].id_favorite,
-      {
-        isDelete: 1,
-      }
-    );
-
     res.json({
       data: {
         result: true,
@@ -207,51 +199,49 @@ router.get("/:id/lessions", async (req, res) => {
   });
 });
 
-router.get("/:id/coursesJoin", auth, async (req, res) => {
+router.post("/:id/favorite", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
-  const { getInfo } = req.query;
-  if (+id !== +userId) {
-    return res.json({
-      data: {
-        error_message: "Access Token Invalid.",
-      },
-    });
-  }
 
-  const courses = await joinModel.allByUser(userId);
-
-  for (const course of courses) {
-    await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
-  }
+  const ret = await favoriteCourseModel.add({
+    id_user: userId,
+    id_course: id,
+    isDelete: 0,
+  });
 
   return res.json({
-    data: courses,
+    data: {
+      created: true,
+    },
   });
 });
 
-router.get("/:id/coursesFavorite", auth, async (req, res) => {
+router.delete("/:id/favorite", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
-  const { getInfo } = req.query;
 
-  if (+id !== +userId) {
+  try {
+    const ret = await favoriteCourseModel.single({
+      id_user: +userId,
+      id_course: +id,
+    });
+    
+    await favoriteCourseModel.update(ret.id, {
+      isDelete: 1,
+    });
+
     return res.json({
       data: {
-        error_message: "Access Token Invalid.",
+        deleted: true,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      data: {
+        deleted: false,
       },
     });
   }
-
-  const courses = await favoriteCourseModel.allByUser(userId);
-
-  for (const course of courses) {
-    await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
-  }
-
-  return res.json({
-    data: courses,
-  });
 });
 
 router.get("/:id/feedbacks", async (req, res) => {
@@ -299,9 +289,43 @@ router.patch("/:id", auth, async (req, res) => {
     });
   }
 
+  delete req.body.isDelete;
+
   try {
     const ret = await courseModel.update(id, {
       ...req.body,
+      lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
+    });
+    return res.json({
+      data: {
+        updated: true,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      data: {
+        updated: false,
+      },
+    });
+  }
+});
+
+router.patch("/:id/active", auth, async (req, res) => {
+  const { id } = req.params;
+  const { permission } = req.accessTokenPayload;
+
+  if (permission !== 0) {
+    return res.json({
+      data: {
+        updated: false,
+        err_message: "permission invalid",
+      },
+    });
+  }
+
+  try {
+    const ret = await courseModel.update(id, {
+      isDelete: req.body.isDelete,
       lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
     });
     return res.json({

@@ -29,24 +29,22 @@ router.get("/", async (req, res) => {
     );
 
     return res.json({
-      data: {
-        authenticated: true,
-        accountInfo: {
-          id: user.id,
-          username: `${user.firstName} ${user.lastName}`,
-          role: user.permission,
-          srcImage: user.srcImage,
-        },
-        accessToken: accessToken,
-        refreshToken: user.refreshToken,
+      authenticated: true,
+      accountInfo: {
+        id: user.id,
+        username: `${user.firstName} ${user.lastName}`,
+        role: user.permission,
+        srcImage: user.srcImage,
       },
+      accessToken: accessToken,
+      refreshToken: user.rfToken,
     });
   }
 
   return res.json({
-    data: {
-      authenticated: false,
-    },
+    authenticated: false,
+    accessToken: "",
+    refreshToken: "",
   });
 });
 

@@ -5,9 +5,9 @@ const teacherApi = {
     const url = "teachers";
     return axiosClient.post(url, { ...data });
   },
-  getAll: () => {
+  getAll: (data) => {
     const url = "teachers";
-    return axiosClient.get(url);
+    return axiosClient.get(url, {params: {...data}});
   },
   getSingle: (id, data) => {
     const url = `teachers/${id}`;

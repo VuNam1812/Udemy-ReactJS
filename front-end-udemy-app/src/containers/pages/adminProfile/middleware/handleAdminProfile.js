@@ -26,11 +26,24 @@ export const handleAdminProfile = {
   },
 
   loadTeachers: async (dispatch) => {
-    const res = await teacherApi.getAll();
-    console.log(res.data);
+    const res = await teacherApi.getAll({
+      getInfo: ["courseCount"],
+    });
+
     dispatch({
       type: ADMIN_PROFILE_ACTION.UPDATE_TEACHERS,
       payload: res.data.all,
     });
+  },
+
+  loadUsers: async (dispatch) => {
+    const res = await accountApi.getAll({
+      getInfo: ["paidCourseCount"],
+    });
+
+    dispatch({
+      type: ADMIN_PROFILE_ACTION.UPDATE_USERS,
+      payload: res.data
+    })
   },
 };

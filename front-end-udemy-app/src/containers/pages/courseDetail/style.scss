@@ -99,6 +99,11 @@
 
             &__add-fav-btn {
               margin-top: 1rem;
+              &.added {
+                .button__clip-path-background {
+                  background-color: $--blue-main;
+                }
+              }
             }
             &__join-btn {
               transform: none;

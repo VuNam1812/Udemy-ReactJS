@@ -5,12 +5,21 @@ const accountApi = {
     const url = "accounts";
     return axiosClient.post(url, { ...data });
   },
-  getAll: () => {
+  getAll: (data) => {
     const url = "accounts";
-    return axiosClient.get(url);
+    return axiosClient.get(url, { params: { ...data } });
   },
   getSingle: (id, data) => {
     const url = `accounts/${id}`;
+    return axiosClient.get(url, { params: { ...data } });
+  },
+
+  getCourseJoin: (id, data = {}) => {
+    const url = `accounts/${id}/coursesJoin`;
+    return axiosClient.get(url, { params: { ...data } });
+  },
+  getCourseFavorite: (id, data = {}) => {
+    const url = `accounts/${id}/coursesFavorite`;
     return axiosClient.get(url, { params: { ...data } });
   },
 
@@ -31,6 +40,11 @@ const accountApi = {
 
   updateInfo: (id, data) => {
     const url = `accounts/${id}`;
+    return axiosClient.patch(url, { ...data });
+  },
+
+  updateActive: (id, data) => {
+    const url = `accounts/${id}/active`;
     return axiosClient.patch(url, { ...data });
   },
 };

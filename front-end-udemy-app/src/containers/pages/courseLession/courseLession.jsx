@@ -1,15 +1,18 @@
 // @flow
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, useContext } from "react";
 
 import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
-import { Expander } from "../../../components";
+
 import "./style.scss";
 
 import { handleCourseLession } from "./middleware/handleCourseLessions";
+import { authContext } from "../../../contexts/auth/authContext";
 import { reducer, LESSION_ACTION } from "./reducer/reducer";
-import { useParams } from "react-router";
+import { useParams, useHistory } from "react-router-dom";
 
 import { InfoCourse, LessionVideos, VideoPlayer } from "./pageItem";
+
+import $ from 'jquery';
 
 const initData = {
   course: {},
@@ -20,7 +23,17 @@ const initData = {
 
 export const CourseLession = (props) => {
   const [store_lecture, dispatch] = useReducer(reducer, initData);
+  const { store_auth } = useContext(authContext);
   const params = useParams();
+  const history = useHistory();
+  useEffect(() => {
+    (async () => {
+      if (Object.keys(store_auth.account) !== 0) {
+        await handleCourseLession.checkAccountPayment(params,store_auth.auth, history);
+      }
+    })();
+  }, [params]);
+
   useEffect(() => {
     (async () => {
       dispatch({
@@ -30,10 +43,11 @@ export const CourseLession = (props) => {
       await handleCourseLession.loadCourse(params, dispatch);
       await handleCourseLession.loadLessions(params, dispatch);
     })();
+
   }, [params.courId]);
 
   useEffect(() => {
-    console.log(store_lecture.active);
+    $("html,body").animate({ scrollTop: 0 }, 500);
   }, [store_lecture.active]);
 
   useEffect(() => {

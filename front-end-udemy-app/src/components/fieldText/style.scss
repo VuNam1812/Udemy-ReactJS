@@ -10,6 +10,10 @@
     .field-text__input {
       border-radius: 0.3rem;
     }
+
+    .field-text__date-time {
+      border-radius: 0.3rem;
+    }
   }
 
   width: 100%;
@@ -67,7 +71,7 @@
     color: rgba($color: $--dark, $alpha: 0.7) !important;
     &::placeholder {
       font-weight: normal;
-      font-family: 'Quicksand' !important;
+      font-family: "Quicksand" !important;
     }
     &:focus {
       box-shadow: 0px 0px 0px 3px transparent;

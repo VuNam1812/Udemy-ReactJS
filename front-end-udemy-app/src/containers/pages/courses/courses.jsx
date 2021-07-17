@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useReducer } from "react";
-import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
+import { Header } from "../../header/header";
 import { CourseList } from "./courseList/courseList";
 import { Footer } from "../../footer/footer";
 import { useLocation, useParams, useRouteMatch } from "react-router-dom";
@@ -33,7 +33,11 @@ export const Courses = (props) => {
   }, [url]);
 
   useEffect(() => {
-    handleCoursePage.filterCourses(store_courses.courses, store_courses.filter, dispatch_courses);
+    handleCoursePage.filterCourses(
+      store_courses.courses,
+      store_courses.filter,
+      dispatch_courses
+    );
   }, [store_courses.filter]);
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export const Courses = (props) => {
 
   return (
     <div className="courses-page">
-      <HeaderUpper className="header--zoom-80"></HeaderUpper>
+      <Header></Header>
       <div className="courses-page__body">
         <div className="wrap">
           <CourseList

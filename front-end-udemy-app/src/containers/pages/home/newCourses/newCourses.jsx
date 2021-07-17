@@ -6,6 +6,8 @@ import SwiperCore, { Mousewheel, Pagination } from "swiper/core";
 import numeral from "numeral";
 import newCourseImage from "../../../../public/image/new_course.jpg";
 
+import { Link } from "react-router-dom";
+
 SwiperCore.use([Mousewheel, Pagination]);
 
 export const NewCourses = (props) => {
@@ -49,9 +51,12 @@ export const NewCourses = (props) => {
 
                     <div className="body-item__content">
                       <div className="course-info">
-                        <div className="course-info__name">
+                        <Link
+                          to={`/courses/${course.id}`}
+                          className="course-info__name"
+                        >
                           {course.courName}
-                        </div>
+                        </Link>
                         <div className="course-info__mentor">
                           Mr. {course.teacherName}
                         </div>

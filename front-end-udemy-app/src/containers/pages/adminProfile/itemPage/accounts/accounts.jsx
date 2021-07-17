@@ -1,9 +1,62 @@
 // @flow
-import * as React from "react";
-import { NavTab, Button } from "../../../../../components";
-import teacherImage from "../../../../../public/image/teacher_1.png";
+import React, { useReducer, useRef } from "react";
+import { NavTab, Button, Modal, FieldText } from "../../../../../components";
 import "./style.scss";
-export const Accounts = (propss) => {
+import { reducer, enumState, ACCOUNT_ADMIN_ACTION } from "./reducer/reducer";
+import { handleAdminAccount } from "./middlewares/handleAdminCategory";
+import { useForm } from "react-hook-form";
+
+const initData = {
+  modalState: enumState.HIDDEN,
+  error: {
+    firstName: {
+      isShow: false,
+      message: "*Hiện đang chưa có dữ liệu",
+    },
+    lastName: {
+      isShow: false,
+      message: "*Hiện đang chưa có dữ liệu",
+    },
+    email: {
+      isShow: false,
+      message: "*Hiện đang chưa có dữ liệu",
+    },
+    password: {
+      isShow: false,
+      message: "*Hiện đang chưa có dữ liệu",
+    },
+  },
+};
+
+export const Accounts = ({ teachers, users, adminProfileDispatch }) => {
+  const [store, dispatch] = useReducer(reducer, initData);
+  const { register, handleSubmit, setValue } = useForm();
+  const form = useRef();
+  const submit = useRef();
+  const handleCreateAccountModal = () => {
+    form.current.reset();
+    setValue("password", "");
+    dispatch({
+      type: ACCOUNT_ADMIN_ACTION.MODAL_OPEN,
+    });
+  };
+
+  const onCreateAccount = async (data) => {
+    if (!handleAdminAccount.validateAll(data, dispatch)) return;
+    if (await handleAdminAccount.validEmailExists(data, dispatch)) return;
+
+    const result = await handleAdminAccount.createAccountTeacher(
+      data,
+      adminProfileDispatch
+    );
+
+    if (result) {
+      dispatch({
+        type: ACCOUNT_ADMIN_ACTION.MODAL_CLOSE,
+      });
+    }
+  };
+
   return (
     <div className="account-manager">
       <NavTab
@@ -11,30 +64,137 @@ export const Accounts = (propss) => {
         blocks={[
           <div className="accounts-list">
             <div className="flex-block">
+              <Modal
+                state={store.modalState}
+                onClickOverlay={() => {
+                  dispatch({
+                    type: ACCOUNT_ADMIN_ACTION.MODAL_CLOSE,
+                  });
+                }}
+              >
+                <div className="modal-create-account">
+                  <div className="modal-create-account__header">
+                    <h3 className="header__create-account-title">
+                      Tạo tài khoản
+                    </h3>
+                  </div>
+                  <div className="modal-create-account__content">
+                    <form
+                      onSubmit={handleSubmit(onCreateAccount)}
+                      ref={form}
+                      className="content-create-account__form"
+                    >
+                      <div className="block-flex">
+                        <FieldText
+                          placeHolder="Họ"
+                          label="Họ"
+                          name="firstName"
+                          register={register}
+                          className="field--none-rounded"
+                          error={store.error.firstName}
+                        ></FieldText>
+                        <FieldText
+                          placeHolder="Tên"
+                          label="Tên"
+                          name="lastName"
+                          register={register}
+                          className="field--none-rounded"
+                          error={store.error.lastName}
+                        ></FieldText>
+                      </div>
+                      <FieldText
+                        placeHolder="Email"
+                        label="Email"
+                        name="email"
+                        register={register}
+                        className="field--none-rounded"
+                        error={store.error.email}
+                      ></FieldText>
+                      <FieldText
+                        placeHolder="Ngày sinh"
+                        label="Ngày sinh"
+                        name="dob"
+                        type="date"
+                        register={register}
+                        className="field--none-rounded"
+                        defaultValue={new Date()}
+                      ></FieldText>
+                      <FieldText
+                        placeHolder="Vai trò"
+                        label="Vai trò"
+                        className="field--none-rounded"
+                        defaultValue="Giảng viên"
+                        readOnly={true}
+                      ></FieldText>
+                      <FieldText
+                        placeHolder="Mật khẩu"
+                        label="Mật khẩu"
+                        className="field--none-rounded"
+                        type="password"
+                        onBlur={(e) => {
+                          setValue("password", e.target.value);
+                        }}
+                        error={store.error.password}
+                      ></FieldText>
+
+                      <input type="submit" ref={submit} hidden></input>
+                    </form>
+                  </div>
+                  <div className="modal-create-account__footer">
+                    <Button
+                      className="btn--hover-change-color"
+                      content="Tạo tài khoản"
+                      onClick={() => {
+                        submit.current.click();
+                      }}
+                    ></Button>
+                  </div>
+                </div>
+              </Modal>
               <p className="accounts-list__title">Danh sách giảng viên</p>
               <Button
+                onClick={handleCreateAccountModal}
                 content="Thêm giảng viên"
-                className="btn-smaller accounts-list__add-btn"
+                className="btn-smaller accounts-list__add-btn btn--hover-vertical-change-color"
               ></Button>
             </div>
             <div className="accounts-list__group">
-              {dataSet_Teachers.map((item) => {
+              {teachers.map((teacher) => {
                 return (
-                  <div className={`accounts-group__item ${item}`}>
-                    <div
-                      className="item__image"
-                      style={{ backgroundImage: `url(${teacherImage})` }}
-                    ></div>
+                  <div
+                    className={`accounts-group__item ${
+                      teacher.status === 0 ? "disable" : ""
+                    }`}
+                  >
+                    {teacher.srcImage && (
+                      <div
+                        className="item__image"
+                        style={{
+                          backgroundImage: `url("http://localhost:3030/${teacher.srcImage.replaceAll(
+                            "\\",
+                            "/"
+                          )}")`,
+                        }}
+                      ></div>
+                    )}
                     <div className="item__info">
-                      <p className="item__info-name">Vũ Thành Nam</p>
+                      <p className="item__info-name">{`${teacher.firstName} ${teacher.lastName}`}</p>
                       <p className="item__info-courses">
-                        <span>12</span> khóa học
+                        <span>{teacher.courseCount}</span> khóa học
                       </p>
                     </div>
-                    <div className="item__btn-lock">
+                    <div
+                      className="item__btn-lock"
+                      onClick={() => {
+                        handleAdminAccount.activeAccount(
+                          teacher,
+                          adminProfileDispatch
+                        );
+                      }}
+                    >
                       <i
                         className={`icon fa fa-${
-                          item === "disable" ? "lock" : "unlock-alt"
+                          teacher.status === 0 ? "lock" : "unlock-alt"
                         }`}
                         aria-hidden="true"
                       ></i>
@@ -47,22 +207,43 @@ export const Accounts = (propss) => {
           <div className="accounts-list">
             <p className="accounts-list__title">Danh sách học viên</p>
             <div className="accounts-list__group">
-              {dataSet_Students.map((item) => {
+              {users.map((user) => {
                 return (
-                  <div className={`accounts-group__item ${item}`}>
-                    <div
-                      className="item__image"
-                      style={{ backgroundImage: `url(${teacherImage})` }}
-                    ></div>
+                  <div
+                    className={`accounts-group__item ${
+                      user.status === 0 ? "disable" : ""
+                    }`}
+                  >
+                    {user.srcImage && (
+                      <div
+                        className="item__image"
+                        style={{
+                          backgroundImage: `url("http://localhost:3030/${user.srcImage.replaceAll(
+                            "\\",
+                            "/"
+                          )}")`,
+                        }}
+                      ></div>
+                    )}
                     <div className="item__info">
-                      <p className="item__info-name">Vũ Thành Nam</p>
+                      <p className="item__info-name">{`${user.firstName} ${user.lastName}`}</p>
                       <p className="item__info-courses">
-                        <span>12</span> khóa học
+                        <span>{user.paidCourseCount}</span> khóa học
                       </p>
                     </div>
-                    <div className="item__btn-lock">
-                            <i
-                                className={`icon fa fa-${item === 'disable' ? 'lock' : 'unlock-alt'}`}
+                    <div
+                      className="item__btn-lock"
+                      onClick={() => {
+                        handleAdminAccount.activeAccount(
+                          user,
+                          adminProfileDispatch
+                        );
+                      }}
+                    >
+                      <i
+                        className={`icon fa fa-${
+                          user.status === 0 ? "lock" : "unlock-alt"
+                        }`}
                         aria-hidden="true"
                       ></i>
                     </div>
@@ -76,10 +257,3 @@ export const Accounts = (propss) => {
     </div>
   );
 };
-
-const dataSet_Teachers = new Array(1).fill("").map((item, index) => {
-  return (index + 1) % 3 === 0 ? "disable" : "";
-});
-const dataSet_Students = new Array(7).fill("").map((item, index) => {
-  return (index + 1) % 3 === 0 ? "disable" : "";
-});

@@ -19,6 +19,9 @@
         &:first-child {
           margin-left: 0rem;
         }
+
+        cursor: pointer;
+
         will-change: transform;
         transition: all 0.5s;
 

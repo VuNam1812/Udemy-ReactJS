@@ -23,11 +23,14 @@
     box-shadow: -3px 0px 15px rgba($color: $--gray, $alpha: 0.5);
     .group__btn-add {
       margin-bottom: 4.5rem;
+      transform: none !important;
     }
+
     .group-item {
+      text-align: left;
       width: 100%;
       margin-bottom: 1rem;
-      padding: 0.5rem 0rem;
+      padding: 0.5rem 1rem;
       border-radius: 0.3rem;
       font-size: 0.75rem;
       font-weight: bold;
@@ -152,8 +155,15 @@
         flex-wrap: wrap;
         justify-content: space-between;
         .sub-category-group {
+          &__empty {
+            width: 100%;
+            font-size: 0.9rem;
+            color: rgba($color: $--gray, $alpha: 0.6);
+            font-weight: bold;
+            font-style: italic;
+          }
           &__item {
-              margin-bottom: 1rem;
+            margin-bottom: 1rem;
             flex: 0 1 49%;
             background-color: $--white;
             align-items: flex-start;
@@ -163,10 +173,85 @@
             }
 
             &-name {
+              max-width: 95%;
               color: $--green-main !important;
             }
           }
         }
+      }
+    }
+  }
+}
+
+.category-modal {
+  background-color: $--white;
+  width: 35rem;
+  border-radius: 0.5rem;
+  text-align: center;
+
+  &__header {
+    padding: 1rem 0rem;
+    border-bottom: 1px solid rgba($color: $--gray, $alpha: 0.2);
+
+    .header-category {
+      &__title {
+        margin: 0;
+        border-right: 4px solid $--text-color-bold;
+        border-left: 4px solid $--text-color-bold;
+        padding: 0.5rem 0rem;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: $--text-color-bold;
+      }
+    }
+  }
+
+  &__content {
+    padding: 1rem;
+    .content-category {
+      &__image {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        width: 100%;
+        height: 15rem;
+        border-radius: 0.3rem;
+        box-shadow: 0px 2px 4px rgba($color: $--gray, $alpha: 0.5);
+        margin-bottom: 1.5rem;
+        .image__btn-upload {
+          width: 100%;
+          display: flex;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          color: $--dark;
+          font-weight: bold;
+          cursor: pointer;
+          background: rgba($color: $--gray, $alpha: 0.2);
+          border-radius: 0.5rem;
+          opacity: 0;
+          transition: all 0.5s;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+      &__input {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    .footer-category__btn {
+      width: 50%;
+      &-body {
+        padding: 0.75rem;
       }
     }
   }

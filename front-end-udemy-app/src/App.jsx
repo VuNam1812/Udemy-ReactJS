@@ -1,7 +1,8 @@
 import "./App.scss";
 import React, { useContext, useEffect, useState } from "react";
-import { PrivateRoute } from "./components";
-import { Switch, Route, Redirect } from "react-router-dom";
+import $ from "jquery";
+import { Switch, Route, Redirect, useParams } from "react-router-dom";
+import { Loader } from "./containers/loader/loader";
 import {
   Home,
   Login,
@@ -19,6 +20,7 @@ import { authContext } from "./contexts/auth/authContext";
 function App() {
   const { store_auth, checkAuth } = useContext(authContext);
   const [loading, setLoading] = useState(false);
+  const params = useParams();
   useEffect(() => {
     (async () => {
       await checkAuth();
@@ -29,7 +31,7 @@ function App() {
   return (
     <div className="App">
       {!loading ? (
-        <p>Loading Auth</p>
+        <Loader></Loader>
       ) : (
         <Switch>
           <Route path="/register">

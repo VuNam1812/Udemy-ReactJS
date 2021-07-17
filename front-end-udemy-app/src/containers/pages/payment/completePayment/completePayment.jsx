@@ -4,7 +4,7 @@ import "./style.scss";
 
 import { Button } from "../../../../components";
 import { useHistory } from "react-router-dom";
-export const CompletePayment = (props) => {
+export const CompletePayment = ({ course }) => {
   const history = useHistory();
   return (
     <div className="complete-payment">
@@ -36,7 +36,7 @@ export const CompletePayment = (props) => {
           className="btn-smaller btn--hover-horizontal-change-color"
           content="Bắt đầu học ngay"
           onClick={() => {
-            history.push(`/lession/:id/:idLession`);
+            history.push(`/lessions/${course.id}/${course.firstLecture}`);
           }}
         ></Button>
       </div>

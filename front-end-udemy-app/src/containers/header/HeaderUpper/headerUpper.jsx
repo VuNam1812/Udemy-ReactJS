@@ -6,51 +6,42 @@ import { Categories } from "./categories/categories";
 import { UserAccount } from "./userAccount/userAccount";
 import { authContext } from "../../../contexts/auth/authContext";
 import { useHistory } from "react-router-dom";
+import $ from "jquery";
 import Swal from "sweetalert2";
+import { prop } from "dom7";
 export const HeaderUpper = (props) => {
   const headerUpper = useRef();
   const [height, setHeight] = useState(0);
   const history = useHistory();
   const { store_auth, logoutUser } = useContext(authContext);
-  const [sticky, setSticky] = useState({
-    beginPos: props.offsetTop ? props.offsetTop : 0,
-    text: "",
-  });
+  const [sticky, setSticky] = useState('');
 
   useEffect(() => {
     setHeight(+headerUpper.current.offsetHeight);
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > sticky.beginPos && sticky.text != "sticky") {
-        setSticky({
-          ...sticky,
-          text: "sticky",
-        });
+
+    const stickHandle = () => {
+      if (
+        $(window).scrollTop() > props.offsetTop &&
+        localStorage.getItem("scroll") !== "sticky"
+      ) {
+        localStorage.setItem("scroll", "sticky");
+        setSticky("sticky");
       }
-      if (window.scrollY <= sticky.beginPos) {
-        setSticky({
-          ...sticky,
-          text: "",
-        });
+      if (
+        $(window).scrollTop() <= props.offsetTop &&
+        localStorage.getItem("scroll") === "sticky"
+      ) {
+        localStorage.setItem("scroll", "");
+        setSticky("");
       }
-    });
+    };
+
+    window.addEventListener("scroll", stickHandle);
 
     return () => {
-      window.removeEventListener("scroll", () => {
-        if (window.scrollY > sticky.beginPos && sticky.text != "sticky") {
-          setSticky({
-            ...sticky,
-            text: "sticky",
-          });
-        }
-        if (window.scrollY <= sticky.beginPos) {
-          setSticky({
-            ...sticky,
-            text: "",
-          });
-        }
-      });
+      window.removeEventListener("scroll", stickHandle, false);
     };
-  }, []);
+  }, [props.offsetTop]);
 
   const logout = async () => {
     const alert = await Swal.fire({
@@ -72,11 +63,11 @@ export const HeaderUpper = (props) => {
   return (
     <>
       <div
-        className={`header-upper-cover ${sticky.text}`}
+        className={`header-upper-cover ${sticky}`}
         style={{ height: `${height}px` }}
       ></div>
       <div
-        className={`header-upper ${props.className} ${sticky.text}`}
+        className={`header-upper ${props.className} ${sticky}`}
         ref={headerUpper}
       >
         <div className="wrap">

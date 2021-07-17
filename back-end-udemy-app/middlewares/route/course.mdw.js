@@ -21,6 +21,7 @@ const getCourseByFilter = async (type = "") => {
     case "topNew":
       res_data.topNew = await courseModel.allWithFilter("id", "desc", 10, 0);
       break;
+    
     default:
       res_data.all = await courseModel.all();
       break;

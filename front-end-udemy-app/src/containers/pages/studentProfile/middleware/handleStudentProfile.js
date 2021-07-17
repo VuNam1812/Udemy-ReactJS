@@ -21,7 +21,7 @@ export const handleStudentProfile = {
   loadCourseJoin: async (data, dispatch) => {
     const { accountId } = data;
 
-    const courses = await courseApi.getCourseJoin(accountId, {
+    const courses = await accountApi.getCourseJoin(accountId, {
       getInfo: ["lectureCount", "teacherName", "firstLecture"],
     });
 
@@ -34,11 +34,9 @@ export const handleStudentProfile = {
   loadCourseFavorite: async (data, dispatch) => {
     const { accountId } = data;
 
-    const courses = await courseApi.getCourseFavorite(accountId, {
+    const courses = await accountApi.getCourseFavorite(accountId, {
       getInfo: ["lectureCount", "teacherName", "firstLecture"],
     });
-
- 
 
     dispatch({
       type: STUDENT_PROFILE_ACTION.UPDATE_COURSE_FAVORITE,
