@@ -3,7 +3,7 @@ import React, { useReducer, useRef } from "react";
 import "./style.scss";
 import { useForm } from "react-hook-form";
 import { reducer, ACTION } from "./reducer";
-
+import { Link } from "react-router-dom";
 import { DatePickerComponent } from "@syncfusion/ej2-react-calendars";
 import { handleValidate } from "./handleValidate";
 import {
@@ -60,9 +60,9 @@ export const RegisterForm = (props) => {
   };
   return (
     <div className={`register-form ${props.className}`}>
-      <h1 className="register-form__title">Register</h1>
+      <h1 className="register-form__title">Đăng ký</h1>
       <h3 className="register-form__desc">
-        <span>Welcome!</span> Please confirm that you are visiting
+        <span>Xin chào!</span> Hãy xác nhận rằng bạn đã từng ghé qua
       </h3>
       <form
         onSubmit={handleSubmit(onSubmitForm)}
@@ -70,11 +70,11 @@ export const RegisterForm = (props) => {
       >
         <div className="form-multi-input">
           <InputWithLabel
-            placeHolder="First Name"
+            placeHolder="Họ & tên đệm"
             name="firstName"
             register={register}
             className="input--shadow"
-            labelName="First Name"
+            labelName="Họ & tên đệm"
             type="text"
             error={{
               isShow: error.firstName.show,
@@ -82,11 +82,11 @@ export const RegisterForm = (props) => {
             }}
           ></InputWithLabel>
           <InputWithLabel
-            placeHolder="Last Name"
+            placeHolder="Tên"
             name="lastName"
             register={register}
             className="input--shadow"
-            labelName="Last Name"
+            labelName="Tên"
             type="text"
             error={{
               isShow: error.lastName.show,
@@ -96,11 +96,11 @@ export const RegisterForm = (props) => {
         </div>
         <div className="form-multi-input">
           <InputWithLabel
-            placeHolder="Email address"
+            placeHolder="Địa chỉ hộp thư"
             name="email"
             register={register}
             className="input--shadow"
-            labelName="Email Address"
+            labelName="Địa chỉ hộp thư"
             type="text"
             error={{
               isShow: error.email.show,
@@ -109,24 +109,24 @@ export const RegisterForm = (props) => {
           ></InputWithLabel>
           <div className="date-time">
             <label className="date-time__label">
-              Date of Birthday
+              Ngày sinh
               <DatePickerComponent
                 format="dd-MM-yyyy"
                 name="dob"
                 {...register("dob")}
                 className="date-time__input"
-                placeholder="Date of Birthday"
+                placeholder="Ngày sinh"
               ></DatePickerComponent>
             </label>
           </div>
         </div>
         <div className="form-multi-input">
           <InputWithLabel
-            placeHolder="Password"
+            placeHolder="Mật khẩu"
             name="password"
             register={register}
             className="input--shadow"
-            labelName="Password"
+            labelName="Mật khẩu"
             type="password"
             error={{
               isShow: error.password.show,
@@ -134,11 +134,11 @@ export const RegisterForm = (props) => {
             }}
           ></InputWithLabel>
           <InputWithLabel
-            placeHolder="Confirm Password"
+            placeHolder="Nhập lại mật khẩu"
             name="confirmPassword"
             register={register}
             className="input--shadow"
-            labelName="Confirm Password"
+            labelName="Nhập lại mật khẩu"
             type="password"
             error={{
               isShow: error.confirmPassword.show,
@@ -148,7 +148,7 @@ export const RegisterForm = (props) => {
         </div>
         <RadioButton
           className="gender"
-          items={["Male", "Female", "Other"]}
+          items={["Nam", "Nũ", "Khác"]}
           value={-1}
           onChange={(e) => {
             props.dispatch({
@@ -160,7 +160,7 @@ export const RegisterForm = (props) => {
         <input ref={submit} type="submit" hidden></input>
         <Button
           className="btn--hover-horizontal-change-color"
-          content="Register"
+          content="Đăng ký"
           onClick={() => {
             submit.current.click();
           }}
@@ -168,7 +168,7 @@ export const RegisterForm = (props) => {
       </form>
 
       <p className="register-form__register">
-        Already have an account?? <span>Sign In</span>
+        Bạn đã có tài khoản? <Link to="/login">Đăng nhập</Link>
       </p>
     </div>
   );

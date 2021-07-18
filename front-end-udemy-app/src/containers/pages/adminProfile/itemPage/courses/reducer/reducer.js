@@ -60,7 +60,11 @@ export const reducer = (state, action) => {
         ...state,
         currentCourses: [...payload],
       };
-
+    case COURSES_ADMIN_ACTION.UPDATE_LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
     default:
       return state;
   }
@@ -75,6 +79,7 @@ export const COURSES_ADMIN_ACTION = {
   UPDATE_SUB_CATEGORY: 6,
   RESET_FILTER: 7,
   UPDATE_CURRENT_COURSES: 8,
+  UPDATE_LOADING: 9,
 };
 
 export const enumState = {

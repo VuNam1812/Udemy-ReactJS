@@ -13,9 +13,9 @@ import "./style.scss";
 import { authContext } from "../../../contexts/auth/authContext";
 
 import numeral from "numeral";
-import { reducer } from "./reducer/reducer";
+import { reducer, COURSE_DETAIL_ACTION } from "./reducer/reducer";
 import { handleCourseDetail } from "./middleware/handleCourseDetal";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import $ from "jquery";
 const initData = {
   course: {},
@@ -25,6 +25,7 @@ const initData = {
   activeTab: 0,
   coursesCat: [],
   paid: false,
+  loading: true,
   inFavoriteList: false,
 };
 
@@ -33,9 +34,29 @@ export const CourseDetail = (props) => {
   const { store_auth } = useContext(authContext);
   const params = useParams();
   const history = useHistory();
+  const location = useLocation();
   useEffect(() => {
+    (async () => {
+      dispatch({
+        type: COURSE_DETAIL_ACTION.UPDATE_LOADING,
+        payload: true,
+      });
+      await handleCourseDetail.loadCourse(params, dispatch);
+      await handleCourseDetail.checkPaid(params, dispatch);
+      await handleCourseDetail.checkFavoriteList(
+        params,
+        store_auth.account,
+        dispatch
+      );
+      setTimeout(() => {
+        dispatch({
+          type: COURSE_DETAIL_ACTION.UPDATE_LOADING,
+          payload: false,
+        });
+      }, 1000);
+    })();
     $("html,body").animate({ scrollTop: 0 }, 500);
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     (async () => {
@@ -45,18 +66,8 @@ export const CourseDetail = (props) => {
 
   const handleTabActive = async (index) => {
     switch (index) {
-      case 0:
-        if (Object.keys(store.course).length !== 0 ) return;
-        await handleCourseDetail.loadCourse(params, dispatch);
-        await handleCourseDetail.checkPaid(params, dispatch);
-        await handleCourseDetail.checkFavoriteList(
-          params,
-          store_auth.account,
-          dispatch
-        );
-        break;
       case 1:
-        if (Object.keys(store.teacher).length !== 0) return;
+        if (store.teacher.id) return;
         await handleCourseDetail.loadTeacher(
           {
             userId: store.course.teacherId,
@@ -98,16 +109,23 @@ export const CourseDetail = (props) => {
               headers={["Giới thiệu", "Giảng viên", "Video", "Đánh giá"]}
               blocks={[
                 <Introduce course={store.course}></Introduce>,
-                <Teacher teacher={store.teacher}></Teacher>,
-                <Videos
-                  paid={store.paid}
-                  course={store.course}
-                  lessions={store.lectures}
-                ></Videos>,
-                <Feedback
-                  rate={store.course.rate}
-                  feedbacks={store.feedbacks}
-                ></Feedback>,
+                !store.loading && <Teacher teacher={store.teacher}></Teacher>,
+                !store.loading && (
+                  <Videos
+                    paid={store.paid}
+                    course={store.course}
+                    lessions={store.lectures}
+                  ></Videos>
+                ),
+                !store.loading && (
+                  <Feedback
+                    course={store.course}
+                    dispatch={dispatch}
+                    paid={store.paid}
+                    rate={store.course.rate}
+                    feedbacks={store.feedbacks}
+                  ></Feedback>
+                ),
               ]}
               onChangeActive={handleTabActive}
             ></NavTab>

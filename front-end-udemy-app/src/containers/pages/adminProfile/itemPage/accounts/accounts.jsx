@@ -1,5 +1,5 @@
 // @flow
-import React, { useReducer, useRef } from "react";
+import React, { useReducer, useRef, useEffect } from "react";
 import { NavTab, Button, Modal, FieldText } from "../../../../../components";
 import "./style.scss";
 import { reducer, enumState, ACCOUNT_ADMIN_ACTION } from "./reducer/reducer";
@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 const initData = {
   modalState: enumState.HIDDEN,
+  loading: true,
   error: {
     firstName: {
       isShow: false,
@@ -33,6 +34,20 @@ export const Accounts = ({ teachers, users, adminProfileDispatch }) => {
   const { register, handleSubmit, setValue } = useForm();
   const form = useRef();
   const submit = useRef();
+
+  useEffect(() => {
+    dispatch({
+      type: ACCOUNT_ADMIN_ACTION.UPDATE_LOADING,
+      payload: true,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: ACCOUNT_ADMIN_ACTION.UPDATE_LOADING,
+        payload: false,
+      });
+    }, 1000);
+  }, []);
+
   const handleCreateAccountModal = () => {
     form.current.reset();
     setValue("password", "");
@@ -204,54 +219,56 @@ export const Accounts = ({ teachers, users, adminProfileDispatch }) => {
               })}
             </div>
           </div>,
-          <div className="accounts-list">
-            <p className="accounts-list__title">Danh sách học viên</p>
-            <div className="accounts-list__group">
-              {users.map((user) => {
-                return (
-                  <div
-                    className={`accounts-group__item ${
-                      user.status === 0 ? "disable" : ""
-                    }`}
-                  >
-                    {user.srcImage && (
-                      <div
-                        className="item__image"
-                        style={{
-                          backgroundImage: `url("http://localhost:3030/${user.srcImage.replaceAll(
-                            "\\",
-                            "/"
-                          )}")`,
-                        }}
-                      ></div>
-                    )}
-                    <div className="item__info">
-                      <p className="item__info-name">{`${user.firstName} ${user.lastName}`}</p>
-                      <p className="item__info-courses">
-                        <span>{user.paidCourseCount}</span> khóa học
-                      </p>
-                    </div>
+          !store.loading && (
+            <div className="accounts-list">
+              <p className="accounts-list__title">Danh sách học viên</p>
+              <div className="accounts-list__group">
+                {users.map((user) => {
+                  return (
                     <div
-                      className="item__btn-lock"
-                      onClick={() => {
-                        handleAdminAccount.activeAccount(
-                          user,
-                          adminProfileDispatch
-                        );
-                      }}
+                      className={`accounts-group__item ${
+                        user.status === 0 ? "disable" : ""
+                      }`}
                     >
-                      <i
-                        className={`icon fa fa-${
-                          user.status === 0 ? "lock" : "unlock-alt"
-                        }`}
-                        aria-hidden="true"
-                      ></i>
+                      {user.srcImage && (
+                        <div
+                          className="item__image"
+                          style={{
+                            backgroundImage: `url("http://localhost:3030/${user.srcImage.replaceAll(
+                              "\\",
+                              "/"
+                            )}")`,
+                          }}
+                        ></div>
+                      )}
+                      <div className="item__info">
+                        <p className="item__info-name">{`${user.firstName} ${user.lastName}`}</p>
+                        <p className="item__info-courses">
+                          <span>{user.paidCourseCount}</span> khóa học
+                        </p>
+                      </div>
+                      <div
+                        className="item__btn-lock"
+                        onClick={() => {
+                          handleAdminAccount.activeAccount(
+                            user,
+                            adminProfileDispatch
+                          );
+                        }}
+                      >
+                        <i
+                          className={`icon fa fa-${
+                            user.status === 0 ? "lock" : "unlock-alt"
+                          }`}
+                          aria-hidden="true"
+                        ></i>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>,
+          ),
         ]}
       ></NavTab>
     </div>

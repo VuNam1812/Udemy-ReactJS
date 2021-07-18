@@ -98,7 +98,7 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
         <div className="courses-owner__view-courses">
           <div className="left-block-owner">
             <div className="left-block-owner__fix">
-              <div className="filter-header">Filter characters</div>
+              <div className="filter-header">Bộ lọc ký tự</div>
               <div className="filter-content">
                 {dataSet_characters.map((item, index) => {
                   return (
@@ -127,7 +127,7 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
                 <input
                   onChange={handleResetCourse}
                   onKeyPress={handleSearch}
-                  placeholder="Type here to search"
+                  placeholder="Nhập khóa học cần tìm kiếm"
                   className="right-block-owner__search-input"
                 ></input>
               </div>

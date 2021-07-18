@@ -57,7 +57,7 @@ export const StudentInfo = ({ info, dispatch, dispatchAuth }) => {
       </div>
       <Button
         className="btn-edit-profile btn--hover-change-color"
-        content="Edit profile"
+        content="Thông tin cá nhân"
         onClick={() => {
           dispatch({
             type: STUDENT_PROFILE_ACTION.UPDATE_ACTIVE,

@@ -44,6 +44,9 @@ function App() {
           <Route path="/login">
             {store_auth.auth ? <Redirect to="/"></Redirect> : <Login></Login>}
           </Route>
+          <Route path="/search">
+            <Courses></Courses>
+          </Route>
           <Route path="/courses">
             <Switch>
               <Route exact path="/courses">

@@ -30,6 +30,12 @@ router.post("/", async function (req, res) {
   };
 
   const accountID = await userModel.add(user);
+  await teacherinfoModel.add({
+    id_user: accountID,
+    teacherDesc: "",
+    major: "",
+    techniques: "",
+  });
   return res.status(200).json({
     id: accountID,
   });
@@ -47,7 +53,6 @@ router.get("/", async (req, res) => {
 
     await handleAccount.getMoreInfoAccount(user, [].concat(getInfo));
   }
-
 
   return res.json({
     data: {

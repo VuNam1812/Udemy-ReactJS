@@ -8,13 +8,13 @@ import { authContext } from "../../../contexts/auth/authContext";
 import { useHistory } from "react-router-dom";
 import $ from "jquery";
 import Swal from "sweetalert2";
-import { prop } from "dom7";
 export const HeaderUpper = (props) => {
   const headerUpper = useRef();
   const [height, setHeight] = useState(0);
+  const [searchText, setSearchText] = useState("");
   const history = useHistory();
   const { store_auth, logoutUser } = useContext(authContext);
-  const [sticky, setSticky] = useState('');
+  const [sticky, setSticky] = useState("");
 
   useEffect(() => {
     setHeight(+headerUpper.current.offsetHeight);
@@ -60,6 +60,12 @@ export const HeaderUpper = (props) => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      history.push(`/search?searchText=${searchText}`);
+    }
+  };
+
   return (
     <>
       <div
@@ -82,10 +88,20 @@ export const HeaderUpper = (props) => {
             <div className="navigation">
               <div className="search">
                 <input
-                  placeholder="What do you want to search?"
+                  placeholder="Nhập từ khóa bạn muốn tìm kiếm?"
                   className="search__input"
+                  value={searchText}
+                  onKeyPress={handleKeyPress}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                  }}
                 />
-                <div className="search__button">
+                <div
+                  className="search__button"
+                  onClick={() => {
+                    history.push(`/search?searchText=${searchText}`);
+                  }}
+                >
                   <i className="fa fa-search fa-lg" aria-hidden="true"></i>
                 </div>
               </div>

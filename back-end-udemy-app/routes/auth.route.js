@@ -53,12 +53,21 @@ router.post("/login", validate(userSchema), async function (req, res) {
   if (user === null) {
     return res.json({
       authenticated: false,
+      err_message: "Email không đúng",
     });
   }
 
   if (!bcrypt.compareSync(req.body.password, user.password)) {
     return res.json({
       authenticated: false,
+      err_message: "Mật khẩu không đúng",
+    });
+  }
+
+  if (user.status === 0) {
+    return res.json({
+      authenticated: false,
+      err_message: "Tài khoản đã bị khóa!!",
     });
   }
 

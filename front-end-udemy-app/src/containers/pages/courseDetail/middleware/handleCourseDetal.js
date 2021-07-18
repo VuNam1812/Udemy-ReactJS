@@ -27,6 +27,7 @@ export const handleCourseDetail = {
       getInfo: ["studentCount", "rate", "courseCount", "teacherDesc", "major"],
     });
 
+
     dispatch({
       type: COURSE_DETAIL_ACTION.UPDATE_TEACHER,
       payload: {
@@ -80,6 +81,7 @@ export const handleCourseDetail = {
     const ret = await courseApi.checkPaid({
       courId: params.courId,
     });
+
     dispatch({
       type: COURSE_DETAIL_ACTION.UPDATE_PAID,
       payload: ret.data?.paid ? ret.data.paid : false,

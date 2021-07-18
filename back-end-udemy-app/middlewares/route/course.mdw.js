@@ -21,7 +21,7 @@ const getCourseByFilter = async (type = "") => {
     case "topNew":
       res_data.topNew = await courseModel.allWithFilter("id", "desc", 10, 0);
       break;
-    
+
     default:
       res_data.all = await courseModel.all();
       break;
@@ -35,9 +35,36 @@ const getCourseByFilter = async (type = "") => {
           "catName",
           "lectureCount",
           "duration",
+          "firstLecture",
         ]);
       }
     }
+  }
+
+  return res_data;
+};
+
+const getCourseBySearchText = async (
+  getInfo,
+  search,
+  order,
+) => {
+  let res_data = { courses: [] };
+  res_data.courses = await courseModel.bySearchText(
+    search,
+    order,
+  );
+  for (const course of res_data.courses) {
+    await getMoreInfoCourse(
+      course,
+      [
+        "teacherName",
+        "catName",
+        "lectureCount",
+        "duration",
+        "firstLecture",
+      ].concat(getInfo)
+    );
   }
 
   return res_data;
@@ -87,4 +114,5 @@ const getMoreInfoCourse = async (course, info = []) => {
 module.exports = {
   getCourseByFilter: getCourseByFilter,
   getMoreInfoCourse: getMoreInfoCourse,
+  getCourseBySearchText: getCourseBySearchText,
 };

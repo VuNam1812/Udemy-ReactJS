@@ -39,7 +39,7 @@ export const handleAction = {
           : Swal.fire({
               icon: "error",
               title: "Opp....",
-              text: "Đăng nhập thất bại!!!",
+              text: res_login.err_message,
               showConfirmButton: true,
               confirmButtonText: "đăng nhập lại",
               confirmButtonColor: "#dc3545",

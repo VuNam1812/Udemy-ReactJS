@@ -19,6 +19,21 @@ module.exports = {
     return db(TBL_COURSES).where("isDelete", 0).where("id_cat", id);
   },
 
+  bySearchText(
+    text,
+    order = "id",
+    sort = "asc",
+    limit = 1000000000,
+    offset = 0
+  ) {
+    return db(TBL_COURSES)
+      .whereRaw(`MATCH(CourName) AGAINST('+${text}' IN BOOLEAN MODE)`)
+      .where("isDelete", 0)
+      .orderBy(order, sort)
+      .limit(limit)
+      .offset(offset);
+  },
+
   async single(id) {
     const courses = await db(TBL_COURSES).where("id", id);
 

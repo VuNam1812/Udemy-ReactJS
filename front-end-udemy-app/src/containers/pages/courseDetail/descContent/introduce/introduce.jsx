@@ -3,6 +3,15 @@ import * as React from "react";
 import "./style.scss";
 import numeral from "numeral";
 import { Link } from "react-router-dom";
+
+import Rating from "@material-ui/lab/Rating";
+import { withStyles } from "@material-ui/core/styles";
+const StyleRating = withStyles({
+  iconFilled: {
+    color: "#00ab15",
+  },
+})(Rating);
+
 export const Introduce = ({ course, teacher }) => {
   return (
     <div className="introduce">
@@ -17,13 +26,14 @@ export const Introduce = ({ course, teacher }) => {
         <div className="rating">
           <div className="rating__stars">
             <p>{numeral(course.rate).format("0.0")}</p>
-            <div className="stars">
-              <i className="fa fa-star" aria-hidden="true"></i>
-              <i className="fa fa-star" aria-hidden="true"></i>
-              <i className="fa fa-star" aria-hidden="true"></i>
-              <i className="fa fa-star" aria-hidden="true"></i>
-              <i className="fa fa-star" aria-hidden="true"></i>
-            </div>
+            {course.rate && (
+              <StyleRating
+                className="stars"
+                value={course.rate}
+                precision={0.1}
+                readOnly
+              ></StyleRating>
+            )}
           </div>
           <p className="rating__number">
             ({numeral(course.feedbackCount).format("0,0")}) đánh giá
@@ -45,7 +55,10 @@ export const Introduce = ({ course, teacher }) => {
         <p className="title--highlight">Mô tả chi tiết</p>
         <div className="content-title">
           {course.fullDes ? (
-            <p className='content-title__fullDes' dangerouslySetInnerHTML={{ __html: course.fullDes }}></p>
+            <p
+              className="content-title__fullDes"
+              dangerouslySetInnerHTML={{ __html: course.fullDes }}
+            ></p>
           ) : (
             <p className="content-title__empty">(Hiện đang trống)</p>
           )}
@@ -66,9 +79,12 @@ export const Introduce = ({ course, teacher }) => {
               </div>
             )}
             <div className="mini-teacher-card__info">
-              <p className="mini-teacher-card__info-name">
+              <Link
+                to={`/teachers/${course.id_owner}`}
+                className="mini-teacher-card__info-name"
+              >
                 {course.teacherName}
-              </p>
+              </Link>
             </div>
             <div className="mini-teacher-card__contact">
               <i

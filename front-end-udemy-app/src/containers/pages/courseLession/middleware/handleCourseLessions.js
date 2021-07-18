@@ -47,7 +47,7 @@ export const handleCourseLession = {
     const ret = await courseApi.checkPaid({
       courId: data.courId,
     });
-    if (!ret.data.paid) {
+    if (!ret.data?.paid) {
       if (auth) {
         history.push(`/payment/${data.courId}`);
         return;

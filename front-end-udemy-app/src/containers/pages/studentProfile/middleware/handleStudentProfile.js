@@ -38,6 +38,16 @@ export const handleStudentProfile = {
       getInfo: ["lectureCount", "teacherName", "firstLecture"],
     });
 
+    if (courses.data?.length) {
+      for (const course of courses.data) {
+        course.paid = (
+          await courseApi.checkPaid({
+            courId: course.id,
+          })
+        ).data?.paid;
+      }
+    }
+
     dispatch({
       type: STUDENT_PROFILE_ACTION.UPDATE_COURSE_FAVORITE,
       payload: [...courses.data],

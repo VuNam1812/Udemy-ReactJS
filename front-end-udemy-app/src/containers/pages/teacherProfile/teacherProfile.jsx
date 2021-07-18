@@ -1,12 +1,13 @@
 // @flow
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import { Background, InfoTeacher, CoursesOwner } from "./teacherProfileItems";
 import { Logo } from "../../../components";
 import "./style.scss";
 
-import { useParams } from "react-router-dom";
-
+import { useParams, useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
 import { reducer, TEACHER_PROFILE_ACTION } from "./reducer/reducer";
+import { authContext } from "../../../contexts/auth/authContext";
 import { handleTeacheDashboard } from "./middlewares/handleTeacherDashboard";
 const initData = {
   account: {},
@@ -16,7 +17,9 @@ const initData = {
 
 export const TeacherProfile = (props) => {
   const [store, dispatch] = useReducer(reducer, initData);
+  const { logoutUser } = useContext(authContext);
   const params = useParams();
+  const history = useHistory();
   useEffect(() => {
     (async () => {
       await handleTeacheDashboard.loadAccount(params, dispatch);
@@ -31,11 +34,33 @@ export const TeacherProfile = (props) => {
     });
   };
 
+  const handleLogoutAccount = async () => {
+    const alert = await Swal.fire({
+      icon: "question",
+      text: "Bạn có chắc chắn muốn đăng xuất?",
+      showConfirmButton: true,
+      confirmButtonText: "Xác Nhận",
+      confirmButtonColor: "#00ab15",
+      showCancelButton: true,
+      cancelButtonText: "Hủy bỏ",
+      cancelButtonColor: "#dc3545",
+    });
+
+    if (alert.isConfirmed) {
+      await logoutUser();
+    }
+  };
+
   return (
     <div className="teacher-profile">
       <Background></Background>
       <div className="teacher-profile__left-content">
-        <Logo className="logo--shadow"></Logo>
+        <Logo
+          className="logo--shadow"
+          onClick={() => {
+            history.push("/");
+          }}
+        ></Logo>
         <div className="left-content__menu ">
           <div
             className={`left-content__menu-item ${
@@ -44,8 +69,7 @@ export const TeacherProfile = (props) => {
             onClick={updateActive}
             data-id="1"
           >
-            <i className="icon fa fa-user-circle-o" aria-hidden="true"></i>My
-            Profile
+            <i className="icon fa fa-user-circle-o" aria-hidden="true"></i>Thông tin
           </div>
           <div
             className={`left-content__menu-item ${
@@ -54,13 +78,21 @@ export const TeacherProfile = (props) => {
             onClick={updateActive}
             data-id="2"
           >
-            <i className="icon fa fa-graduation-cap" aria-hidden="true"></i>My
-            Courses
+            <i className="icon fa fa-graduation-cap" aria-hidden="true"></i>Khóa học
           </div>
         </div>
       </div>
       <div className="teacher-profile__right-content">
-        <div className="header-profile"></div>
+        <div className="header-profile">
+          <div
+            className="header-profile__btn-logout"
+            onClick={handleLogoutAccount}
+          >
+            <span>
+              <i className="icon fa fa-sign-out fa-2x" aria-hidden="true"></i>
+            </span>
+          </div>
+        </div>
         <div className="body-profile">
           <div className="body-profile__background">
             <div className="cover-flex">

@@ -35,6 +35,7 @@ app.use("/api/categories", require("./routes/category.route"));
 app.use("/api/courses", require("./routes/course.route"));
 app.use("/api/lectures", require("./routes/lecture.route"));
 app.use("/api/chapters", require("./routes/chapter.route"));
+app.use("/api/feedbacks", require("./routes/feedback.route"));
 
 app.use(function (req, res, next) {
   res.status(404).send({

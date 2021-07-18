@@ -44,6 +44,11 @@ export const reducer = (state, action) => {
         ...state,
         filter: +payload,
       };
+    case COURSES_ACTION.UPDATE_LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
     default:
       return state;
   }
@@ -57,4 +62,5 @@ export const COURSES_ACTION = {
   UPDATE_PAGE_ACTIVE: 4,
   UPDATE_VIEW_ITEM: 5,
   UPDATE_FILTER: 6,
+  UPDATE_LOADING: 7,
 };

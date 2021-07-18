@@ -84,7 +84,8 @@
     }
 
     &__fullDes {
-      p, span {
+      p,
+      span {
         font-family: "Quicksand" !important;
       }
     }
@@ -120,6 +121,12 @@
 
           font-weight: 900;
           color: $--text-color-bold;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.3s;
+          &:hover {
+            color: $--green-main;
+          }
         }
 
         &-major {

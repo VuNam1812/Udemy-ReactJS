@@ -5,7 +5,7 @@ import { Checkbox, InputWithLabel, Button } from "../../../../components";
 import { handleValidate } from "../middlewares/handleValidateLogin";
 import { handleAction } from "../middlewares/handleActionLogin";
 import { useForm } from "react-hook-form";
-
+import { Link } from "react-router-dom";
 export const LoginForm = (props) => {
   const { register, handleSubmit } = useForm();
   const submit = useRef();
@@ -17,9 +17,9 @@ export const LoginForm = (props) => {
 
   return (
     <div className="login-form">
-      <h1 className="login-form__title">Login</h1>
+      <h1 className="login-form__title">Đăng nhập</h1>
       <h3 className="login-form__desc">
-        <span>Welcome!</span> Please confirm that you are visiting
+        <span>Xin chào!</span> Hãy xác nhận rằng bạn đã từng ghé qua
       </h3>
       <form
         onSubmit={handleSubmit(onSubmitLogin)}
@@ -40,7 +40,7 @@ export const LoginForm = (props) => {
           register={register}
           name="password"
           className="input--shadow"
-          labelName="Password"
+          labelName="Mật khẩu"
           type="password"
           error={{
             isShow: props.store.error.password.isShow,
@@ -51,13 +51,13 @@ export const LoginForm = (props) => {
         <div className="option-login">
           <div className="option-login__remember">
             <Checkbox className="option-login__remember-input checkbox-basic"></Checkbox>
-            <p className="option-login__remember-text">Remember Password</p>
+            <p className="option-login__remember-text">Nhớ mật khẩu</p>
           </div>
-          <p className="option-login__forget-password">Forget Password?</p>
+          <p className="option-login__forget-password">Quên mật khẩu?</p>
         </div>
         <Button
           className="btn--hover-vertical-change-color"
-          content="Login"
+          content="Đăng nhập"
           onClick={() => {
             submit.current.click();
           }}
@@ -65,7 +65,7 @@ export const LoginForm = (props) => {
       </form>
 
       <p className="login-form__register">
-        New User? <span>Register</span>
+        Người dùng mới? <Link to="/register">Đăng ký</Link>
       </p>
     </div>
   );

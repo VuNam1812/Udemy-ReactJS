@@ -4,8 +4,10 @@ import "./style.scss";
 import { Button, Checkbox, Select } from "../../../../components";
 import numeral from "numeral";
 import { COURSES_ACTION } from "../reducer/reducer";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { SkeletonCourses } from "../skeleton/skeletonCourses";
 export const CourseList = (props) => {
+  const history = useHistory();
   const handleLoadPage = (e) => {
     const index = e.target.getAttribute("data-id");
     props.dispatch({
@@ -34,9 +36,9 @@ export const CourseList = (props) => {
 
     props.dispatch({
       type: COURSES_ACTION.UPDATE_FILTER,
-      payload: +index
-    })
-  }
+      payload: +index,
+    });
+  };
 
   return (
     <div className="course-list">
@@ -51,7 +53,7 @@ export const CourseList = (props) => {
             <Select
               data={dataSet_filter}
               className="body-list__filter-select select--bottom select--shadow"
-              defaultSelected="---------- Bộ lọc ----------"
+              defaultSelected={`${dataSet_filter[props.filter]}`}
               onChange={handleFilter}
               value={props.filter}
             ></Select>
@@ -59,7 +61,7 @@ export const CourseList = (props) => {
               <Button
                 onClick={() => handleChangeViewItem(0)}
                 className={`btn--color-white btn--square btn-filter-list__btn ${
-                  props.direct == 0 ? "active" : ""
+                  props.direct === 0 ? "active" : ""
                 }`}
               >
                 <i className="fa fa-th-list" aria-hidden="true"></i>
@@ -67,105 +69,131 @@ export const CourseList = (props) => {
               <Button
                 onClick={() => handleChangeViewItem(1)}
                 className={`btn--color-white btn--square btn-filter-list__btn  ${
-                  props.direct == 1 ? "active" : ""
+                  props.direct === 1 ? "active" : ""
                 }`}
               >
                 <i className="fa fa-th-large" aria-hidden="true"></i>
               </Button>
             </div>
           </div>
-          <div className="body-list__content">
-            <div className="courses">
-              {props.courses.length !== 0 &&
-                props.courses.map((course) => {
-                  return (
-                    <div
-                      className={`courses-item ${
-                        props.direct === 1
-                          ? "item--verticle"
-                          : "item--horizontal"
-                      }`}
-                    >
-                      <div className="cover-image">
-                        <div
-                          className="courses-item__image"
-                          style={{
-                            backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                              "\\",
-                              "/"
-                            )}")`,
-                          }}
-                        ></div>
-                      </div>
-                      <div className="courses-item__body">
-                        <div className="courses-item__title">
-                          <div className="title-main">
-                            <Link to={`/courses/${course.id}`} className="title-main__course-name">
-                              {course.courName}
-                            </Link>
-                            <div>
-                              <p className="title-main__cat-name">
-                                {course.catName}
-                              </p>
-                              <p className="title-main__teacher-name">
-                                Giảng viên: <Link to={`/teachers/${course.teacherId}`}>{course.teacherName}</Link>
-                              </p>
-                              <h3 className="title-main__course-price">
-                                {numeral(course.price).format(0, 0)} VND
-                              </h3>
-                            </div>
-                            <div
-                              className={`title-main__sub-info ${
-                                props.direct === 1 ? "hidden" : ""
-                              }`}
-                            >
-                              <p className="text--warning">
-                                {course.rate}{" "}
-                                <i
-                                  className="fa fa-star"
-                                  aria-hidden="true"
-                                ></i>
-                              </p>
-                              <p className="text--info">
-                                {numeral(course.joinerCount).format("0,0")}{" "}
-                                <i
-                                  className="fa fa-users"
-                                  aria-hidden="true"
-                                ></i>
-                              </p>
+          {props.loading ? (
+            <SkeletonCourses
+              limit={props.direct === 1 ? 12 : 5}
+              className={props.direct === 1 ? "vertical" : "horizontal"}
+            ></SkeletonCourses>
+          ) : (
+            <div className="body-list__content">
+              <div className="courses">
+                {props.courses.length !== 0 &&
+                  props.courses.map((course) => {
+                    return (
+                      <div
+                        className={`courses-item ${
+                          props.direct === 1
+                            ? "item--verticle"
+                            : "item--horizontal"
+                        }`}
+                      >
+                        <div className="cover-image">
+                          <div
+                            className="courses-item__image"
+                            style={{
+                              backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
+                                "\\",
+                                "/"
+                              )}")`,
+                            }}
+                          ></div>
+                        </div>
+                        <div className="courses-item__body">
+                          <div className="courses-item__title">
+                            <div className="title-main">
+                              <Link
+                                to={`/courses/${course.id}`}
+                                className="title-main__course-name"
+                              >
+                                {course.courName}
+                              </Link>
+                              <div>
+                                <p className="title-main__cat-name">
+                                  {course.catName}
+                                </p>
+                                <p className="title-main__teacher-name">
+                                  Giảng viên:{" "}
+                                  <Link to={`/teachers/${course.teacherId}`}>
+                                    {course.teacherName}
+                                  </Link>
+                                </p>
+                                <h3 className="title-main__course-price">
+                                  {numeral(course.price).format(0, 0)} VND
+                                </h3>
+                              </div>
+                              <div
+                                className={`title-main__sub-info ${
+                                  props.direct === 1 ? "hidden" : ""
+                                }`}
+                              >
+                                <p className="text--warning">
+                                  {course.rate}{" "}
+                                  <i
+                                    className="fa fa-star"
+                                    aria-hidden="true"
+                                  ></i>
+                                </p>
+                                <p className="text--info">
+                                  {numeral(course.joinerCount).format("0,0")}{" "}
+                                  <i
+                                    className="fa fa-users"
+                                    aria-hidden="true"
+                                  ></i>
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="courses-item__enroll-btn">
-                          <h3 className="lecture-count">
-                            {course.lectureCount} bài giảng
-                          </h3>
-                          <Button
-                            className="btn-smaller btn--hover-change-color"
-                            content="Tham gia"
-                          ></Button>
+                          <div className="courses-item__enroll-btn">
+                            <h3 className="lecture-count">
+                              {course.lectureCount} bài giảng
+                            </h3>
+                            {!course.owner && (
+                              <Button
+                                className="btn-smaller btn--hover-change-color"
+                                content={`${
+                                  course.paid ? "Tiếp tục học" : "Ghi danh"
+                                }`}
+                                onClick={() => {
+                                  history.push(
+                                    `${
+                                      course.paid
+                                        ? `/lessions/${course.id}/${course.firstLecture}`
+                                        : `/payment/${course.id}`
+                                    }`
+                                  );
+                                }}
+                              ></Button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-            </div>
-            {props.pagination.length > 1 && (
-              <div className="pagination">
-                {props.pagination.map((item) => {
-                  return (
-                    <div
-                      data-id={item.id}
-                      className={`pagination__item ${item.active}`}
-                      onClick={handleLoadPage}
-                    >
-                      {item.id}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
-            )}
-          </div>
+              {props.pagination.length > 1 && (
+                <div className="pagination">
+                  {props.pagination.map((item) => {
+                    return (
+                      <div
+                        data-id={item.id}
+                        className={`pagination__item ${item.active}`}
+                        onClick={handleLoadPage}
+                      >
+                        {item.id}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="filter-by">
           <p className="filter-by__header">Filter by</p>

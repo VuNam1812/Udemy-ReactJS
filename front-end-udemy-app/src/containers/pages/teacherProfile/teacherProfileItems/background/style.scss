@@ -3,7 +3,7 @@
 .background {
   position: fixed;
   min-width: 100vw;
-
+  pointer-events: none;
   min-height: 100vh;
   .square {
     background-color: $--green-main;

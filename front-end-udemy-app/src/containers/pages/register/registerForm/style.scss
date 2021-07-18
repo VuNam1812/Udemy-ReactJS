@@ -112,10 +112,11 @@
   }
 
   &__register {
-    span {
+    a {
       cursor: pointer;
       font-weight: bold;
       color: $--green-main;
+      text-decoration: none;
     }
   }
 }

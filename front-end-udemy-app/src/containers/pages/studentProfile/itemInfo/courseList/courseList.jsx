@@ -1,9 +1,22 @@
 // @flow
 import React, { useState, useEffect, useReducer } from "react";
+import { STUDENT_PROFILE_ACTION } from "../../reducer/reducer";
 import { Button } from "../../../../../components";
 import "./style.scss";
 import numeral from "numeral";
 import { useHistory, Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import courseApi from "../../../../../api/courseAPI";
+
+import Rating from "@material-ui/lab/Rating";
+import { withStyles } from "@material-ui/core/styles";
+
+const StyleRating = withStyles({
+  iconFilled: {
+    color: "#00ab15",
+  },
+})(Rating);
+
 const ACTION = {
   UPDATE_PAGINATION: 1,
   UPDATE_LIMIT: 2,
@@ -24,6 +37,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         pagination: [...pageInit],
+        page: 1,
       };
     case ACTION.UPDATE_PAGINATION:
       let page = new Array(state.pagination.length).fill(null).map(() => ({
@@ -33,6 +47,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         pagination: [...page],
+        page: +payload,
       };
     case ACTION.UPDATE_LIMIT:
       return {
@@ -47,6 +62,7 @@ const reducer = (state, action) => {
             payload.page * state.limit
           ),
         ],
+        page: +payload.page,
       };
     case ACTION.UPDATE_DIRECTACTIVE:
       const directActiveList = new Array(2).fill(null).map(() => {
@@ -58,6 +74,7 @@ const reducer = (state, action) => {
         limit: +payload === 0 ? 8 : 5,
         directList: +payload,
         directActive: [...directActiveList],
+        page: 1,
       };
 
     default:
@@ -71,9 +88,10 @@ const initObject = {
   limit: 8,
   listRender: [],
   directActive: ["active", ""],
+  page: 1,
 };
 
-export const CourseList = ({ courses, type }) => {
+export const CourseList = ({ studentProfileDispatch, courses, type }) => {
   const [listCourse, dispatch] = useReducer(reducer, initObject);
   const history = useHistory();
   useEffect(() => {
@@ -81,8 +99,8 @@ export const CourseList = ({ courses, type }) => {
     dispatch({
       type: ACTION.UPDATE_LISTRENDER,
       payload: {
-        page: 1,
         courses,
+        page: 1,
       },
     });
   }, [courses]);
@@ -128,6 +146,71 @@ export const CourseList = ({ courses, type }) => {
     dispatch({
       type: ACTION.UPDATE_DIRECTACTIVE,
       payload: direct,
+    });
+  };
+
+  const handleRemoveFavorite = async (e) => {
+    const index = +e.currentTarget.getAttribute("data-id");
+
+    const confirm = await Swal.fire({
+      icon: "question",
+      text: "Xác nhận bỏ yêu thích khóa học?",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy bỏ",
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#00ab15",
+    });
+
+    if (confirm.isConfirmed) {
+      const ret = await courseApi.deleteFavoriteList(index);
+
+      if (ret.data.deleted) {
+        //disaptch
+        updateListRender(index);
+
+        Swal.fire({
+          icon: "success",
+          text: "Cập nhật thành công.",
+          showConfirmButton: false,
+          didOpen: async () => {
+            setTimeout(() => {
+              Swal.close();
+            }, 1200);
+          },
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Lỗi",
+          text: "Vui lòng thử lại.",
+          showConfirmButton: false,
+          didOpen: async () => {
+            setTimeout(() => {
+              Swal.close();
+            }, 1200);
+          },
+        });
+      }
+    }
+  };
+
+  const updateListRender = (id) => {
+    const decIndex =
+      listCourse.listRender.length % listCourse.limit === 1 ? 1 : 0;
+    const newPage = listCourse.page - decIndex;
+    setupPagenation(courses.length - 1);
+    dispatch({
+      type: ACTION.UPDATE_LISTRENDER,
+      payload: {
+        courses: courses.filter((course) => +course.id !== +id),
+        page: newPage,
+      },
+    });
+    studentProfileDispatch({
+      type: STUDENT_PROFILE_ACTION.REMOVE_SINGLE_COURSE,
+      payload: id,
     });
   };
 
@@ -243,13 +326,12 @@ export const CourseList = ({ courses, type }) => {
                           </span>
                           /5
                         </p>
-                        <div className="stars">
-                          <i className="fa fa-star" aria-hidden="true"></i>
-                          <i className="fa fa-star" aria-hidden="true"></i>
-                          <i className="fa fa-star" aria-hidden="true"></i>
-                          <i className="fa fa-star" aria-hidden="true"></i>
-                          <i className="fa fa-star" aria-hidden="true"></i>
-                        </div>
+                        <StyleRating
+                          className="stars"
+                          value={course.rate}
+                          precision={0.1}
+                          readOnly
+                        ></StyleRating>
                       </div>
                     </div>
                   </div>
@@ -268,12 +350,21 @@ export const CourseList = ({ courses, type }) => {
                   <>
                     <Button
                       className="block-bottom__btn-join btn-smaller  btn--hover-vertical-change-color"
-                      content="Ghi danh"
+                      content={course.paid ? "Tiếp tục học" : "Ghi danh"}
                       onClick={() => {
-                        history.push(`/payment/${course.id}`);
+                        history.push(
+                          course.paid
+                            ? `/lessions/${course.id}/${course.firstLecture}`
+                            : `/payment/${course.id}`
+                        );
                       }}
                     ></Button>
-                    <div className="block-bottom__btn-remove">
+
+                    <div
+                      data-id={course.id}
+                      className="block-bottom__btn-remove"
+                      onClick={handleRemoveFavorite}
+                    >
                       <i className="fa fa-trash fa-lg" aria-hidden="true"></i>
                     </div>
                   </>

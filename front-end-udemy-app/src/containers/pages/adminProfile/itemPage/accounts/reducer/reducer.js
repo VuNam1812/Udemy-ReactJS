@@ -45,6 +45,11 @@ export const reducer = (state, action) => {
           email: { ...payload },
         },
       };
+    case ACCOUNT_ADMIN_ACTION.UPDATE_LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
     default:
       return state;
   }
@@ -55,6 +60,7 @@ export const ACCOUNT_ADMIN_ACTION = {
   MODAL_OPEN: 2,
   UPDATE_ERROR: 3,
   UPDATE_EMAIL_ERROR: 4,
+  UPDATE_LOADING: 5,
 };
 
 export const enumState = {

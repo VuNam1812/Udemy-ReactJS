@@ -1,13 +1,13 @@
 // @flow
 import React, { useReducer, useEffect, useContext } from "react";
-import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
+import { BackgroundLogin } from "./backgroundLogin/backgroundLogin";
 import { LoginForm } from "./loginForm/loginForm";
-import { Footer } from "../../footer/footer";
 import "./style.scss";
 import { handleAction } from "./middlewares/handleActionLogin";
 import { authContext } from "../../../contexts/auth/authContext";
 import { useHistory } from "react-router-dom";
 import { reducer } from "./reducer/loginReducer";
+import $ from "jquery";
 const initData = {
   login: {},
   error: {
@@ -32,15 +32,18 @@ export const Login = (props) => {
     }
   }, [store.login]);
 
+  useEffect(() => {
+    $("html,body").animate({ scrollTop: 0 }, 500);
+  }, []);
+
   return (
     <div className="login">
-      <HeaderUpper className="header--zoom-80"></HeaderUpper>
+      <BackgroundLogin></BackgroundLogin>
       <div className="login-body">
         <div className="wrap">
           <LoginForm dispatch={dispatch} store={store}></LoginForm>
         </div>
       </div>
-      <Footer></Footer>
     </div>
   );
 };

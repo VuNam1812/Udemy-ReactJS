@@ -3,11 +3,11 @@ import React, { useEffect, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import authApi from "../../../api/authAPI";
 import accountApi from "../../../api/accountAPI";
-import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
+import { BackgroundLogin } from '../login/backgroundLogin/backgroundLogin';
 import { RegisterForm } from "./registerForm/registerform";
 import { Confirm } from "./confirm/confirm";
-import { Footer } from "../../footer/footer";
 import { reducer, ACTION } from "./reducer/reducer";
+import $ from 'jquery';
 import "./style.scss";
 import Swal from "sweetalert2";
 const initData = {
@@ -25,6 +25,10 @@ export const Register = (props) => {
       }
     })();
   }, [register.account.email]);
+
+  useEffect(() => {
+    $("html,body").animate({ scrollTop: 0 }, 500);
+  }, []);
 
   const sendConfirmCode = async () => {
     Swal.fire({
@@ -104,7 +108,7 @@ export const Register = (props) => {
 
   return (
     <div className="register">
-      <HeaderUpper className="header--zoom-80"></HeaderUpper>
+      <BackgroundLogin></BackgroundLogin>
       <div className="register-body">
         <div className="wrap">
           <div className="wrap__cover">
@@ -123,7 +127,6 @@ export const Register = (props) => {
           </div>
         </div>
       </div>
-      <Footer coverFooter={true}></Footer>
     </div>
   );
 };

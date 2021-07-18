@@ -2,7 +2,7 @@ import { COURSES_ACTION } from "../reducer/reducer";
 import categoryApi from "../../../../api/categoryAPI";
 import courseApi from "../../../../api/courseAPI";
 export const handleCoursePage = {
-  loadInitPage: async (url, params, dispatch) => {
+  loadInitPage: async (userData, url, params, query, dispatch) => {
     let result = "";
     let title = "";
     let courses = [];
@@ -15,24 +15,44 @@ export const handleCoursePage = {
     switch (result) {
       case "category":
         const res = await categoryApi.getSingle(+params.catId);
-        courses = (await categoryApi.getAllCourseByCatId(+params.catId)).data;
-
+        courses = (
+          await categoryApi.getAllCourseByCatId(+params.catId, {
+            getInfo: ["firstLecture"],
+          })
+        ).data;
         title = res.data.fullName;
         break;
       case "search":
+        const searchCourse = await courseApi.getAll({
+          search: query.get("searchText"),
+          order: "id",
+          sort: "asc",
+        });
+        courses = searchCourse.data.courses;
+        title = query.get("searchText");
         break;
       default:
         courses = (await courseApi.getAll()).data.all;
+
         break;
     }
 
+    if (userData.auth) {
+      for (const cour of courses) {
+        cour.paid = (await courseApi.checkPaid({ courId: cour.id })).data.paid;
+        cour.owner = cour.id_owner === userData.account.id;
+      }
+    }
     dispatch({
       type: COURSES_ACTION.UPDATE_COURSES,
       payload: {
         courses: [...courses],
       },
     });
-
+    dispatch({
+      type: COURSES_ACTION.UPDATE_FILTER,
+      payload: 0,
+    });
     dispatch({
       type: COURSES_ACTION.UPDATE_INIT,
       payload: {
@@ -74,7 +94,6 @@ export const handleCoursePage = {
         newCourses = [...courses.sort((a, b) => a.id - b.id)];
         break;
     }
-    console.log(newCourses);
     dispatch({
       type: COURSES_ACTION.UPDATE_COURSES,
       payload: {

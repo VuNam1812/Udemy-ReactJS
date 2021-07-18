@@ -12,7 +12,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 import { InfoCourse, LessionVideos, VideoPlayer } from "./pageItem";
 
-import $ from 'jquery';
+import $ from "jquery";
 
 const initData = {
   course: {},
@@ -28,11 +28,14 @@ export const CourseLession = (props) => {
   const history = useHistory();
   useEffect(() => {
     (async () => {
-      if (Object.keys(store_auth.account) !== 0) {
-        await handleCourseLession.checkAccountPayment(params,store_auth.auth, history);
-      }
+      console.log(Object.keys(store_auth.account));
+        await handleCourseLession.checkAccountPayment(
+          params,
+          store_auth.auth,
+          history
+        );
     })();
-  }, [params]);
+  }, [params, store_auth.auth]);
 
   useEffect(() => {
     (async () => {
@@ -43,7 +46,6 @@ export const CourseLession = (props) => {
       await handleCourseLession.loadCourse(params, dispatch);
       await handleCourseLession.loadLessions(params, dispatch);
     })();
-
   }, [params.courId]);
 
   useEffect(() => {

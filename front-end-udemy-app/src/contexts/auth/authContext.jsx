@@ -13,7 +13,9 @@ export const AuthProvider = ({ children }) => {
   const [store_auth, dispatch_auth] = useReducer(reducer, initData);
 
   const checkAuth = async () => {
-    const res = (await authApi.checkAuth());
+    localStorage.udemyapp_accessToken = "";
+    localStorage.udemyapp_refreshToken = "";
+    const res = await authApi.checkAuth();
     if (res.authenticated) {
       dispatch_auth({
         type: AUTH_ACTION.UPDATE_AUTH,
@@ -37,6 +39,8 @@ export const AuthProvider = ({ children }) => {
       dispatch_auth({
         type: AUTH_ACTION.DELETE_ACCOUNT,
       });
+      localStorage.udemyapp_accessToken = "";
+      localStorage.udemyapp_refreshToken = "";
     }
   };
 

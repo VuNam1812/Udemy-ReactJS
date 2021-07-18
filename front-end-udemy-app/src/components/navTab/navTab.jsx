@@ -7,7 +7,7 @@ export const NavTab = ({ headers, blocks, className, onChangeActive }) => {
   const [left, setLeft] = useState(0);
   const [active, setActive] = useState([
     "active",
-    ...new Array(headers.length-1).fill(""),
+    ...new Array(headers.length - 1).fill(""),
   ]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export const NavTab = ({ headers, blocks, className, onChangeActive }) => {
     const index = +e.target.getAttribute("data-id");
     const distance = 100 / headers.length;
     setLeft(index * distance);
-    const newActive = new Array(headers.length-1).fill("");
+    const newActive = new Array(headers.length - 1).fill("");
     newActive[index] = "active";
     onChangeActive(+index);
     setActive(newActive);

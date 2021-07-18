@@ -131,6 +131,11 @@ export const reducer = (state, action) => {
         ...state,
         courseFavorites: [...payload],
       };
+    case STUDENT_PROFILE_ACTION.REMOVE_SINGLE_COURSE:
+      return {
+        ...state,
+        courseFavorites: state.courseFavorites.filter(course => +course.id !== +payload),
+      };
     default:
       return state;
   }
@@ -150,6 +155,7 @@ export const STUDENT_PROFILE_ACTION = {
   UPDATE_ERROR_CONFIRM_NEW_PASSWORD: 10,
   UPDATE_COURSE_JOIN: 11,
   UPDATE_COURSE_FAVORITE: 12,
+  REMOVE_SINGLE_COURSE: 13,
 };
 
 export const enumState = {

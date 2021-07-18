@@ -77,8 +77,15 @@ export const StudentProfile = (props) => {
                 className="tabs-content--none-shadow student-profile__tabs"
                 headers={["Khóa đang học", "Khóa yêu thích"]}
                 blocks={[
-                  <CourseList type='join' courses={store.courseJoin}></CourseList>,
-                  <CourseList type='favorite' courses={store.courseFavorites}></CourseList>,
+                  <CourseList
+                    type="join"
+                    courses={store.courseJoin}
+                  ></CourseList>,
+                  <CourseList
+                    type="favorite"
+                    studentProfileDispatch={dispatch}
+                    courses={store.courseFavorites}
+                  ></CourseList>,
                 ]}
               ></NavTab>
               <EditProfile

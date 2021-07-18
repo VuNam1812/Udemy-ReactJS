@@ -69,8 +69,8 @@ export const EditProfile = ({
       >
         <div className="block-flex">
           <FieldText
-            placeHolder="First Name"
-            label="First Name"
+            placeHolder="Họ & tên đệm"
+            label="Họ & tên đệm"
             name="firstName"
             type="text"
             defaultValue={info.firstName}
@@ -78,8 +78,8 @@ export const EditProfile = ({
             register={register}
           ></FieldText>
           <FieldText
-            placeHolder="Last Name"
-            label="Last Name"
+            placeHolder="Tên"
+            label="Tên"
             name="lastName"
             error={error.lastName}
             defaultValue={info.lastName}
@@ -87,24 +87,24 @@ export const EditProfile = ({
           ></FieldText>
         </div>
         <FieldText
-          placeHolder="Email"
-          label="Email"
+          placeHolder="Hộp thư"
+          label="Hộp thư"
           name="email"
           error={error.email}
           defaultValue={info.email}
           register={register}
         ></FieldText>
         <FieldText
-          placeHolder="Phone number"
-          label="Phone number"
+          placeHolder="Số điện thoại"
+          label="Số điện thoại"
           name="phone"
           defaultValue={info.phone}
           register={register}
         ></FieldText>
         <div className="change-password">
           <FieldText
-            placeHolder="Password"
-            label="Password"
+            placeHolder="Mật khẩu"
+            label="Mật khẩu"
             type="password"
             defaultValue="******************"
             readOnly={true}
@@ -127,7 +127,7 @@ export const EditProfile = ({
           hidden
         ></input>
         <RadioButton
-          items={["Male", "Female", "Other"]}
+          items={["Nam", "Nữ", "Khác"]}
           value={gender}
           onChange={(e) => {
             setValue("gender", +e.target.value);
@@ -140,7 +140,7 @@ export const EditProfile = ({
         <div className="edit-profile__btn-controls">
           <Button
             className="btn--color-white"
-            content="Cancel"
+            content="Quay lại"
             onClick={handleCancelBtn}
           ></Button>
           <Button

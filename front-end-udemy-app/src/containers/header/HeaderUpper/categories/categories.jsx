@@ -79,7 +79,7 @@ export const Categories = (props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <p className={`categories__title ${show ? "active" : ""}`}>Categories</p>
+      <p className={`categories__title ${show ? "active" : ""}`}>Danh mục</p>
       <div className={`categories__body  ${show ? "active" : ""}`}>
         <div className="dropdown">
           <ul className="dropdown-menu">

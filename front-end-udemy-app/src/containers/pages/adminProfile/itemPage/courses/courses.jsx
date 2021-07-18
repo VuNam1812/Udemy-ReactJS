@@ -6,6 +6,7 @@ import { categoryContext } from "../../../../../contexts/categories/categoryCont
 import { reducer, COURSES_ADMIN_ACTION } from "./reducer/reducer";
 import { Link } from "react-router-dom";
 import { handleAdminCourse } from "./middlewares/handleAdminCourse";
+import { CourseAdminSkeleton } from "./courseAdminSkeleton/courseAdminSkeleton";
 import numeral from "numeral";
 const initObject = {
   pagination: [],
@@ -17,6 +18,7 @@ const initObject = {
   catSelected: -1,
   teacherSelected: -1,
   currentCourses: [],
+  loading: true,
 };
 
 export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
@@ -36,6 +38,19 @@ export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
       payload: courses,
     });
   }, [courses]);
+
+  useEffect(() => {
+    dispatch({
+      type: COURSES_ADMIN_ACTION.UPDATE_LOADING,
+      payload: true,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: COURSES_ADMIN_ACTION.UPDATE_LOADING,
+        payload: false,
+      });
+    }, 1500);
+  }, [listCourse.listRender]);
 
   const handleLoadPagination = (e) => {
     const index = +e.target.getAttribute("data-id");
@@ -88,20 +103,21 @@ export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
       type: COURSES_ADMIN_ACTION.RESET_FILTER,
     });
 
-    dispatch({
-      type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
-      payload: {
-        page: 1,
-        courses: courses,
-      },
-    });
+    if (listCourse.currentCourses.length !== courses.length) {
+      dispatch({
+        type: COURSES_ADMIN_ACTION.UPDATE_LISTRENDER,
+        payload: {
+          page: 1,
+          courses: courses,
+        },
+      });
 
-    setupPagenation(courses.length);
-
-    dispatch({
-      type: COURSES_ADMIN_ACTION.UPDATE_CURRENT_COURSES,
-      payload: courses,
-    });
+      setupPagenation(courses.length);
+      dispatch({
+        type: COURSES_ADMIN_ACTION.UPDATE_CURRENT_COURSES,
+        payload: courses,
+      });
+    }
 
     dispatch({
       type: COURSES_ADMIN_ACTION.UPDATE_FILTER_SELECTED,
@@ -244,59 +260,75 @@ export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
         })}
       </div>
       <div className="courses__group">
-        {listCourse.listRender.map((course, index) => {
-          return (
-            <div className="courses__item">
-              {course.srcImage && (
-                <div className='item__cover'>
-                  <div
-                    className="item__image"
-                    style={{
-                      backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                        "\\",
-                        "/"
-                      )}")`,
-                    }}
-                  ></div>
-                </div>
-              )}
-              <div className="item__info-course">
-                <div className="info-course__header">
-                  <Link to={`/courses/${course.id}`} className="info-course__name">{course.courName}</Link>
-                  <div
-                    data-id={course.id}
-                    className="info-course__status"
-                    onClick={handleDisableCourse}
-                  >
-                    <i
-                      class={`icon icon-success fa fa-${
-                        !course.isDelete ? "unlock-alt" : "lock disabled"
-                      } fa-2x`}
-                      aria-hidden="true"
-                    ></i>
+        {listCourse.loading ? (
+          <CourseAdminSkeleton></CourseAdminSkeleton>
+        ) : (
+          listCourse.listRender.map((course, index) => {
+            return (
+              <div className="courses__item">
+                {course.srcImage && (
+                  <div className="item__cover">
+                    <div
+                      className="item__image"
+                      style={{
+                        backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
+                          "\\",
+                          "/"
+                        )}")`,
+                      }}
+                    ></div>
                   </div>
-                </div>
-                <div className="info-course__categories">{course.catName}</div>
-                <div className="info-course__teacher">
-                  Giảng viên:{" "}
-                  <Link to={`/teachers/${course.id_owner}`} className="text-main">{course.teacherName}</Link>
-                </div>
-                <div className="info--block-flex">
-                  <div className="info-course__lecture">
-                    <span className="text-main">{course.lectureCount}</span> Bài
-                    giảng
+                )}
+                <div className="item__info-course">
+                  <div className="info-course__header">
+                    <Link
+                      to={`/courses/${course.id}`}
+                      className="info-course__name"
+                    >
+                      {course.courName}
+                    </Link>
+                    <div
+                      data-id={course.id}
+                      className="info-course__status"
+                      onClick={handleDisableCourse}
+                    >
+                      <i
+                        class={`icon icon-success fa fa-${
+                          !course.isDelete ? "unlock-alt" : "lock disabled"
+                        } fa-2x`}
+                        aria-hidden="true"
+                      ></i>
+                    </div>
                   </div>
-                  <div className="info-course__price">
-                    <span className="text-danger">
-                      {numeral(course.price ? course.price : 0).format("0,0")}{" "}
-                      VND
-                    </span>
+                  <div className="info-course__categories">
+                    {course.catName}
+                  </div>
+                  <div className="info-course__teacher">
+                    Giảng viên:{" "}
+                    <Link
+                      to={`/teachers/${course.id_owner}`}
+                      className="text-main"
+                    >
+                      {course.teacherName}
+                    </Link>
+                  </div>
+                  <div className="info--block-flex">
+                    <div className="info-course__lecture">
+                      <span className="text-main">{course.lectureCount}</span>{" "}
+                      Bài giảng
+                    </div>
+                    <div className="info-course__price">
+                      <span className="text-danger">
+                        {numeral(course.price ? course.price : 0).format("0,0")}{" "}
+                        VND
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );

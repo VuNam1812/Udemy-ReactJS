@@ -21,21 +21,33 @@ const router = express.Router();
 const emptyImage = "public/imgs/Courses/CourseEmptyImage.png";
 
 router.get("/", async (req, res) => {
-  const { filter } = req.query;
+  const { filter, getInfo, search, order} = req.query;
 
   let res_data = {};
-  switch (typeof filter) {
-    case "string":
-      res_data[filter] = (await handleCourse.getCourseByFilter(filter))[filter];
-      break;
-    case "object":
-      for (const item of filter) {
-        res_data[item] = (await handleCourse.getCourseByFilter(item))[item];
-      }
-      break;
-    default:
-      res_data.all = (await handleCourse.getCourseByFilter()).all;
-      break;
+  if (!search) {
+    switch (typeof filter) {
+      case "string":
+        res_data[filter] = (await handleCourse.getCourseByFilter(filter))[
+          filter
+        ];
+        break;
+      case "object":
+        for (const item of filter) {
+          res_data[item] = (await handleCourse.getCourseByFilter(item))[item];
+        }
+        break;
+      default:
+        res_data.all = (await handleCourse.getCourseByFilter()).all;
+        break;
+    }
+  } else {
+    res_data = (
+      await handleCourse.getCourseBySearchText(
+        [].concat(getInfo),
+        search,
+        order,
+      )
+    );
   }
 
   return res.json({
@@ -225,7 +237,7 @@ router.delete("/:id/favorite", auth, async (req, res) => {
       id_user: +userId,
       id_course: +id,
     });
-    
+
     await favoriteCourseModel.update(ret.id, {
       isDelete: 1,
     });
@@ -272,6 +284,44 @@ router.get("/:id/feedbacks", async (req, res) => {
   return res.json({
     data: course,
   });
+});
+
+router.post("/:id/feedbacks", auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.accessTokenPayload;
+
+  try {
+    const ret = await feedbackModel.add({
+      id_course: id,
+      id_user: userId,
+      ...req.body,
+      createAt: moment(new Date()).format("YYYY-MM-DD"),
+    });
+
+    const feedbackCount = (await courseModel.single(id)).feedbackCount;
+    const feedbacks = await feedbackModel.allWithCourseId(id);
+
+    const rate =
+      feedbacks.reduce((sum, value) => sum + +value.rate, 0) / feedbacks.length;
+
+    await courseModel.update(id, {
+      feedbackCount: feedbackCount + 1,
+      rate: Math.round(rate * 10) / 10,
+    });
+
+    return res.json({
+      data: {
+        created: true,
+        id_feedback: ret,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      data: {
+        created: false,
+      },
+    });
+  }
 });
 
 router.patch("/:id", auth, async (req, res) => {

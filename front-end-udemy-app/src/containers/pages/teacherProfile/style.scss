@@ -48,6 +48,21 @@
       max-height: 3rem;
       min-height: 3rem;
       width: 100%;
+      &__btn-logout {
+        width: fit-content;
+        float: right;
+        margin-right: 1rem;
+        margin-top: 1rem;
+        cursor: pointer;
+        .icon {
+          transition: all 0.3s;
+        }
+        &:hover {
+          .icon {
+            color: $--green-main;
+          }
+        }
+      }
     }
 
     .body-profile {

@@ -13,6 +13,7 @@ export const reducer = (state, action) => {
       return {
         ...state,
         teacher: {
+          ...state.teacher,
           ...payload.teacher,
         },
       };
@@ -45,6 +46,48 @@ export const reducer = (state, action) => {
         ...state,
         inFavoriteList: payload,
       };
+
+    case COURSE_DETAIL_ACTION.ADD_FEEDBACK:
+      state.feedbacks.feedbacks.unshift(payload.newFeedback);
+      console.log({
+        ...state.feedbacks,
+        feedbacks: state.feedbacks.feedbacks,
+        rate: [...payload.rate],
+      });
+      return {
+        ...state,
+        feedbacks: {
+          ...state.feedbacks,
+          feedbacks: state.feedbacks.feedbacks,
+          rate: [...payload.rate],
+        },
+      };
+    case COURSE_DETAIL_ACTION.UPDATE_RATE_COURSE:
+      return {
+        ...state,
+        course: {
+          ...state.course,
+          rate: payload,
+        },
+      };
+    case COURSE_DETAIL_ACTION.UPDATE_RATE_TEACHER:
+      console.log({
+        ...state.teacher,
+        rate: payload,
+      });
+      return {
+        ...state,
+        teacher: {
+          ...state.teacher,
+          rate: payload,
+        },
+      };
+
+    case COURSE_DETAIL_ACTION.UPDATE_LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
     default:
       return state;
   }
@@ -58,4 +101,8 @@ export const COURSE_DETAIL_ACTION = {
   UPDATE_COURSE_CAT: 4,
   UPDATE_PAID: 5,
   UPDATE_IN_FAVOTIRE: 6,
+  ADD_FEEDBACK: 7,
+  UPDATE_RATE_COURSE: 8,
+  UPDATE_RATE_TEACHER: 9,
+  UPDATE_LOADING: 10,
 };

@@ -158,6 +158,12 @@
             font-size: 1.5rem;
             margin-bottom: 0.25rem;
             font-family: "Montserrat";
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            &:hover {
+              color: $--green-main;
+            }
           }
 
           &-major {
@@ -207,9 +213,10 @@
       &__intro-teacher {
         padding: 0rem 1rem 1rem 6rem;
         text-align: justify;
-        .intro-teacher__content{
-          p, span{
-            font-family: 'Quicksand' !important;
+        .intro-teacher__content {
+          p,
+          span {
+            font-family: "Quicksand" !important;
           }
         }
       }

@@ -1,11 +1,12 @@
 // @flow
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import { Header } from "../../header/header";
 import { CourseList } from "./courseList/courseList";
 import { Footer } from "../../footer/footer";
 import { useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { handleCoursePage } from "./middleware/courses.mdw";
 import { reducer, COURSES_ACTION } from "./reducer/reducer";
+import { authContext } from "../../../contexts/auth/authContext";
 import "./style.scss";
 import $ from "jquery";
 const initData = {
@@ -18,19 +19,26 @@ const initData = {
   direct: 1,
   courses: [],
   filter: 0,
+  loading: true,
 };
 
 export const Courses = (props) => {
   const [store_courses, dispatch_courses] = useReducer(reducer, initData);
+  const { store_auth } = useContext(authContext);
   let params = useParams();
   let { url } = useRouteMatch();
   const location = useLocation();
   useEffect(() => {
-    //console.log(path, url, params, new URLSearchParams(location.search).get('catId'));
     (async () => {
-      await handleCoursePage.loadInitPage(url, params, dispatch_courses);
+      await handleCoursePage.loadInitPage(
+        store_auth,
+        url,
+        params,
+        new URLSearchParams(location.search),
+        dispatch_courses
+      );
     })();
-  }, [url]);
+  }, [location]);
 
   useEffect(() => {
     handleCoursePage.filterCourses(
@@ -43,6 +51,10 @@ export const Courses = (props) => {
   useEffect(() => {
     const { pageActive, limit, courses } = store_courses;
     dispatch_courses({
+      type: COURSES_ACTION.UPDATE_LOADING,
+      payload: true,
+    });
+    dispatch_courses({
       type: COURSES_ACTION.UPDATE_RENDER_LIST,
       payload: [...courses.slice((pageActive - 1) * limit, pageActive * limit)],
     });
@@ -53,6 +65,12 @@ export const Courses = (props) => {
       dispatch_courses
     );
     $("html,body").animate({ scrollTop: 0 }, 500);
+    setTimeout(() => {
+      dispatch_courses({
+        type: COURSES_ACTION.UPDATE_LOADING,
+        payload: false,
+      });
+    }, 2000);
   }, [store_courses.courses, store_courses.pageActive, store_courses.limit]);
 
   return (
@@ -61,6 +79,7 @@ export const Courses = (props) => {
       <div className="courses-page__body">
         <div className="wrap">
           <CourseList
+            loading={store_courses.loading}
             search={store_courses.search}
             title={store_courses.title}
             courses={store_courses.renderList}

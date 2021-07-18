@@ -8,7 +8,7 @@ module.exports = {
   },
 
   allWithCourseId(id) {
-    return db(TBL_FEEDBACKS).where("id_course", id);
+    return db(TBL_FEEDBACKS).where("id_course", id).orderBy('createAt');
   },
 
   allWithUserOwnerCourse(id) {
@@ -25,5 +25,9 @@ module.exports = {
     }
 
     return feedback[0];
+  },
+
+  add(data) {
+    return db(TBL_FEEDBACKS).insert({ ...data });
   },
 };

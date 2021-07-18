@@ -1,7 +1,7 @@
 // @flow
-import * as React from "react";
+import React from "react";
 import "./style.scss";
-import teacherImg from "../../../../../public/image/teacher_1.png";
+import { Link } from "react-router-dom";
 import numeral from "numeral";
 export const Teacher = ({ teacher }) => {
   return (
@@ -43,7 +43,10 @@ export const Teacher = ({ teacher }) => {
               </div>
 
               <div className="teacher-info__intro">
-                <p className="teacher-info__intro-name">{`${teacher.firstName} ${teacher.lastName}`}</p>
+                <Link
+                  to={`/teachers/${teacher.id}`}
+                  className="teacher-info__intro-name"
+                >{`${teacher.firstName} ${teacher.lastName}`}</Link>
                 <p className="teacher-info__intro-major">
                   {teacher.major || "( Hiện chưa cập nhật chuyên môn )"}
                 </p>
@@ -78,12 +81,14 @@ export const Teacher = ({ teacher }) => {
             </div>
           </div>
           <div className="item__intro-teacher">
-            {(
+            {teacher.teacherDesc?.length ? (
               <p
                 className="intro-teacher__content"
                 dangerouslySetInnerHTML={{ __html: teacher.teacherDesc }}
               ></p>
-            ) || "̣( Hiện chưa có thông tin mô tả )"}
+            ) : (
+              "̣( Hiện chưa có thông tin mô tả )"
+            )}
           </div>
         </div>
       </div>
