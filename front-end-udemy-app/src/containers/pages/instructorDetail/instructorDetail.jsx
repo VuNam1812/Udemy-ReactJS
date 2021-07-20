@@ -45,10 +45,7 @@ export const InstructorDetail = (props) => {
                 <div
                   className="instructor__summary-image"
                   style={{
-                    backgroundImage: `url("http://localhost:3030/${store_page.teacherInfo.srcImage.replaceAll(
-                      "\\",
-                      "/"
-                    )}")`,
+                    backgroundImage: `url("${store_page.teacherInfo.srcImage}")`,
                   }}
                 ></div>
                 <div className="summary-text">

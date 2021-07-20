@@ -7,8 +7,6 @@ const router = express.Router();
 const auth = require("../middlewares/auth.mdw");
 const lectureModel = require("../models/lecture.model");
 
-//const upload = require('../../middlewares/multer.mdw').UploadUser();
-
 router.post("/", auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 

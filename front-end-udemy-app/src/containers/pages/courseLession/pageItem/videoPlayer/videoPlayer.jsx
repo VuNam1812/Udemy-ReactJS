@@ -8,8 +8,8 @@ export const VideoPlayer = ({ className, video }) => {
       {video.src && (
         <ReactPlayer
           className="video-player__body"
-                  url={`http://localhost:3030/${video.src.replaceAll("\\", "/")}`}
-                  controls
+          url={`${video.src}`}
+          controls
         ></ReactPlayer>
       )}
     </div>

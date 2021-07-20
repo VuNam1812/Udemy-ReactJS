@@ -71,10 +71,7 @@ export const Introduce = ({ course, teacher }) => {
             {course.teacherImage && (
               <div className="mini-teacher-card__image">
                 <img
-                  src={`http://localhost:3030/${course.teacherImage.replaceAll(
-                    "\\",
-                    "/"
-                  )}`}
+                  src={`${course.teacherImage}`}
                 ></img>
               </div>
             )}

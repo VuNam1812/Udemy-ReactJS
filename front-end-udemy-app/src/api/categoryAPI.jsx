@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient";
+import axios from "axios";
 
 const categoryApi = {
   getAll: (filter = {}) => {
@@ -16,6 +17,11 @@ const categoryApi = {
     return axiosClient.get(url);
   },
 
+  getLinkUpload: (data = {}) => {
+    const url = `categories/linkUpload`;
+    return axiosClient.get(url, { params: { ...data } });
+  },
+
   create: (data) => {
     const url = `categories`;
     return axiosClient.post(url, data);
@@ -29,6 +35,10 @@ const categoryApi = {
   updateInfo: (id, data) => {
     const url = `categories/${id}`;
     return axiosClient.patch(url, data);
+  },
+
+  uploadImage: (url, data, config = {}) => {
+    return axios.put(url, data, { headers: { ...config } });
   },
 
   checkDelete: (id) => {

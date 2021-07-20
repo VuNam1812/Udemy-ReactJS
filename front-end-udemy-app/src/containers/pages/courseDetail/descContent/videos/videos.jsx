@@ -15,7 +15,7 @@ export const Videos = ({ course, lessions, paid }) => {
       if (lecture.isCanPreview) {
         setStateModel("visible");
         setUrlSeleted(
-          `http://localhost:3030/${lecture.src?.replaceAll("\\", "/")}`
+          `${lecture.src}`
         );
       } else {
         setUrlSeleted("");

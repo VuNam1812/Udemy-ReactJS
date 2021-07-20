@@ -135,10 +135,7 @@ export const CourseDetail = (props) => {
                   <div
                     className="image-course"
                     style={{
-                      backgroundImage: `url("http://localhost:3030/${store.course.srcImage.replaceAll(
-                        "\\",
-                        "/"
-                      )}")`,
+                      backgroundImage: `url("${store.course.srcImage}")`,
                     }}
                   >
                     <Button className="image-course__btn btn-afer-rounded">

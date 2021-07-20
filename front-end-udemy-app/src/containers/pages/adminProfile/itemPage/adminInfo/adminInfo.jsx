@@ -88,14 +88,7 @@ export const AdminInfo = ({ account, adminProfileDispatch }) => {
       <div className="admin-info__content">
         <div className="content-view">
           <div className="content-view__image">
-            {account.srcImage && (
-              <img
-                src={`http://localhost:3030/${account.srcImage.replaceAll(
-                  "\\",
-                  "/"
-                )}`}
-              ></img>
-            )}
+            {account.srcImage && <img src={`${account.srcImage}`}></img>}
             <input
               type="file"
               ref={avatar}

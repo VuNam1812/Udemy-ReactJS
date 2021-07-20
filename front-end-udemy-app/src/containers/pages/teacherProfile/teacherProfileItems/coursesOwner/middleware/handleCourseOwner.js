@@ -216,14 +216,37 @@ export const handleCourseOwner = {
   },
 
   changeImageCourse: async (file, course, ownerDispatch, dispatch) => {
-    const formData = new FormData();
+    let result = false;
 
-    formData.append("srcImage", file);
-    formData.append("currentSrc", course.srcImage);
+    await Swal.fire({
+      text: "Cập nhật hình ảnh khóa học",
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      didOpen: async () => {
+        Swal.showLoading();
+        const linkUpload = await courseApi.getLinkUpload({
+          fileName: file.name,
+          fileType: file.type,
+          userId: course.id_owner,
+        });
 
-    const ret = await courseApi.uploadImage(course.id, formData);
+        const { urlGetObject, urlSaveObject } = linkUpload.data.uri;
 
-    if (!ret.data.updated) {
+        await courseApi.uploadImage(urlSaveObject, file, {
+          "Content-type": file.type,
+        });
+
+        const ret = await courseApi.uploadInfo(course.id, {
+          srcImage: urlGetObject,
+        });
+
+        result = ret.data.updated;
+
+        Swal.close();
+      },
+    });
+
+    if (!result) {
       await Swal.fire({
         icon: "error",
         text: "Cập nhật thất bại!! Vui lòng thử lại.",

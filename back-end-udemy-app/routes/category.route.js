@@ -11,7 +11,7 @@ const awsService = require("../aws/index");
 const auth = require("../middlewares/auth.mdw");
 
 const EmptyImage =
-  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/CategoryEmptyImage.png";
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/CategoryEmptyImage.png";
 
 router.get("/", async (req, res) => {
   const { filter } = req.query;
@@ -52,6 +52,7 @@ router.post("/", auth, async (req, res) => {
         : (await categoryModel.single(+req.body.id_parentCat)).fullName + " | ";
 
     const ret = await categoryModel.add({
+      srcImage: EmptyImage,
       ...req.body,
       fullName: `${parentCatName}${req.body.catName}`,
     });
@@ -112,7 +113,8 @@ router.get("/linkUpload", auth, async (req, res) => {
   }
 
   const { urlSaveObject, urlGetObject } = await awsService.createLinkUpload(
-    req.query
+    req.query,
+    "categories"
   );
 
   return res.json({

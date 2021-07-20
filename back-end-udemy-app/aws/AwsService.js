@@ -14,20 +14,18 @@ class AwsService {
     this.s3 = new aws.S3();
   }
 
-  async createLinkUpload({ userId, fileName, fileType }) {
+  async createLinkUpload({ userId, fileName, fileType }, folder) {
     const s3Params = {
       ContentType: fileType,
       Bucket: this.S3_BUCKET,
-      Key: userId + "/" + fileName,
+      Key: userId + "/" + folder + "/" + fileName,
       Expires: 600,
     };
-    const urlGetObject = this.s3.getSignedUrl("getObject", {
-      Bucket: this.S3_BUCKET,
-      Key: userId + "/" + fileName,
-      Expires: 600,
-    });
+    const urlGetObject = `https://${this.S3_BUCKET}.s3.${
+      process.env.AWS_REGION
+    }.amazonaws.com/${userId + "/" + folder + "/" + fileName}`;
     const urlSaveObject = this.s3.getSignedUrl("putObject", s3Params);
-
+    
     return {
       urlGetObject,
       urlSaveObject,

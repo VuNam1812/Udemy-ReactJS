@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "./axiosClient";
 
 const lectureApi = {
@@ -10,9 +11,18 @@ const lectureApi = {
     return axiosClient.get(url, { params: { ...data } });
   },
 
+  getLinkUpload: (data) => {
+    const url = `lectures/linkUpload`;
+    return axiosClient.get(url, { params: { ...data } });
+  },
+
   create: (data) => {
     const url = `lectures`;
     return axiosClient.post(url, data);
+  },
+
+  uploadVideo: (url, data, config = {}) => {
+    return axios.put(url, data, { headers: { ...config } });
   },
 
   updateInfo: (id, data) => {

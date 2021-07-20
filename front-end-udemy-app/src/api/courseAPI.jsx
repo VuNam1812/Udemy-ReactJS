@@ -1,5 +1,5 @@
 import axiosClient from "./axiosClient";
-
+import axios from "axios";
 const courseApi = {
   getAll: (data = {}) => {
     const url = "courses";
@@ -16,6 +16,15 @@ const courseApi = {
   getFeedbacks: (id) => {
     const url = `courses/${id}/feedbacks`;
     return axiosClient.get(url);
+  },
+
+  getLinkUpload: (data = {}) => {
+    const url = `courses/linkUpload`;
+    return axiosClient.get(url, { params: { ...data } });
+  },
+
+  uploadImage: (url, data, config = {}) => {
+    return axios.put(url, data, { headers: { ...config } });
   },
 
   checkPaid: (data) => {
@@ -46,11 +55,6 @@ const courseApi = {
   uploadInfo: (id, data) => {
     const url = `courses/${id}`;
     return axiosClient.patch(url, { ...data });
-  },
-
-  uploadImage: (id, data) => {
-    const url = `courses/${id}/uploadImage`;
-    return axiosClient.put(url, data);
   },
 
   updateActive: (id, data) => {

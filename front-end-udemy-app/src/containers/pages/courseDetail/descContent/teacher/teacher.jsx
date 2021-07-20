@@ -18,10 +18,7 @@ export const Teacher = ({ teacher }) => {
             <div className="item__image-teacher">
               {teacher.srcImage && (
                 <img
-                  src={`http://localhost:3030/${teacher.srcImage.replaceAll(
-                    "\\",
-                    "/"
-                  )}`}
+                  src={`${teacher.srcImage}`}
                 ></img>
               )}
             </div>

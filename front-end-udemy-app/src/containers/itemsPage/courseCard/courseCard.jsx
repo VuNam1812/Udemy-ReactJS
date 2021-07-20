@@ -90,10 +90,7 @@ export const CourseCard = ({ course, className }) => {
             <div
               className="popover-course__image"
               style={{
-                backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                  "\\",
-                  "/"
-                )}")`,
+                backgroundImage: `url("${course.srcImage}")`,
               }}
             ></div>
             <p className="popover-course__name">{course.courName}</p>
@@ -165,10 +162,7 @@ export const CourseCard = ({ course, className }) => {
           <div
             className="item__image"
             style={{
-              backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                "\\",
-                "/"
-              )}")`,
+              backgroundImage: `url("${course.srcImage}")`,
             }}
           ></div>
         </div>

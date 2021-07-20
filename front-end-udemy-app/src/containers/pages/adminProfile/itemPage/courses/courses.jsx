@@ -271,10 +271,7 @@ export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
                     <div
                       className="item__image"
                       style={{
-                        backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                          "\\",
-                          "/"
-                        )}")`,
+                        backgroundImage: `url("${course.srcImage}")`,
                       }}
                     ></div>
                   </div>

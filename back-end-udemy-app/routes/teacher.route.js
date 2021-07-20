@@ -14,7 +14,7 @@ const teacherinfoModel = require("../models/teacherinfo.model");
 const router = express.Router();
 
 const EmptyImage =
-  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/UserEmptyImage.jpg";
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/UserEmptyImage.jpg";
 
 router.post("/", async function (req, res) {
   const hash = bcrypt.hashSync(req.body.password, 10);

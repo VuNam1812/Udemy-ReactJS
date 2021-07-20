@@ -201,18 +201,12 @@ export const handleLessionCourse = {
     }
   },
 
-  createLecture: async (data, dispatch) => {
+  createLecture: async (account, data, dispatch) => {
     const newLecture = { ...data };
     delete newLecture.chapterName;
     delete newLecture.lectureName;
 
     newLecture.name = data.lectureName;
-
-    const formData = new FormData();
-
-    Object.keys(newLecture).map((item) => {
-      formData.append(item, newLecture[item]);
-    });
 
     let result = false;
 
@@ -222,11 +216,26 @@ export const handleLessionCourse = {
       allowOutsideClick: false,
       didOpen: async () => {
         Swal.showLoading();
+        if (newLecture.src && typeof newLecture.src === "object") {
+          const linkUpload = await lectureApi.getLinkUpload({
+            fileName: newLecture.src.name,
+            fileType: newLecture.src.type,
+            userId: account.id,
+          });
 
-        const res = await lectureApi.create(formData);
+          const { urlGetObject, urlSaveObject } = linkUpload.data.uri;
+
+          await lectureApi.uploadVideo(urlSaveObject, newLecture.src, {
+            "Content-type": newLecture.src.type,
+          });
+
+          newLecture.src = urlGetObject;
+        }
+
+        const res = await lectureApi.create(newLecture);
         result = res.data.created;
 
-        if (res.data.created) {
+        if (result) {
           const chapter = await chapterApi.getSingle(newLecture.id_chapter);
 
           dispatch({
@@ -268,20 +277,14 @@ export const handleLessionCourse = {
     }
   },
 
-  editLecture: async (lecture, data, dispatch) => {
-    let newLecture = { ...data };
-    delete newLecture.chapterName;
-    delete newLecture.lectureName;
+  editLecture: async (account, lecture, data, dispatch) => {
+    let editLecture = { ...data };
+    delete editLecture.chapterName;
+    delete editLecture.lectureName;
 
-    newLecture.name = data.lectureName;
+    editLecture.name = data.lectureName;
 
-    newLecture = { ...lecture, ...newLecture };
-
-    const formData = new FormData();
-
-    Object.keys(newLecture).map((item) => {
-      formData.append(item, newLecture[item]);
-    });
+    editLecture = { ...lecture, ...editLecture };
 
     let result = false;
 
@@ -292,11 +295,27 @@ export const handleLessionCourse = {
       didOpen: async () => {
         Swal.showLoading();
 
-        const res = await lectureApi.updateInfo(lecture.id, formData);
+        if (editLecture.src && typeof editLecture.src === "object") {
+          const linkUpload = await lectureApi.getLinkUpload({
+            fileName: editLecture.src.name,
+            fileType: editLecture.src.type,
+            userId: account.id,
+          });
+
+          const { urlGetObject, urlSaveObject } = linkUpload.data.uri;
+
+          await lectureApi.uploadVideo(urlSaveObject, editLecture.src, {
+            "Content-Type": editLecture.src.type,
+          });
+
+          editLecture.src = urlGetObject;
+        }
+
+        const res = await lectureApi.updateInfo(lecture.id, editLecture);
         result = res.data.updated;
 
-        if (res.data.updated) {
-          const chapter = await chapterApi.getSingle(newLecture.id_chapter);
+        if (result) {
+          const chapter = await chapterApi.getSingle(editLecture.id_chapter);
 
           dispatch({
             type: EDIT_COURSE_ACTION.UPDATE_SINGLE_LESSION,

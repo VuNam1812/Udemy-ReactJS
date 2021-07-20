@@ -16,7 +16,7 @@ const AwsService = require("../aws/index");
 const router = express.Router();
 
 const EmptyImage =
-  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/UserEmptyImage.jpg";
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/UserEmptyImage.jpg";
 
 router.post("/", async function (req, res) {
   const hash = bcrypt.hashSync(req.body.password, 10);
@@ -136,7 +136,8 @@ router.get("/:id/coursesFavorite", auth, async (req, res) => {
 
 router.get("/linkUpload", async (req, res) => {
   const { urlSaveObject, urlGetObject } = await AwsService.createLinkUpload(
-    req.query
+    req.query,
+    "avatar"
   );
 
   return res.json({

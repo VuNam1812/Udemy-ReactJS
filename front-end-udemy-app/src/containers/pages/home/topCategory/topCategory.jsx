@@ -29,10 +29,7 @@ export const TopCategory = (props) => {
                   <div
                     className="body-item__image"
                     style={{
-                      backgroundImage: `url(${
-                        "http://localhost:3030/" +
-                        cat.srcImage.replaceAll("\\", "/")
-                      })`,
+                      backgroundImage: `url(${cat.srcImage})`,
                     }}
                   ></div>
                   <div className="body-item__content">

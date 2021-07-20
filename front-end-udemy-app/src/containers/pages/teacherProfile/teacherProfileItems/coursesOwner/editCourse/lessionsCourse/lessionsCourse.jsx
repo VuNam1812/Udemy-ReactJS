@@ -1,5 +1,5 @@
 // @flow
-import React, { useReducer, useRef } from "react";
+import React, { useReducer, useRef, useContext } from "react";
 import ReactPlayer from "react-player";
 import "./style.scss";
 import {
@@ -9,6 +9,7 @@ import {
   FieldText,
   RadioButton,
 } from "../../../../../../../components";
+import { authContext } from "../../../../../../../contexts/auth/authContext";
 
 import {
   reducer,
@@ -41,6 +42,7 @@ const initData = {
 
 export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
   const [store, lessionsCourse_dispatch] = useReducer(reducer, initData);
+  const { store_auth } = useContext(authContext);
   const { register, getValues, setValue } = useForm();
   const file = useRef();
   const video = useRef();
@@ -130,7 +132,7 @@ export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
 
   const handleCreateLectureModalOpen = (lession) => {
     setValue("lectureName", "");
-    setValue("src", {});
+    setValue("src", "");
     setValue("id_chapter", +lession.id);
     setValue("isCanPreview", 0);
     lessionsCourse_dispatch({
@@ -168,7 +170,7 @@ export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
     if (lecture.src.length) {
       lessionsCourse_dispatch({
         type: LESSIONS_COURSE_ACTION.UPDATE_URL_VIDEO,
-        payload: `http://localhost:3030/${lecture.src.replaceAll("\\", "/")}`,
+        payload: lecture.src,
       });
       setValue("src", lecture.src);
     } else {
@@ -184,8 +186,8 @@ export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
   };
 
   const handleLoadLectureVideo = async (e) => {
+    console.log(e.target.files);
     if (e.target.files.length === 0) return;
-
     if (store.urlVideo.length) {
       const result = await Swal.fire({
         icon: "question",
@@ -219,6 +221,7 @@ export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
     setValue("duration", +Math.round(video.current.getDuration()));
 
     const result = await handleLessionCourse.createLecture(
+      store_auth.account,
       getValues(),
       editCourseDispatch
     );
@@ -237,6 +240,7 @@ export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
     setValue("duration", +Math.round(video.current.getDuration()));
 
     const result = await handleLessionCourse.editLecture(
+      store_auth.account,
       store.lectureSelect,
       getValues(),
       editCourseDispatch
@@ -295,6 +299,7 @@ export const LessionsCourse = ({ course, lessions, editCourseDispatch }) => {
       <Modal
         state={store.modalLectureState}
         onClickOverlay={() => {
+          file.current.value = "";
           lessionsCourse_dispatch({
             type: LESSIONS_COURSE_ACTION.MODAL_LECTURE_CLOSE,
           });

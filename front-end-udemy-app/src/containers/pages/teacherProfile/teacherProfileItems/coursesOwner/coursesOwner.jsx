@@ -184,10 +184,7 @@ export const CoursesOwner = ({ account, courses, className, dispatch }) => {
                                 <div
                                   className="slide-item__image"
                                   style={{
-                                    backgroundImage: `url("http://localhost:3030/${course.srcImage.replaceAll(
-                                      "\\",
-                                      "/"
-                                    )}")`,
+                                    backgroundImage: `url("${course.srcImage}")`,
                                   }}
                                 ></div>
                               )}

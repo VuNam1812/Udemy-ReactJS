@@ -87,16 +87,13 @@ const responsePayload = {
               elements: [
                 ...courses.map((course) => {
                   return {
-                    image_url: `http://localhost:3030//${course.srcImage.replace(
-                      "\\/g",
-                      "/"
-                    )}`,
+                    image_url: course.srcImage,
                     title: course.courName,
                     subtitle: course.tinyDes,
                     buttons: [
                       {
                         type: "web_url",
-                        url: `http://localhost:3000/courses/${course.id}`,
+                        url: course.id,
                         title: "Xem chi tiết",
                       },
                     ],

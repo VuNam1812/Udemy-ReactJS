@@ -45,7 +45,7 @@ export const handleAdminCategory = {
 
     dispatch({
       type: CATEGORIES_ADMIN_ACTION.UPDATE_URL_SELECTED,
-      payload: `http://localhost:3030/${cat.srcImage.replaceAll("\\", "/")}`,
+      payload: `${cat.srcImage}`,
     });
   },
 
@@ -61,7 +61,7 @@ export const handleAdminCategory = {
     return !result;
   },
 
-  createCategory: async (data, dispatch, dispatch_cat) => {
+  createCategory: async (account, data, dispatch, dispatch_cat) => {
     let result = false;
     await Swal.fire({
       text: "Cập nhật khóa học",
@@ -69,16 +69,26 @@ export const handleAdminCategory = {
       allowOutsideClick: false,
       didOpen: async () => {
         Swal.showLoading();
-        const formData = new FormData();
 
-        Object.keys(data).map((item) => {
-          formData.append(item, data[item]);
-        });
+        if (data.srcImage && typeof data.srcImage === "object") {
+          const linkUpload = await categoryApi.getLinkUpload({
+            fileName: data.srcImage.name,
+            fileType: data.srcImage.type,
+            userId: account.id,
+          });
 
-        const res = await categoryApi.create(formData);
+          const { urlGetObject, urlSaveObject } = linkUpload.data.uri;
+
+          await categoryApi.uploadImage(urlSaveObject, data.srcImage, {
+            "Content-type": data.srcImage.type,
+          });
+
+          data.srcImage = urlGetObject;
+        }
+
+        const res = await categoryApi.create(data);
 
         result = res.data.created;
-
         if (result) {
           const catNew = await categoryApi.getSingle(res.data.catId);
 
@@ -122,7 +132,14 @@ export const handleAdminCategory = {
     }
   },
 
-  updateCategory: async (oldCat, data, catSelected, dispatch, dispatch_cat) => {
+  updateCategory: async (
+    account,
+    editCat,
+    data,
+    catSelected,
+    dispatch,
+    dispatch_cat
+  ) => {
     let result = false;
     await Swal.fire({
       text: "Cập nhật danh mục",
@@ -130,14 +147,23 @@ export const handleAdminCategory = {
       allowOutsideClick: false,
       didOpen: async () => {
         Swal.showLoading();
+        if (typeof data.srcImage !== "string") {
+          const linkUpload = await categoryApi.getLinkUpload({
+            fileName: data.srcImage.name,
+            fileType: data.srcImage.type,
+            userId: account.id,
+          });
 
-        const formData = new FormData();
+          const { urlGetObject, urlSaveObject } = linkUpload.data.uri;
 
-        Object.keys(data).map((item) => {
-          formData.append(item, data[item]);
-        });
+          await categoryApi.uploadImage(urlSaveObject, data.srcImage, {
+            "Content-type": data.srcImage.type,
+          });
 
-        const res = await categoryApi.updateInfo(oldCat.id, formData);
+          data.srcImage = urlGetObject;
+        }
+
+        const res = await categoryApi.updateInfo(editCat.id, data);
 
         result = res.data.updated;
 

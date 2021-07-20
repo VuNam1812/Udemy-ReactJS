@@ -51,14 +51,6 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const lecture = await lectureModel.single(id);
-  return res.json({
-    data: lecture,
-  });
-});
-
 router.get("/linkUpload", auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 
@@ -70,15 +62,23 @@ router.get("/linkUpload", auth, async (req, res) => {
       },
     });
   }
-
   const { urlSaveObject, urlGetObject } = await awsService.createLinkUpload(
-    req.query
+    req.query,
+    "lessions"
   );
 
   return res.json({
     data: {
       uri: { urlSaveObject, urlGetObject },
     },
+  });
+});
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const lecture = await lectureModel.single(id);
+  return res.json({
+    data: lecture,
   });
 });
 

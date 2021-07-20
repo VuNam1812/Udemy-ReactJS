@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useReducer } from "react";
+import React, { useRef, useEffect, useReducer, useContext } from "react";
 
 import {
   NavTab,
@@ -282,9 +282,7 @@ export const EditCourse = ({
               <div
                 className="course-info__image"
                 style={{
-                  backgroundImage: `url("http://localhost:3030/${
-                    course.srcImage ? course.srcImage.replaceAll("\\", "/") : ""
-                  }")`,
+                  backgroundImage: `url("${course.srcImage}")`,
                 }}
               >
                 <div

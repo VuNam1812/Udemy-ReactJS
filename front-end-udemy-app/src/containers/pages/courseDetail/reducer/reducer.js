@@ -49,11 +49,6 @@ export const reducer = (state, action) => {
 
     case COURSE_DETAIL_ACTION.ADD_FEEDBACK:
       state.feedbacks.feedbacks.unshift(payload.newFeedback);
-      console.log({
-        ...state.feedbacks,
-        feedbacks: state.feedbacks.feedbacks,
-        rate: [...payload.rate],
-      });
       return {
         ...state,
         feedbacks: {
@@ -67,14 +62,11 @@ export const reducer = (state, action) => {
         ...state,
         course: {
           ...state.course,
-          rate: payload,
+          rate: +payload.rate,
+          feedbackCount: +payload.feedbackCount,
         },
       };
     case COURSE_DETAIL_ACTION.UPDATE_RATE_TEACHER:
-      console.log({
-        ...state.teacher,
-        rate: payload,
-      });
       return {
         ...state,
         teacher: {

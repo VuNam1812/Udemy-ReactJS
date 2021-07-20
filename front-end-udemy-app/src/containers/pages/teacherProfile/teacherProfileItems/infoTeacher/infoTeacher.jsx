@@ -153,10 +153,7 @@ export const InfoTeacher = ({ teacher, className, dispatch }) => {
           <div
             className="left-block__avatar"
             style={{
-              backgroundImage: `url("http://localhost:3030/${teacher.srcImage.replaceAll(
-                "\\",
-                "/"
-              )}")`,
+              backgroundImage: `url("${teacher.srcImage}")`,
             }}
           >
             {" "}

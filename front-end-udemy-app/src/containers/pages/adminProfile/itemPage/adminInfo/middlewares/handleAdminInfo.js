@@ -115,16 +115,25 @@ export const handleAdminInfo = {
       didOpen: async () => {
         Swal.showLoading();
 
-        const formData = new FormData();
+        const linkUpload = await accountApi.getLinkUpload({
+          fileName: file.name,
+          fileType: file.type,
+          userId: account.id,
+        });
 
-        formData.append("currentSrc", account.srcImage);
-        formData.append("srcImage", file);
+        const { urlSaveObject, urlGetObject } = linkUpload.data.uri;
 
-        const res = await accountApi.uploadAvatar(formData);
+        await accountApi.uploadAvatar(urlSaveObject, file, {
+          "Content-type": file.type,
+        });
+
+        const updateInfo = await accountApi.updateInfo(account.id, {
+          srcImage: urlGetObject,
+        });
 
         authDispatch({
           type: AUTH_ACTION.UPDATE_AVATAR_ACCOUNT,
-          payload: res.data.srcImage,
+          payload: urlGetObject,
         });
 
         Swal.fire({

@@ -19,7 +19,7 @@ const joinInCourseModel = require("../models/joinInCourse.model");
 const router = express.Router();
 
 const emptyImage =
-  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/CourseEmptyImage.png";
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/CourseEmptyImage.png";
 
 router.get("/", async (req, res) => {
   const { filter, getInfo, search, order, limit } = req.query;
@@ -75,6 +75,7 @@ router.post("/", auth, async (req, res) => {
     lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
     joinerCount: 0,
     feedbackCount: 0,
+    rate: 5,
     tinyDes: "",
     fullDes: "",
     isDelete: 0,
@@ -125,7 +126,8 @@ router.get("/linkUpload", auth, async (req, res) => {
   }
 
   const { urlSaveObject, urlGetObject } = await awsService.createLinkUpload(
-    req.query
+    req.query,
+    "courses"
   );
 
   return res.json({

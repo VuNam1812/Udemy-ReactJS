@@ -5,7 +5,6 @@ import "./style.scss";
 import { COURSE_DETAIL_ACTION } from "../../reducer/reducer";
 
 import { Button, Modal } from "../../../../../components";
-import teacherImage from "../../../../../public/image/teacher_1.png";
 import numeral from "numeral";
 
 import Rating from "@material-ui/lab/Rating";
@@ -78,7 +77,10 @@ export const Feedback = ({ rate, feedbacks, paid, course, dispatch }) => {
           });
           dispatch({
             type: COURSE_DETAIL_ACTION.UPDATE_RATE_COURSE,
-            payload: courseTarget.data.rate,
+            payload: {
+              rate: courseTarget.data.rate,
+              feedbackCount: courseTarget.data.feedbackCount,
+            },
           });
           dispatch({
             type: COURSE_DETAIL_ACTION.UPDATE_RATE_TEACHER,
@@ -227,7 +229,7 @@ export const Feedback = ({ rate, feedbacks, paid, course, dispatch }) => {
                   <div className="item">
                     <div className="item-user">
                       <div className="item-user__image">
-                        <img src={teacherImage}></img>
+                        <img src={feedback.user.srcImage}></img>
                       </div>
                       <p className="item-user__name">{`${feedback.user.firstName} ${feedback.user.lastName}`}</p>
                     </div>

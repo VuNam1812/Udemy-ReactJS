@@ -3,6 +3,7 @@ import React, { useContext, useReducer, useEffect, useRef } from "react";
 import "./style.scss";
 import { Button, Modal, FieldText, Select } from "../../../../../components";
 import { categoryContext } from "../../../../../contexts/categories/categoryContext";
+import { authContext } from "../../../../../contexts/auth/authContext";
 import { reducer, enumState, CATEGORIES_ADMIN_ACTION } from "./reducer/reducer";
 import { handleAdminCategory } from "./middlewares/handleAdminCategory";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,8 @@ const initData = {
 export const Categories = (props) => {
   const [store, dispatch] = useReducer(reducer, initData);
   const { store_cat, dispatch_cat } = useContext(categoryContext);
+  const { store_auth } = useContext(authContext);
+
   const { register, getValues, setValue } = useForm();
   const file = useRef();
 
@@ -47,6 +50,7 @@ export const Categories = (props) => {
     if (!handleAdminCategory.validFieldText(getValues(), dispatch)) return;
 
     await handleAdminCategory.createCategory(
+      store_auth.account,
       getValues(),
       dispatch,
       dispatch_cat
@@ -65,6 +69,7 @@ export const Categories = (props) => {
     if (!handleAdminCategory.validFieldText(getValues(), dispatch)) return;
 
     await handleAdminCategory.updateCategory(
+      store_auth.account,
       store.catSelectedModal,
       getValues(),
       store.catSelected,
@@ -216,10 +221,7 @@ export const Categories = (props) => {
               <div
                 className="main-category__image"
                 style={{
-                  backgroundImage: `url("http://localhost:3030/${store.catSelected.srcImage.replaceAll(
-                    "\\",
-                    "/"
-                  )}")`,
+                  backgroundImage: `url("${store.catSelected.srcImage}")`,
                 }}
               ></div>
 
@@ -242,10 +244,15 @@ export const Categories = (props) => {
                   {store.catSelected.subCategory?.length || 0} danh mục
                 </p>
               </div>
-              <div className="main-category__delete-btn" onClick={() => {handleAdminCategory.deleteCategory(
-                store.catSelected,
-                dispatch_cat
-              );}}>
+              <div
+                className="main-category__delete-btn"
+                onClick={() => {
+                  handleAdminCategory.deleteCategory(
+                    store.catSelected,
+                    dispatch_cat
+                  );
+                }}
+              >
                 <i className="icon fa fa-trash" aria-hidden="true"></i>
               </div>
             </div>
@@ -262,10 +269,7 @@ export const Categories = (props) => {
                       <div
                         className="main-category__image sub-category-group__item-image"
                         style={{
-                          backgroundImage: `url("http://localhost:3030/${cat.srcImage.replaceAll(
-                            "\\",
-                            "/"
-                          )}")`,
+                          backgroundImage: `url("${cat.srcImage}")`,
                         }}
                       ></div>
                       <div className="main-category__info">
