@@ -1,16 +1,13 @@
 const express = require("express");
-const fs = require("fs");
 
 const lectureModel = require("../models/lecture.model");
 const chapterModel = require("../models/chapter.model");
 
+const awsService = require("../aws/index");
+
 const router = express.Router();
 
 const auth = require("../middlewares/auth.mdw");
-
-const upload = require("../middlewares/multer.mdw").UploadVideoLecture();
-
-const EmptyImage = "public/imgs/Categories/CategoryEmptyImage.png";
 
 router.get("/", async (req, res) => {
   return res.json({
@@ -18,7 +15,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/", auth, upload.single("src"), async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 
   if (permission !== 1) {
@@ -32,7 +29,6 @@ router.post("/", auth, upload.single("src"), async (req, res) => {
   try {
     const ret = await lectureModel.add({
       ...req.body,
-      src: req.file ? req.file.path : "",
     });
 
     const chapter = await chapterModel.single(req.body.id_chapter);
@@ -63,7 +59,30 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-router.patch("/:id", auth, upload.single("src"), async (req, res) => {
+router.get("/linkUpload", auth, async (req, res) => {
+  const { permission } = req.accessTokenPayload;
+
+  if (permission !== 1) {
+    return res.json({
+      data: {
+        updated: false,
+        err_message: "Permission invalid!!",
+      },
+    });
+  }
+
+  const { urlSaveObject, urlGetObject } = await awsService.createLinkUpload(
+    req.query
+  );
+
+  return res.json({
+    data: {
+      uri: { urlSaveObject, urlGetObject },
+    },
+  });
+});
+
+router.patch("/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { permission } = req.accessTokenPayload;
 
@@ -76,16 +95,8 @@ router.patch("/:id", auth, upload.single("src"), async (req, res) => {
     });
   }
   try {
-    if (req.file?.path) {
-      const oldPath = (await lectureModel.single(id)).src;
-      if (oldPath.length !== 0 && req.file.path !== oldPath) {
-        fs.unlink(oldPath.replace("\\/g", "/"), () => {});
-      }
-    }
-
     const ret = await lectureModel.update(id, {
       ...req.body,
-      src: req.file ? req.file.path : req.body.src,
     });
 
     return res.json({
@@ -140,14 +151,8 @@ router.delete("/:id", auth, async (req, res) => {
   }
 
   try {
-    const { src: oldPath, id_chapter } = await lectureModel.single(id);
+    const { id_chapter } = await lectureModel.single(id);
     const ret = await lectureModel.delete(id);
-
-    if (ret && oldPath.length !== 0) {
-      if (fs.existsSync(oldPath.replace("\\/g", "/"))) {
-        fs.unlink(oldPath.replace("\\/g", "/"), () => {});
-      }
-    }
 
     const chapter = await chapterModel.single(id_chapter);
 

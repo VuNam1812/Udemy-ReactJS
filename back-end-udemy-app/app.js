@@ -37,6 +37,8 @@ app.use("/api/lectures", require("./routes/lecture.route"));
 app.use("/api/chapters", require("./routes/chapter.route"));
 app.use("/api/feedbacks", require("./routes/feedback.route"));
 
+app.use("/webhook", require("./routes/webhook.route"));
+
 app.use(function (req, res, next) {
   res.status(404).send({
     error_message: "Endpoint not found!",

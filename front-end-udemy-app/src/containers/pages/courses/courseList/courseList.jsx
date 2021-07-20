@@ -78,7 +78,7 @@ export const CourseList = (props) => {
           </div>
           {props.loading ? (
             <SkeletonCourses
-              limit={props.direct === 1 ? 12 : 5}
+              limit={props.direct === 1 ? 9 : 5}
               className={props.direct === 1 ? "vertical" : "horizontal"}
             ></SkeletonCourses>
           ) : (

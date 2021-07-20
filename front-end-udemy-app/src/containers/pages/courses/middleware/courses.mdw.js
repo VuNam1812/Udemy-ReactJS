@@ -60,7 +60,10 @@ export const handleCoursePage = {
         search: result === "search",
       },
     });
-
+    dispatch({
+      type: COURSES_ACTION.UPDATE_LOADING,
+      payload: false,
+    });
     return result;
   },
   setupPagination: (length, active, limit, dispatch) => {
@@ -78,6 +81,7 @@ export const handleCoursePage = {
       type: COURSES_ACTION.UPDATE_PAGINATION,
       payload: [...object],
     });
+
   },
 
   filterCourses: (courses, filter, dispatch) => {

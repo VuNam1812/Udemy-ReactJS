@@ -44,15 +44,13 @@ const getCourseByFilter = async (type = "") => {
   return res_data;
 };
 
-const getCourseBySearchText = async (
-  getInfo,
-  search,
-  order,
-) => {
+const getCourseBySearchText = async (getInfo, search, order, limit) => {
   let res_data = { courses: [] };
   res_data.courses = await courseModel.bySearchText(
     search,
     order,
+    "asc",
+     limit || 1000000000
   );
   for (const course of res_data.courses) {
     await getMoreInfoCourse(

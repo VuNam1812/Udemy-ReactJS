@@ -11,7 +11,7 @@ export const StudentInfo = ({ info, dispatch, dispatchAuth }) => {
     const { files } = e.target;
     await handleStudentProfile.changeAvatar(
       files[0],
-      info.srcImage,
+      info,
       dispatch,
       dispatchAuth
     );
@@ -20,11 +20,7 @@ export const StudentInfo = ({ info, dispatch, dispatchAuth }) => {
   return (
     <div className="student-info">
       <div className="avatar">
-        {info.srcImage && (
-          <img
-            src={`http://localhost:3030/${info.srcImage.replaceAll("\\", "/")}`}
-          ></img>
-        )}
+        {info.srcImage && <img src={`${info.srcImage}`}></img>}
         <input
           ref={avatar}
           type="file"

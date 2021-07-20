@@ -13,4 +13,12 @@ const knex = require("knex")({
   },
 });
 
+//connection: {
+//  host: "us-cdbr-east-04.cleardb.com",
+//  user: "b24e3594d725bb",
+//  password: "fdad89a8",
+//  database: "heroku_112bc1e92b24ce0",
+//  port: 3306,
+//},
+
 module.exports = knex;

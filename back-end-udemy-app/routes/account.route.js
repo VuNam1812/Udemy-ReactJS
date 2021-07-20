@@ -11,12 +11,12 @@ const joinModel = require("../models/joinInCourse.model");
 const handleAccount = require("../middlewares/route/account.mdw");
 const handleCourse = require("../middlewares/route/course.mdw");
 
-const fs = require("fs");
+const AwsService = require("../aws/index");
 
 const router = express.Router();
 
-const upload = require("../middlewares/multer.mdw").UploadUser();
-const EmptyImage = "public/imgs/Users/UserEmptyImage.jpg";
+const EmptyImage =
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/UserEmptyImage.jpg";
 
 router.post("/", async function (req, res) {
   const hash = bcrypt.hashSync(req.body.password, 10);
@@ -115,7 +115,6 @@ router.get("/:id/coursesFavorite", auth, async (req, res) => {
   const { userId } = req.accessTokenPayload;
   const { getInfo } = req.query;
 
-
   if (+id !== +userId) {
     return res.json({
       data: {
@@ -132,6 +131,18 @@ router.get("/:id/coursesFavorite", auth, async (req, res) => {
 
   return res.json({
     data: courses,
+  });
+});
+
+router.get("/linkUpload", async (req, res) => {
+  const { urlSaveObject, urlGetObject } = await AwsService.createLinkUpload(
+    req.query
+  );
+
+  return res.json({
+    data: {
+      uri: { urlSaveObject, urlGetObject },
+    },
   });
 });
 
@@ -212,28 +223,6 @@ router.patch("/:id", auth, async (req, res) => {
       },
     });
   }
-});
-
-router.put("/upload", auth, upload.single("srcImage"), async (req, res) => {
-  let { currentSrc } = req.body;
-  const { userId } = req.accessTokenPayload;
-
-  const result = await userModel.update(userId, {
-    srcImage: req.file.path,
-  });
-
-  if (result) {
-    currentSrc = currentSrc.replace("\\/g", "/");
-    if (currentSrc !== EmptyImage && fs.existsSync(currentSrc)) {
-      fs.unlink(currentSrc, () => {});
-    }
-  }
-
-  return res.json({
-    data: {
-      srcImage: req.file.path,
-    },
-  });
 });
 
 module.exports = router;

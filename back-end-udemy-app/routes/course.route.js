@@ -4,7 +4,7 @@ const moment = require("moment");
 
 const handleCourse = require("../middlewares/route/course.mdw");
 const handleAccount = require("../middlewares/route/account.mdw");
-const upload = require("../middlewares/multer.mdw").UploadCourses();
+const awsService = require("../aws/index");
 
 const chapterModel = require("../models/chapter.model");
 const courseModel = require("../models/course.model");
@@ -18,10 +18,11 @@ const joinInCourseModel = require("../models/joinInCourse.model");
 
 const router = express.Router();
 
-const emptyImage = "public/imgs/Courses/CourseEmptyImage.png";
+const emptyImage =
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/CourseEmptyImage.png";
 
 router.get("/", async (req, res) => {
-  const { filter, getInfo, search, order} = req.query;
+  const { filter, getInfo, search, order, limit } = req.query;
 
   let res_data = {};
   if (!search) {
@@ -41,12 +42,11 @@ router.get("/", async (req, res) => {
         break;
     }
   } else {
-    res_data = (
-      await handleCourse.getCourseBySearchText(
-        [].concat(getInfo),
-        search,
-        order,
-      )
+    res_data = await handleCourse.getCourseBySearchText(
+      [].concat(getInfo),
+      search,
+      order,
+      limit
     );
   }
 
@@ -112,6 +112,29 @@ router.get("/payment", auth, async (req, res) => {
   });
 });
 
+router.get("/linkUpload", auth, async (req, res) => {
+  const { permission } = req.accessTokenPayload;
+
+  if (permission !== 1) {
+    return res.json({
+      data: {
+        updated: false,
+        err_message: "Permission invalid!!",
+      },
+    });
+  }
+
+  const { urlSaveObject, urlGetObject } = await awsService.createLinkUpload(
+    req.query
+  );
+
+  return res.json({
+    data: {
+      uri: { urlSaveObject, urlGetObject },
+    },
+  });
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const { getInfo } = req.query;
@@ -126,45 +149,6 @@ router.get("/:id", async (req, res) => {
     data: course,
   });
 });
-
-router.put(
-  "/:id/uploadImage",
-  auth,
-  upload.single("srcImage"),
-  async (req, res) => {
-    const { id } = req.params;
-    let { currentSrc } = req.body;
-    const { permission } = req.accessTokenPayload;
-
-    if (permission !== 1) {
-      return res.json({
-        data: {
-          updated: false,
-          err_message: "Permission invalid!!",
-        },
-      });
-    }
-
-    const result = await courseModel.update(id, {
-      srcImage: req.file.path,
-      lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
-    });
-
-    if (result) {
-      currentSrc = currentSrc.replace("\\/g", "/");
-      if (currentSrc !== emptyImage) {
-        fs.unlink(currentSrc, () => {});
-      }
-    }
-
-    return res.json({
-      data: {
-        updated: true,
-        srcImage: req.file.path,
-      },
-    });
-  }
-);
 
 router.post("/:id/payment", auth, async (req, res) => {
   const { id } = req.params;

@@ -1,5 +1,5 @@
 import axiosClient from "./axiosClient";
-
+import axios from "axios";
 const accountApi = {
   createAccount: (data) => {
     const url = "accounts";
@@ -23,6 +23,11 @@ const accountApi = {
     return axiosClient.get(url, { params: { ...data } });
   },
 
+  getLinkUpload: (data = {}) => {
+    const url = `accounts/linkUpload`;
+    return axiosClient.get(url, { params: { ...data } });
+  },
+
   checkEmailAvailable: (data) => {
     const url = `accounts/available`;
     return axiosClient.get(url, { params: { ...data } });
@@ -33,9 +38,8 @@ const accountApi = {
     return axiosClient.get(url, { params: { ...data } });
   },
 
-  uploadAvatar: (data) => {
-    const url = `accounts/upload`;
-    return axiosClient.put(url, data);
+  uploadAvatar: (url, data, config = {}) => {
+    return axios.put(url, data, { headers: { ...config } });
   },
 
   updateInfo: (id, data) => {

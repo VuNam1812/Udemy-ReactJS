@@ -7,11 +7,11 @@ const handleCategory = require("../middlewares/route/category.mdw");
 const handleCourse = require("../middlewares/route/course.mdw");
 const router = express.Router();
 
+const awsService = require("../aws/index");
 const auth = require("../middlewares/auth.mdw");
 
-const upload = require("../middlewares/multer.mdw").UploadCategories();
-
-const EmptyImage = "public/imgs/Categories/CategoryEmptyImage.png";
+const EmptyImage =
+  "https://myedu-1612407.s3.sa-east-1.amazonaws.com/1/CategoryEmptyImage.png";
 
 router.get("/", async (req, res) => {
   const { filter } = req.query;
@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/", auth, upload.single("srcImage"), async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 
   if (permission !== 0) {
@@ -53,7 +53,6 @@ router.post("/", auth, upload.single("srcImage"), async (req, res) => {
 
     const ret = await categoryModel.add({
       ...req.body,
-      srcImage: req.file ? req.file.path : EmptyImage,
       fullName: `${parentCatName}${req.body.catName}`,
     });
 
@@ -100,6 +99,29 @@ router.get("/:id/can-Delete", auth, async (req, res) => {
   });
 });
 
+router.get("/linkUpload", auth, async (req, res) => {
+  const { permission } = req.accessTokenPayload;
+
+  if (permission !== 0) {
+    return res.json({
+      data: {
+        updated: false,
+        err_message: "Permission invalid!!",
+      },
+    });
+  }
+
+  const { urlSaveObject, urlGetObject } = await awsService.createLinkUpload(
+    req.query
+  );
+
+  return res.json({
+    data: {
+      uri: { urlSaveObject, urlGetObject },
+    },
+  });
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const cat = await categoryModel.single(id);
@@ -108,7 +130,7 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-router.patch("/:id", auth, upload.single("srcImage"), async (req, res) => {
+router.patch("/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { permission } = req.accessTokenPayload;
 
@@ -127,18 +149,9 @@ router.patch("/:id", auth, upload.single("srcImage"), async (req, res) => {
         ? ""
         : (await categoryModel.single(+req.body.id_parentCat)).fullName + " | ";
 
-    if (req.file?.path) {
-      const oldPath = (await categoryModel.single(id)).srcImage;
-      if (oldPath !== EmptyImage && req.file.path !== oldPath) {
-        if (fs.existsSync(oldPath.replace("\\/g", "/"))) {
-          fs.unlink(oldPath.replace("\\/g", "/"), () => {});
-        }
-      }
-    }
-
     await categoryModel.update(id, {
+      srcImage: EmptyImage,
       ...req.body,
-      srcImage: req.file ? req.file.path : req.body.srcImage,
       fullName: parentCatName + req.body.catName,
     });
 
@@ -170,15 +183,7 @@ router.delete("/:id", auth, async (req, res) => {
   }
 
   try {
-    const catImage = (await categoryModel.single(id)).srcImage;
-
     const ret = await categoryModel.delete(id);
-    if (
-      catImage !== EmptyImage &&
-      fs.existsSync(catImage.replace("\\/g", "/") && ret)
-    ) {
-      fs.unlink(catImage.replace("\\/g", "/"), () => {});
-    }
 
     return res.json({
       data: {

@@ -14,10 +14,7 @@ export const UserAccount = ({ account, handlelogout }) => {
           <div
             className="header__image"
             style={{
-              backgroundImage: `url("http://localhost:3030/${account.srcImage.replaceAll(
-                "\\",
-                "/"
-              )}")`,
+              backgroundImage: `url("${account.srcImage}")`,
             }}
           ></div>
         )}
@@ -45,7 +42,10 @@ export const UserAccount = ({ account, handlelogout }) => {
                       <i className="icon fa fa-info" aria-hidden="true"></i>
                       Quản lý cá nhân
                     </Link>
-                    <Link className="option__item" to={`/teachers/dashboard/${account.id}`}>
+                    <Link
+                      className="option__item"
+                      to={`/teachers/dashboard/${account.id}`}
+                    >
                       <i className="icon fa fa-home" aria-hidden="true"></i>
                       Trang chủ giảng viên
                     </Link>

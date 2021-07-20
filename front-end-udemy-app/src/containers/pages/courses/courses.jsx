@@ -65,12 +65,14 @@ export const Courses = (props) => {
       dispatch_courses
     );
     $("html,body").animate({ scrollTop: 0 }, 500);
-    setTimeout(() => {
-      dispatch_courses({
-        type: COURSES_ACTION.UPDATE_LOADING,
-        payload: false,
-      });
-    }, 2000);
+    if (store_courses.courses.length !== 0) {
+      setTimeout(() => {
+        dispatch_courses({
+          type: COURSES_ACTION.UPDATE_LOADING,
+          payload: false,
+        });
+      }, 2000);
+    }
   }, [store_courses.courses, store_courses.pageActive, store_courses.limit]);
 
   return (
