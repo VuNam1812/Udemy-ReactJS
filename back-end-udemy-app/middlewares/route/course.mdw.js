@@ -1,0 +1,116 @@
+const courseModel = require("../../models/course.model");
+const userModel = require("../../models/user.model");
+const cateModel = require("../../models/category.model");
+const chapterModel = require("../../models/chapter.model");
+const lectureModel = require("../../models/lecture.model");
+
+const getCourseByFilter = async (type = "") => {
+  let res_data = {};
+  switch (type) {
+    case "topRate":
+      res_data.topRate = await courseModel.allWithFilter("rate", "desc", 5, 0);
+      break;
+    case "topView":
+      res_data.topView = await courseModel.allWithFilter(
+        "viewCount",
+        "desc",
+        10,
+        0
+      );
+      break;
+    case "topNew":
+      res_data.topNew = await courseModel.allWithFilter("id", "desc", 10, 0);
+      break;
+
+    default:
+      res_data.all = await courseModel.all();
+      break;
+  }
+  for (const key in res_data) {
+    if (Object.hasOwnProperty.call(res_data, key)) {
+      const courses = res_data[key];
+      for (const course of courses) {
+        await getMoreInfoCourse(course, [
+          "teacherName",
+          "catName",
+          "lectureCount",
+          "duration",
+          "firstLecture",
+        ]);
+      }
+    }
+  }
+
+  return res_data;
+};
+
+const getCourseBySearchText = async (getInfo, search, order, limit) => {
+  let res_data = { courses: [] };
+  res_data.courses = await courseModel.bySearchText(
+    search,
+    order,
+    "asc",
+     limit || 1000000000
+  );
+  for (const course of res_data.courses) {
+    await getMoreInfoCourse(
+      course,
+      [
+        "teacherName",
+        "catName",
+        "lectureCount",
+        "duration",
+        "firstLecture",
+      ].concat(getInfo)
+    );
+  }
+
+  return res_data;
+};
+
+const getMoreInfoCourse = async (course, info = []) => {
+  for (const item_info of info) {
+    if (info.length === 0) return;
+
+    switch (item_info) {
+      case "teacherName":
+        const teacher = await userModel.single(course.id_owner);
+        course.teacherName = `${teacher.firstName} ${teacher.lastName}`;
+        course.teacherId = teacher.id;
+        break;
+
+      case "teacherImage":
+        const teacherinfo = await userModel.single(course.id_owner);
+        course.teacherImage = teacherinfo.srcImage;
+        break;
+
+      case "catName":
+        const cat = await cateModel.single(course.id_cat);
+        course.catName = cat.fullName;
+        break;
+      case "lectureCount":
+        const chapters = await chapterModel.allByCourse(course.id);
+        course.lectureCount = chapters.reduce((a, b) => a + b.lectureCount, 0);
+        break;
+      case "duration":
+        const lectures = await lectureModel.allByCourse(course.id);
+        course.duration = +lectures.reduce((a, item) => a + item.duration, 0);
+        break;
+
+      case "firstLecture":
+        await (async () => {
+          const lectures = await lectureModel.allByCourse(course.id);
+          course.firstLecture = lectures[0].id;
+        })();
+        break;
+      default:
+        break;
+    }
+  }
+};
+
+module.exports = {
+  getCourseByFilter: getCourseByFilter,
+  getMoreInfoCourse: getMoreInfoCourse,
+  getCourseBySearchText: getCourseBySearchText,
+};
