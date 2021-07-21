@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const session = require("express-session");
 require("express-async-errors");
+const webView = require("./config/viewEngine");
 
 const auth = require("./middlewares/auth.mdw");
 
@@ -26,7 +27,7 @@ app.use(
 );
 
 app.use("/public", express.static("public"));
-
+webView(app);
 app.use("/api/auth", require("./routes/auth.route"));
 app.use("/api/accounts", require("./routes/account.route"));
 app.use("/api/teachers", require("./routes/teacher.route"));
@@ -52,7 +53,7 @@ app.use(function (err, req, res, next) {
   });
 });
 
-const PORT = 3030;
+const PORT = process.env.PORT || 3030;
 app.listen(PORT, function () {
   console.log(`back-end is running at http://localhost:${PORT}`);
 });

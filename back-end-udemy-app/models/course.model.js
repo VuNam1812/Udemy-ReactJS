@@ -15,8 +15,13 @@ module.exports = {
       .offset(offset);
   },
 
-  allWithCatId(id) {
-    return db(TBL_COURSES).where("isDelete", 0).where("id_cat", id);
+  allWithCatId(id, order = "id", sort = "asc", limit = 1000000000, offset = 0) {
+    return db(TBL_COURSES)
+      .where("isDelete", 0)
+      .where("id_cat", id)
+      .orderBy(order, sort)
+      .limit(limit)
+      .offset(offset);;
   },
 
   bySearchText(
