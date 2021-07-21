@@ -60,10 +60,7 @@ export const handleCoursePage = {
         search: result === "search",
       },
     });
-    dispatch({
-      type: COURSES_ACTION.UPDATE_LOADING,
-      payload: false,
-    });
+    
     return result;
   },
   setupPagination: (length, active, limit, dispatch) => {

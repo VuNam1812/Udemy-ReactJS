@@ -38,6 +38,12 @@ export const Courses = (props) => {
         dispatch_courses
       );
     })();
+    setTimeout(() => {
+      dispatch_courses({
+        type: COURSES_ACTION.UPDATE_LOADING,
+        payload: false,
+      });
+    }, 2000);
   }, [location]);
 
   useEffect(() => {
