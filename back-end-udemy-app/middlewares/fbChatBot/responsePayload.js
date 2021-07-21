@@ -1,4 +1,5 @@
 const userAPI = require("../../API/userAPI");
+const categoryModel = require("../../models/category.model");
 const courseModel = require("../../models/course.model");
 const responsePayload = {
   getInfoUser: async (sender_psid) => {
@@ -35,11 +36,6 @@ const responsePayload = {
                     title: "Duyệt danh mục",
                     payload: "VIEW_CATEGORIES",
                   },
-                  {
-                    type: "postback",
-                    title: "Xem chi tiết khóa học",
-                    payload: "VIEW_DETAIL_COURSE",
-                  },
                 ],
               },
             ],
@@ -53,7 +49,7 @@ const responsePayload = {
     const userName = await responsePayload.getInfoUser(sender_psid);
     return [
       {
-        text: `Xin chào ${userName.fullName}, Chào mừng bạn đến với Lizsy. Chúng tôi có thể giúp gì được cho bạn`,
+        text: `Xin chào ${userName.fullName}, Chào mừng bạn đến với MyEdu. Chúng tôi có thể giúp gì được cho bạn`,
       },
       ...responsePayload.MENU_FEATURES(),
     ];
@@ -65,6 +61,7 @@ const responsePayload = {
 
   SEARCH_COURSES_MESSAGE: async (message = "") => {
     const courses = await courseModel.bySearchText(message, "id", "asc", 10);
+
     if (courses.length === 0) {
       return [
         {
@@ -93,7 +90,14 @@ const responsePayload = {
                     buttons: [
                       {
                         type: "web_url",
-                        url: course.id,
+                        url: `https://udemy-1612407.herokuapp.com/webhook/courses/${course.id}`,
+                        title: "Giới thiệu",
+                        webview_height_ratio: "tall",
+                        messenger_extensions: "true",
+                      },
+                      {
+                        type: "web_url",
+                        url: `https://udemy-1612407.herokuapp.com/api/courses/${course.id}`,
                         title: "Xem chi tiết",
                       },
                     ],
@@ -108,6 +112,154 @@ const responsePayload = {
         },
       ];
     }
+  },
+
+  MAIN_CATEGORIES: async () => {
+    const cats = await categoryModel.all();
+    let catFilter = [];
+    cats.forEach((cat) => {
+      cat.isSubCategory = cat.id_parentCat === 0 ? true : false;
+      if (cat.id_parentCat === 0) {
+        cat.subCategory = cats.filter((value) => value.id_parentCat === cat.id);
+        cat.isSubCategory = cat.subCategory.length === 0 ? false : true;
+        catFilter.push(cat);
+      }
+    });
+    return [
+      { text: "Chúng tôi hiện có một vài lĩnh vực chính dưới đây!!" },
+      { text: "bạn có thể xem qua để tìm khóa học phù hợp với bản thân." },
+      {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "generic",
+            elements: [
+              ...catFilter.map((cat) => {
+                return {
+                  image_url: cat.srcImage,
+                  title: cat.catName,
+                  subtitle: cat.isSubCategory
+                    ? "Chọn 'Danh mục phụ' để xem các danh mục con của lĩnh vực"
+                    : "Chọn 'Khóa học nổi bật' để xem các khóa học của lĩnh vực",
+                  buttons: [
+                    cat.isSubCategory
+                      ? {
+                          type: "postback",
+                          title: "Danh mục phụ",
+                          payload: `SUB_CATEGORIES__${cat.id}`,
+                        }
+                      : {
+                          type: "postback",
+                          title: "Khóa học nổi bật",
+                          payload: `COURSES_CAT__${cat.id}`,
+                        },
+                  ],
+                };
+              }),
+            ],
+          },
+        },
+      },
+      { text: `Nếu cần tôi giúp gì hãy (".") nhé!!` },
+    ];
+  },
+
+  SUB_CATEGORIES: async (catId) => {
+    const cat = await categoryModel.single(catId);
+    const cats = (await categoryModel.allWithId(catId)).filter(
+      (cat_chil) => cat_chil.id !== catId
+    );
+    return [
+      { text: `Đây là các danh mục phụ của lĩnh vực '${cat.catName}'!!` },
+      {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "generic",
+            elements: [
+              ...cats.map((cat) => {
+                return {
+                  image_url: cat.srcImage,
+                  title: cat.catName,
+                  subtitle:
+                    "Chọn 'Khóa học nổi bật' để xem các khóa học của lĩnh vực",
+                  buttons: [
+                    {
+                      type: "postback",
+                      title: "Khóa học nổi bật",
+                      payload: `COURSES_CAT__${cat.id}`,
+                    },
+                  ],
+                };
+              }),
+            ],
+          },
+        },
+      },
+      { text: `Nếu cần tôi giúp gì hãy (".") nhé!!` },
+    ];
+  },
+
+  COURSES_CAT: async (catId) => {
+    const courses = await courseModel.allWithCatId(
+      catId,
+      "rate",
+      "desc",
+      10,
+      0
+    );
+    const cat = await categoryModel.single(catId);
+    if (courses.length === 0) {
+      return [
+        {
+          text: "Rất xin lỗi bạn nhiếu!!",
+        },
+        {
+          text: "Danh mục mà bạn đang tìm kiếm hiện chúng tôi chưa cập nhật khóa học!!",
+        },
+        { text: `Nếu cần tôi giúp gì hãy (".") nhé!!` },
+      ];
+    }
+    return [
+      {
+        text: `Danh mục ${cat.catName} của chúng tôi đang có những khóa học nổi bật được nhiều học viên đăng ký!!`,
+      },
+      {
+        text: "Có thể bạn sẽ quan tâm đến những khóa học này!!",
+      },
+      {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "generic",
+            elements: [
+              ...courses.map((course) => {
+                return {
+                  image_url: course.srcImage,
+                  title: course.courName,
+                  subtitle: course.tinyDes,
+                  buttons: [
+                    {
+                      type: "web_url",
+                      url: `https://udemy-1612407.herokuapp.com/webhook/courses/${course.id}`,
+                      title: "Giới thiệu",
+                      webview_height_ratio: "tall",
+                      messenger_extensions: "true",
+                    },
+                    {
+                      type: "web_url",
+                      url: `https://udemy-1612407.herokuapp.com/api/courses/${course.id}`,
+                      title: "Xem chi tiết",
+                    },
+                  ],
+                };
+              }),
+            ],
+          },
+        },
+      },
+      { text: `Nếu cần tôi giúp gì hãy (".") nhé!!` },
+    ];
   },
 };
 

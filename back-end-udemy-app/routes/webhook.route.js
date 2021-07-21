@@ -3,8 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 const setupMessage = require("../middlewares/fbChatBot/setupMessage");
-
+const handleCourse = require("../middlewares/route/course.mdw");
 const handleWebhook = require("../middlewares/fbChatBot/handleWebhook");
+const courseModel = require("../models/course.model");
+require("dotenv").config();
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 router.post("/", (req, res) => {
   let body = req.body;
@@ -61,8 +64,35 @@ router.get("/", (req, res) => {
   }
 });
 
-router.get("/setup-profile", (res, req) => {
-  setupMessage.setupAll();
+router.get("/courses/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const course = await courseModel.single(id);
+  await handleCourse.getMoreInfoCourse(course, [
+    "duration",
+    "teacherName",
+    "lectureCount",
+    "catName",
+  ]);
+  return res.render("course.detail.hbs", {
+    course,
+  });
+});
+
+router.get("/setup-profile", async (req, res) => {
+  await setupMessage.setupAll();
+
+  res.json({
+    result: "success",
+  });
+});
+
+router.get("/setup-whitelisted-domains", async (req, res) => {
+  await setupMessage.setupWhitelisted();
+
+  res.json({
+    result: "success",
+  });
 });
 
 module.exports = router;
