@@ -43,6 +43,14 @@ const setupMessage = {
     await messageAPI.createProfile(request_body);
   },
 
+  setupWhitelisted: async () => {
+    let req_body = {
+      whitelisted_domains: ["https://udemy-1612407.herokuapp.com/"],
+    };
+
+    await messageAPI.createProfile(req_body);
+  },
+
   setupAll: async () => {
     await setupMessage.setupStarted();
     await setupMessage.setupPersistentMenu();
