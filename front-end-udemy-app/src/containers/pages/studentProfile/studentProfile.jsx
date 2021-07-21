@@ -8,11 +8,12 @@ import {
   EditProfile,
   ChangePasswordForm,
 } from "./itemInfo";
+import $ from "jquery";
+
 import { NavTab } from "../../../components";
 import { HeaderUpper } from "../../header/HeaderUpper/headerUpper";
 import { Footer } from "../../footer/footer";
 import { InComing } from "../../incoming/inComing";
-import avartar from "../../../public/image/teacher_1.png";
 
 import { reducer, STUDENT_PROFILE_ACTION, enumState } from "./reducer/reducer";
 import { handleStudentProfile } from "./middleware/handleStudentProfile";
@@ -54,6 +55,7 @@ export const StudentProfile = (props) => {
       await handleStudentProfile.loadCourseJoin(params, dispatch);
       await handleStudentProfile.loadCourseFavorite(params, dispatch);
     })();
+    $("html,body").animate({ scrollTop: 0 }, 500);
   }, []);
 
   return (
@@ -117,12 +119,3 @@ export const StudentProfile = (props) => {
     </>
   );
 };
-
-const infoStudent = {
-  name: "Vũ Thành Nam",
-  email: "vunam1218@gmail.com",
-  role: "Học viên",
-  avatar: avartar,
-};
-
-const dataSet = new Array(5).fill("");

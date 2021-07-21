@@ -3,7 +3,17 @@
 .account-manager {
   width: 100%;
   margin: 1rem 0rem;
-
+  &__loading {
+    min-height: 75vh;
+    background-color: white;
+    border-radius: 0.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon {
+      color: $--green-main;
+    }
+  }
   .accounts-list {
     min-height: 85vh;
     zoom: 90%;

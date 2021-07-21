@@ -67,7 +67,6 @@ export const CourseDetail = (props) => {
   const handleTabActive = async (index) => {
     switch (index) {
       case 1:
-        if (store.teacher.id) return;
         await handleCourseDetail.loadTeacher(
           {
             userId: store.course.teacherId,
@@ -76,11 +75,9 @@ export const CourseDetail = (props) => {
         );
         break;
       case 2:
-        if (Object.keys(store.lectures).length !== 0) return;
         await handleCourseDetail.loadLectures(params, dispatch);
         break;
       case 3:
-        if (Object.keys(store.feedbacks).length !== 0) return;
         await handleCourseDetail.loadFeedbacks(params, dispatch);
         break;
     }
@@ -108,7 +105,13 @@ export const CourseDetail = (props) => {
               className="tab-course"
               headers={["Giới thiệu", "Giảng viên", "Video", "Đánh giá"]}
               blocks={[
-                <Introduce course={store.course}></Introduce>,
+                store.loading ? (
+                  <div className="content__loading">
+                    <i className="icon fa fa-spinner fa-pulse fa-4x fa-fw"></i>
+                  </div>
+                ) : (
+                  <Introduce course={store.course}></Introduce>
+                ),
                 !store.loading && <Teacher teacher={store.teacher}></Teacher>,
                 !store.loading && (
                   <Videos
@@ -152,33 +155,37 @@ export const CourseDetail = (props) => {
                   <p className="join-course__price">
                     {numeral(store.course.price).format("0,0")} VND
                   </p>
-                  <Button
-                    onClick={handleAddFavoriteList}
-                    className={`join-course__add-fav-btn btn-smaller btn--hover-change-color ${
-                      store.inFavoriteList ? "added" : ""
-                    }`}
-                    content={`${
-                      store.inFavoriteList ? "Đã thêm" : "Thêm"
-                    } vào yêu thích`}
-                  ></Button>
-                  {store.paid ? (
-                    <Button
-                      className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
-                      content="Tiếp tục học"
-                      onClick={() => {
-                        history.push(
-                          `/lessions/${store.course.id}/${store.course.firstLecture}`
-                        );
-                      }}
-                    ></Button>
-                  ) : (
-                    <Button
-                      className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
-                      content="Ghi danh"
-                      onClick={() => {
-                        history.push(`/payment/${store.course.id}`);
-                      }}
-                    ></Button>
+                  {store_auth.account.id !== store.course.id_owner && (
+                    <>
+                      <Button
+                        onClick={handleAddFavoriteList}
+                        className={`join-course__add-fav-btn btn-smaller btn--hover-change-color ${
+                          store.inFavoriteList ? "added" : ""
+                        }`}
+                        content={`${
+                          store.inFavoriteList ? "Đã thêm" : "Thêm"
+                        } vào yêu thích`}
+                      ></Button>
+                      {store.paid ? (
+                        <Button
+                          className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
+                          content="Tiếp tục học"
+                          onClick={() => {
+                            history.push(
+                              `/lessions/${store.course.id}/${store.course.firstLecture}`
+                            );
+                          }}
+                        ></Button>
+                      ) : (
+                        <Button
+                          className="join-course__join-btn btn--color-white btn--hover-vertical-change-color-reverse"
+                          content="Ghi danh"
+                          onClick={() => {
+                            history.push(`/payment/${store.course.id}`);
+                          }}
+                        ></Button>
+                      )}
+                    </>
                   )}
                 </div>
 

@@ -4,7 +4,7 @@ import { TEACHER_PROFILE_ACTION } from "../../../reducer/reducer";
 import categoryApi from "../../../../../../api/categoryAPI";
 import courseApi from "../../../../../../api/courseAPI.jsx";
 import Swal from "sweetalert2";
-import teacherApi from "../../../../../../api/teacherAPI";
+
 export const handleCourseOwner = {
   handleFilterCharacterCourse: (e, courses, dispatch) => {
     const index = +e.target.getAttribute("data-id");
@@ -35,8 +35,9 @@ export const handleCourseOwner = {
           course.courName
             .toLocaleLowerCase()
             .search(e.target.value.toLocaleLowerCase()) !== -1
-        )
+        ) {
           return course;
+        }
       });
 
       dispatch({

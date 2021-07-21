@@ -3,6 +3,7 @@ import React from "react";
 import "./style.scss";
 import { Button, Checkbox, Select } from "../../../../components";
 import numeral from "numeral";
+import boxEmpty from "../../../../public/image/icon/box.png";
 import { COURSES_ACTION } from "../reducer/reducer";
 import { Link, useHistory } from "react-router-dom";
 import { SkeletonCourses } from "../skeleton/skeletonCourses";
@@ -84,7 +85,7 @@ export const CourseList = (props) => {
           ) : (
             <div className="body-list__content">
               <div className="courses">
-                {props.courses.length !== 0 &&
+                {props.courses.length !== 0 ? (
                   props.courses.map((course) => {
                     return (
                       <div
@@ -172,7 +173,15 @@ export const CourseList = (props) => {
                         </div>
                       </div>
                     );
-                  })}
+                  })
+                ) : (
+                  <div className="course-list__loading">
+                    <div className="list__empty">
+                      <img src={boxEmpty}></img>
+                      <p>(Hiện chưa có khóa học)</p>
+                    </div>
+                  </div>
+                )}
               </div>
               {props.pagination.length > 1 && (
                 <div className="pagination">

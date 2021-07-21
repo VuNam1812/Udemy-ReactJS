@@ -1,9 +1,11 @@
 // @flow
-import React, {useEffect} from "react";
+import React, { useState } from "react";
+import { SkeletonTopCourses } from "./skeletonTopCourses/skeletonTopCourses";
 import "./style.scss";
 import { Button } from "../../../../components";
 import { CourseCard } from "../../../itemsPage";
 export const TopCourses = (props) => {
+  const [loading, setLoading] = useState(false);
   return (
     <div className="top-courses">
       <div className="wrap">
@@ -23,14 +25,18 @@ export const TopCourses = (props) => {
             content="Xem thêm"
           ></Button>
         </div>
-        {props.courses.map((course) => {
-          return (
-            <CourseCard
-              className="top-courses-item"
-              course={course}
-            ></CourseCard>
-          );
-        })}
+        {props.courses.length === 0 ? (
+          <SkeletonTopCourses></SkeletonTopCourses>
+        ) : (
+          props.courses.map((course) => {
+            return (
+              <CourseCard
+                className="top-courses-item"
+                course={course}
+              ></CourseCard>
+            );
+          })
+        )}
       </div>
     </div>
   );

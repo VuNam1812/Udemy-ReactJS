@@ -29,23 +29,37 @@ export const Home = (props) => {
   const [store, dispatch] = useReducer(reducer, initData);
 
   useEffect(() => {
-    (async () => {
-      const courses_filter = await courseApi.getAll({
-        filter: ["topRate", "topView", "topNew"],
+    courseApi.getAll({ filter: "topRate" }).then((courses) => {
+      
+      dispatch({
+        type: HOME_ACTION.UPDATE_TOP_RATE,
+        payload: courses.data.topRate,
       });
-      const category_filter = await categoryApi.getAll({
-        filter: "topJoin",
+    });
+    courseApi.getAll({ filter: "topView" }).then((courses) => {
+      dispatch({
+        type: HOME_ACTION.UPDATE_TOP_VIEW,
+        payload: courses.data.topView,
       });
+    });
+    courseApi.getAll({ filter: "topNew" }).then((courses) => {
+      dispatch({
+        type: HOME_ACTION.UPDATE_TOP_NEW,
+        payload: courses.data.topNew,
+      });
+    });
 
-      dispatch({
-        type: HOME_ACTION.INIT_DATA,
-        payload: courses_filter.data,
+    categoryApi
+      .getAll({
+        filter: "topJoin",
+      })
+      .then((cats) => {
+        console.log(cats);
+        dispatch({
+          type: HOME_ACTION.UPDATE_TOP_CAT,
+          payload: cats.data,
+        });
       });
-      dispatch({
-        type: HOME_ACTION.UPDATE_TOPCAT,
-        payload: category_filter.data,
-      });
-    })();
 
     $("html,body").animate({ scrollTop: 0 }, 500);
   }, []);

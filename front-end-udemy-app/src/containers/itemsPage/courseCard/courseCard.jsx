@@ -67,7 +67,7 @@ export const CourseCard = ({ course, className }) => {
 
     Swal.fire({
       icon: "success",
-      title: `${result ? "Đã thêm" : "Đã xóa"} khóa học!!`,
+      text: `${result ? "Đã thêm vào" : "Đã xóa khỏi"} danh sách!!`,
       toast: true,
       position: "top",
       showConfirmButton: false,

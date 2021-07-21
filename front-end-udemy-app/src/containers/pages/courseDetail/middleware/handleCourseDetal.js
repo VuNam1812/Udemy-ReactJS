@@ -2,6 +2,7 @@ import courseApi from "../../../../api/courseAPI";
 import accountApi from "../../../../api/accountAPI";
 import categoryApi from "../../../../api/categoryAPI";
 import { COURSE_DETAIL_ACTION } from "../reducer/reducer";
+import Swal from "sweetalert2";
 export const handleCourseDetail = {
   loadCourse: async (params, dispatch) => {
     const { courId } = params;
@@ -26,7 +27,6 @@ export const handleCourseDetail = {
     const account = await accountApi.getSingle(userId, {
       getInfo: ["studentCount", "rate", "courseCount", "teacherDesc", "major"],
     });
-
 
     dispatch({
       type: COURSE_DETAIL_ACTION.UPDATE_TEACHER,
@@ -114,5 +114,16 @@ export const handleCourseDetail = {
         payload: ret.data.created,
       });
     }
+    Swal.fire({
+      icon: "success",
+      text: `${
+        !inFavoriteList ? "Đã thêm vào" : "Đã xóa khỏi"
+      } danh sách!!`,
+      toast: true,
+      position: "top",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: false,
+    });
   },
 };
