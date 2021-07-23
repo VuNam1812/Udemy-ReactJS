@@ -12,17 +12,24 @@ const app = express();
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
 app.use(express.json());
+app.enable("trust proxy");
 app.use(
   session({
     secret: "secret-key",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 48,
+      sameSite: "none",
+    },
   })
 );
 
