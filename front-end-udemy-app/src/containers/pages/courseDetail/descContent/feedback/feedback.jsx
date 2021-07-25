@@ -231,7 +231,7 @@ export const Feedback = ({ rate, feedbacks, paid, course, dispatch }) => {
                       <div className="item-user__image">
                         <img src={feedback.user.srcImage}></img>
                       </div>
-                      <p className="item-user__name">{`${feedback.user.firstName} ${feedback.user.lastName}`}</p>
+                      <p className="item-user__name">{feedback.user.name}</p>
                     </div>
 
                     <div className="item-feedback-info">

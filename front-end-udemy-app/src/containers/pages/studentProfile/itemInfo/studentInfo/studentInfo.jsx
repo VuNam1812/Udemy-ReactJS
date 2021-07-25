@@ -38,7 +38,7 @@ export const StudentInfo = ({ info, dispatch, dispatchAuth }) => {
         </div>
       </div>
       <div className="info">
-        <p className="info__name">{`${info.firstName} ${info.lastName}`}</p>
+        <p className="info__name">{info.name}</p>
         <p className="info__email">{info.email}</p>
         <p className="info__role">
           <i className="fa fa-graduation-cap icon" aria-hidden="true"></i>

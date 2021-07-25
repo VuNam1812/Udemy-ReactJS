@@ -14,7 +14,7 @@ import { useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import numeral from "numeral";
 
-import $ from 'jquery'
+import $ from "jquery";
 
 const initData = {
   teacherInfo: {},
@@ -49,7 +49,9 @@ export const InstructorDetail = (props) => {
                   }}
                 ></div>
                 <div className="summary-text">
-                  <p className="summary-text__name">{`${store_page.teacherInfo.firstName} ${store_page.teacherInfo.lastName}`}</p>
+                  <p className="summary-text__name">
+                    {store_page.teacherInfo.name}
+                  </p>
                   <p className="summary-text__major">
                     {store_page.teacherInfo.major
                       ? store_page.teacherInfo.major

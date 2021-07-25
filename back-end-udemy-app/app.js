@@ -18,17 +18,14 @@ app.use(
   })
 );
 app.use(express.json());
-app.enable("trust proxy");
+//app.enable("trust proxy");
 app.use(
   session({
     secret: "secret-key",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
-      httpOnly: true,
-      secure: true,
       maxAge: 1000 * 60 * 60 * 48,
-      sameSite: "none",
     },
   })
 );

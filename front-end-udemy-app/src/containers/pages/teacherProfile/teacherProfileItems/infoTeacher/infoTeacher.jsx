@@ -27,7 +27,7 @@ export const InfoTeacher = ({ teacher, className, dispatch }) => {
   const { register, setValue, handleSubmit } = useForm();
   const submit = useRef();
   useEffect(() => {
-    ["firstName", "lastName", "major", "phone", "email"].map((item) => {
+    ["name", "major", "phone", "email"].map((item) => {
       setValue(item, teacher[item]);
       return {};
     });
@@ -181,22 +181,13 @@ export const InfoTeacher = ({ teacher, className, dispatch }) => {
                 className="left-block__form-group"
               >
                 <div className="form-item">
-                  <div className="form-item__flex">
-                    <label className="form-item__label">
-                      Họ:{" "}
-                      <input
-                        className="form-item__input"
-                        {...register("firstName")}
-                      ></input>
-                    </label>
-                    <label className="form-item__label">
-                      Tên:{" "}
-                      <input
-                        className="form-item__input"
-                        {...register("lastName")}
-                      ></input>
-                    </label>
-                  </div>
+                  <label className="form-item__label">
+                    Họ & Tên:{" "}
+                    <input
+                      className="form-item__input"
+                      {...register("name")}
+                    ></input>
+                  </label>
                   <label className="form-item__label">
                     Chuyên môn:{" "}
                     <input
