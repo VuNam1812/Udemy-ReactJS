@@ -220,7 +220,7 @@ export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
             data={teachers.map((teacher) => {
               return {
                 id: teacher.id,
-                content: `${teacher.firstName} ${teacher.lastName}`,
+                content: teacher.name,
               };
             })}
             defaultSelected="--- Chọn Giảng viên ---"

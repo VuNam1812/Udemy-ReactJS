@@ -27,8 +27,7 @@ const initData = {
   courseFavorites: [],
   courseJoin: [],
   error: {
-    firstName: { isShow: false, message: "* Thông tin không được để trống!!" },
-    lastName: { isShow: false, message: "* Thông tin không được để trống!!" },
+    name: { isShow: false, message: "* Thông tin không được để trống!!" },
     email: { isShow: false, message: "* Thông tin không được để trống!!" },
     oldPassword: {
       isShow: false,
