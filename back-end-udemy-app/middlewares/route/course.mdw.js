@@ -50,7 +50,7 @@ const getCourseBySearchText = async (getInfo, search, order, limit) => {
     search,
     order,
     "asc",
-     limit || 1000000000
+    limit || 1000000000
   );
   for (const course of res_data.courses) {
     await getMoreInfoCourse(
@@ -75,7 +75,7 @@ const getMoreInfoCourse = async (course, info = []) => {
     switch (item_info) {
       case "teacherName":
         const teacher = await userModel.single(course.id_owner);
-        course.teacherName = `${teacher.firstName} ${teacher.lastName}`;
+        course.teacherName = teacher.name;
         course.teacherId = teacher.id;
         break;
 

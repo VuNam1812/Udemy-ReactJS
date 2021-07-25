@@ -9,12 +9,23 @@ export const handleAction = {
       payload: data,
     });
   },
-  checkLogin: (data, dispatch, history) => {
+  checkLogin: (data, type, dispatch, history) => {
     Swal.fire({
       title: "Login...",
       didOpen: async () => {
         Swal.showLoading();
-        const res_login = await authApi.login(data);
+        let res_login = {};
+        switch (type) {
+          case "normal":
+            res_login = await authApi.login(data);
+            break;
+          case "facebook":
+            res_login = await authApi.facebookLogin(data);
+            break;
+          case "google":
+            res_login = await authApi.googleLogin(data);
+            break;
+        }
 
         res_login.authenticated
           ? Swal.fire({

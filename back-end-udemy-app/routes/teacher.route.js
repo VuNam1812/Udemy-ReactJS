@@ -18,12 +18,9 @@ const EmptyImage =
 
 router.post("/", async function (req, res) {
   const hash = bcrypt.hashSync(req.body.password, 10);
-  const dob = moment(new Date(req.body.dob)).format("YYYY-MM-DD");
   const user = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    name: req.body.name,
     password: hash,
-    dob: dob,
     email: req.body.email,
     permission: req.body.permission,
     status: 1,

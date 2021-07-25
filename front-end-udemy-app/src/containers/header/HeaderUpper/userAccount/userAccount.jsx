@@ -7,7 +7,7 @@ export const UserAccount = ({ account, handlelogout }) => {
     <div className="user-account">
       <div className="user-account__header">
         <div className="header__info">
-          <p className="account-info__name">{account.username}</p>
+          <p className="account-info__name">{account.name}</p>
           <p className="account-info__role">{account.role}</p>
         </div>
         {account.srcImage && (

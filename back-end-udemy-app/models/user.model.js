@@ -30,6 +30,17 @@ module.exports = {
     return users[0];
   },
 
+  async findById(condition = {}, except = {}) {
+    const users = await db(TBL_USERS)
+      .where({ ...condition })
+      .whereNot({ ...except });
+    if (users.length === 0) {
+      return null;
+    }
+
+    return users[0];
+  },
+
   async add(user) {
     const ids = await db(TBL_USERS).insert(user);
     return ids[0];

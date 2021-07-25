@@ -28,7 +28,7 @@ export const reducer = (state, action) => {
         account: {
           ...state.accounts,
           id: payload.id,
-          username: payload.username,
+          name: payload.name,
           role: role,
           permission: payload.role,
           srcImage: payload.srcImage,
@@ -46,7 +46,7 @@ export const reducer = (state, action) => {
         ...state,
         account: {
           ...state.account,
-          srcImage: payload
+          srcImage: payload,
         },
       };
 
