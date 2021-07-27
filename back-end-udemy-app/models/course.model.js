@@ -4,15 +4,15 @@ const TBL_COURSES = "courses";
 
 module.exports = {
   all() {
-    return db(TBL_COURSES);
+    return db(TBL_COURSES).where();
   },
 
-  allWithFilter(by = "id", sort = "desc", limit = 0, offset = 0) {
+  allWithFilter(filter, condition = { isDelete: 0 }) {
     return db(TBL_COURSES)
-      .where("isDelete", 0)
-      .orderBy(by, sort)
-      .limit(limit)
-      .offset(offset);
+      .where({ ...condition })
+      .orderBy(filter.order, filter.sort)
+      .limit(filter.limit)
+      .offset(filter.offset);
   },
 
   allWithCatId(id, order = "id", sort = "asc", limit = 1000000000, offset = 0) {
@@ -21,22 +21,16 @@ module.exports = {
       .where("id_cat", id)
       .orderBy(order, sort)
       .limit(limit)
-      .offset(offset);;
+      .offset(offset);
   },
 
-  bySearchText(
-    text,
-    order = "id",
-    sort = "asc",
-    limit = 1000000000,
-    offset = 0
-  ) {
+  bySearchText(text, filter) {
     return db(TBL_COURSES)
       .whereRaw(`MATCH(CourName) AGAINST('+${text}' IN BOOLEAN MODE)`)
       .where("isDelete", 0)
-      .orderBy(order, sort)
-      .limit(limit)
-      .offset(offset);
+      .orderBy(filter.order, filter.sort)
+      .limit(filter.limit)
+      .offset(filter.offset);
   },
 
   async single(id) {
@@ -49,8 +43,11 @@ module.exports = {
     return courses[0];
   },
 
-  singleByOwner(id) {
-    return db(TBL_COURSES).where("id_owner", id);
+  singleByOwner(id, filter = {}) {
+    return db(TBL_COURSES).where({
+      id_owner: id,
+      ...filter,
+    });
   },
 
   add(data) {

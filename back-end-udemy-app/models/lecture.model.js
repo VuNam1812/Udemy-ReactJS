@@ -22,13 +22,13 @@ module.exports = {
   },
 
   async single(id) {
-    const chaptes = await db(TBL_LECTURES).where("id", id);
+    const lectures = await db(TBL_LECTURES).where("id", id);
 
-    if (chaptes.length === 0) {
+    if (lectures.length === 0) {
       return null;
     }
 
-    return chaptes[0];
+    return lectures[0];
   },
 
   add(data) {

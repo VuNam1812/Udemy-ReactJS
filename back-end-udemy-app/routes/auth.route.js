@@ -113,8 +113,6 @@ router.post("/facebookLogin", async (req, res) => {
 });
 
 router.post("/googleLogin", async (req, res) => {
-  //check exists
-  console.log(req.body);
   let user = await userModel.findById({
     googleId: req.body.userID,
   });

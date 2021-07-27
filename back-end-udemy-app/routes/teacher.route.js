@@ -62,9 +62,12 @@ router.get("/", async (req, res) => {
 router.get("/:id/courses", async (req, res) => {
   const { id } = req.params;
 
-  const { getInfo } = req.query;
+  const { getInfo, isDelete } = req.query;
 
-  const courses = await courseModel.singleByOwner(id);
+  const courses = await courseModel.singleByOwner(
+    id,
+    +isDelete !== -1 ? { isDelete: isDelete } : {}
+  );
 
   for (const course of courses) {
     await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));

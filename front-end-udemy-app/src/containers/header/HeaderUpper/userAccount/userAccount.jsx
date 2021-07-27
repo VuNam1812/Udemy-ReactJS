@@ -25,6 +25,13 @@ export const UserAccount = ({ account, handlelogout }) => {
                 //admin
                 return (
                   <>
+                    <Link
+                      className="option__item"
+                      to={`/accounts/${account.id}`}
+                    >
+                      <i className="icon fa fa-info" aria-hidden="true"></i>
+                      Quản lý cá nhân
+                    </Link>
                     <Link className="option__item" to={`/admins/${account.id}`}>
                       <i className="icon fa fa-cog" aria-hidden="true"></i>
                       Trang chủ quản trị viên

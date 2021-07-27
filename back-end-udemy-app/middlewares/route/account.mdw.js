@@ -64,8 +64,13 @@ const getMoreInfoAccount = async (teacher, info = []) => {
 
       case "paidCourseCount":
         await (async () => {
-          const paid = await joinInCourseModal.allByUser(teacher.id);
-          
+          const paid = await joinInCourseModal.allByUser(teacher.id, {
+            limit: 1000000000,
+            order: "id",
+            sort: "asc",
+            offset: 0,
+          });
+
           teacher.paidCourseCount = paid ? paid.length : 0;
         })();
         break;
@@ -77,7 +82,7 @@ const getMoreInfoAccount = async (teacher, info = []) => {
 
 const getBasicInfoAccount = async (id, info = []) => {
   const user = await userModel.single(id);
-
+  if (user === null) return {};
   ["password", "rfToken", "permission", "email"].map((item) => {
     delete user[item];
   });

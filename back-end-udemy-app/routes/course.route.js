@@ -15,6 +15,7 @@ const favoriteCourseModel = require("../models/favoriteCourse.model");
 
 const auth = require("../middlewares/auth.mdw");
 const joinInCourseModel = require("../models/joinInCourse.model");
+const userLessionModel = require("../models/userLession.model");
 
 const router = express.Router();
 
@@ -22,32 +23,38 @@ const emptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/CourseEmptyImage.png";
 
 router.get("/", async (req, res) => {
-  const { filter, getInfo, search, order, limit } = req.query;
+  const { getInfo, isDelete, search, order, sort, limit, page } = req.query;
 
   let res_data = {};
+  const filter = {
+    order: order || "id",
+    sort: sort || "asc",
+    limit,
+    offset: (+page - 1) * +limit || 0,
+  };
+  const condition = +isDelete !== -1 ? { isDelete: +isDelete || 0 } : {};
+
   if (!search) {
-    switch (typeof filter) {
-      case "string":
-        res_data[filter] = (await handleCourse.getCourseByFilter(filter))[
-          filter
-        ];
-        break;
-      case "object":
-        for (const item of filter) {
-          res_data[item] = (await handleCourse.getCourseByFilter(item))[item];
-        }
-        break;
-      default:
-        res_data.all = (await handleCourse.getCourseByFilter()).all;
-        break;
-    }
+    res_data.courses = await handleCourse.getCourseByFilter(
+      [].concat(getInfo),
+      filter,
+      condition
+    );
+    res_data.length = (
+      await courseModel.allWithFilter(
+        { ...filter, limit: 1000000000, offset: 0 },
+        condition
+      )
+    ).length;
   } else {
-    res_data = await handleCourse.getCourseBySearchText(
+    res_data.courses = await handleCourse.getCourseBySearchText(
       [].concat(getInfo),
       search,
-      order,
-      limit
+      filter
     );
+    res_data.length = (
+      await courseModel.bySearchText(search, { ...filter, limit: 1000000000 })
+    ).length;
   }
 
   return res.json({
@@ -197,6 +204,28 @@ router.get("/:id/lessions", async (req, res) => {
   });
 });
 
+router.get("/:id/userlessions", auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.accessTokenPayload;
+  const chapters = await chapterModel.allByCourse(id);
+
+  for (const chapter of chapters) {
+    chapter["lectures"] = await lectureModel.allByChapter(chapter.id);
+    for (const lecture of chapter["lectures"]) {
+      const userLession = await userLessionModel.singleByUserIdAndLectureId(
+        userId,
+        lecture.id
+      );
+      lecture.isCompleted = userLession?.isCompleted || 0;
+      lecture.lastSeconds = userLession?.lastSeconds || 0;
+    }
+  }
+
+  return res.json({
+    data: chapters,
+  });
+});
+
 router.post("/:id/favorite", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
@@ -244,25 +273,43 @@ router.delete("/:id/favorite", auth, async (req, res) => {
 
 router.get("/:id/feedbacks", async (req, res) => {
   const { id } = req.params;
-  const feedbacks = await feedbackModel.allWithCourseId(id);
-  for (const feedback of feedbacks) {
+  const { limit, page, order, sort } = req.query;
+  const filter = {
+    order: order || "createAt",
+    sort: sort || "asc",
+    limit,
+    offset: (+page - 1) * limit || 0,
+  };
+  const feedbacksGet = await feedbackModel.allWithCourseId(id, filter);
+  const feedbackAll = await feedbackModel.allWithCourseId(id, {
+    ...filter,
+    limit: 1000000000,
+    offset: 0,
+  });
+
+  for (const feedback of feedbacksGet) {
     feedback.user = await handleAccount.getBasicInfoAccount(feedback.id_user);
   }
+
   let course = {
-    feedbacks,
+    feedbacks: feedbacksGet,
     rate: [],
+    length: feedbackAll.length,
   };
 
   for (let index = 1; index <= 5; index++) {
-    const count = feedbacks.reduce((a, b) => a + (b.rate === index ? 1 : 0), 0);
+    const count = feedbackAll.reduce(
+      (a, b) => a + (b.rate === index ? 1 : 0),
+      0
+    );
     course.rate = [
       ...course.rate,
       {
         count: count,
         percent:
-          feedbacks.length === 0
+          feedbackAll.length === 0
             ? 0
-            : Math.round((count / feedbacks.length) * 100),
+            : Math.round((count / feedbackAll.length) * 100),
       },
     ];
   }
@@ -277,6 +324,12 @@ router.post("/:id/feedbacks", auth, async (req, res) => {
   const { userId } = req.accessTokenPayload;
 
   try {
+    const filter = {
+      order: "createAt",
+      sort: "asc",
+      limit: 1000000000,
+      offset: 0,
+    };
     const ret = await feedbackModel.add({
       id_course: id,
       id_user: userId,
@@ -285,7 +338,7 @@ router.post("/:id/feedbacks", auth, async (req, res) => {
     });
 
     const feedbackCount = (await courseModel.single(id)).feedbackCount;
-    const feedbacks = await feedbackModel.allWithCourseId(id);
+    const feedbacks = await feedbackModel.allWithCourseId(id, filter);
 
     const rate =
       feedbacks.reduce((sum, value) => sum + +value.rate, 0) / feedbacks.length;

@@ -196,7 +196,8 @@ export const Courses = ({ courses, teachers, adminProfileDispatch }) => {
     const courId = +e.currentTarget.getAttribute("data-id");
     await handleAdminCourse.disableCourse(
       courses.filter((course) => course.id === courId)[0],
-      adminProfileDispatch
+      adminProfileDispatch,
+      dispatch
     );
   };
 

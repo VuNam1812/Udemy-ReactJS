@@ -65,7 +65,6 @@ export const AdminInfo = ({ account, adminProfileDispatch }) => {
   };
 
   const handleCancelUpdate = async () => {
-    console.log(getValues());
     const result = await handleAdminInfo.checkCancelUpdate(dispatch);
 
     if (!result) {
