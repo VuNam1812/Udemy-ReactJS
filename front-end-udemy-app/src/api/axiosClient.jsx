@@ -5,7 +5,7 @@ import queryString from "query-string";
 let isTokenExpired = false;
 let refreshTokenRequest = null;
 const axiosClient = axios.create({
-  baseURL: "https://udemy-1612407.herokuapp.com/api",
+  baseURL: "http://udemy-1612407.herokuapp.com/api",
   headers: {
     "content-type": "application/json",
   },

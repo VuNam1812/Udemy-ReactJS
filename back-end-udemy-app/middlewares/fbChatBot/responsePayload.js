@@ -60,7 +60,12 @@ const responsePayload = {
   },
 
   SEARCH_COURSES_MESSAGE: async (message = "") => {
-    const courses = await courseModel.bySearchText(message, "id", "asc", 10);
+    const courses = await courseModel.bySearchText(message, {
+      order: "id",
+      sort: "asc",
+      limit: 10,
+      offset: 0,
+    });
 
     if (courses.length === 0) {
       return [
