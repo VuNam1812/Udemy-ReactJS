@@ -46,7 +46,6 @@ export const VideoPlayer = ({ className, video, dispatch }) => {
       video.duration * 0.9 <= progress.playedSeconds &&
       video.isCompleted === 0
     ) {
-      console.log("run");
       dispatch({
         type: LESSION_ACTION.UPDATE_SINGLE_LESSIONS,
         payload: {

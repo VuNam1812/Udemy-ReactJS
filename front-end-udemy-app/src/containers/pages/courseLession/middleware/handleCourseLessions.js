@@ -19,7 +19,7 @@ export const handleCourseLession = {
 
   loadLessions: async (data, dispatch) => {
     const lessions = (await courseApi.getUserLessions(data.courId)).data;
-    console.log(lessions);
+
     dispatch({
       type: LESSION_ACTION.UPDATE_LESSION,
       payload: lessions,
