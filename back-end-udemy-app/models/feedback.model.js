@@ -7,8 +7,12 @@ module.exports = {
     return db(TBL_FEEDBACKS);
   },
 
-  allWithCourseId(id) {
-    return db(TBL_FEEDBACKS).where("id_course", id).orderBy('createAt');
+  allWithCourseId(id, filter) {
+    return db(TBL_FEEDBACKS)
+      .where("id_course", id)
+      .orderBy(filter.order, filter.sort)
+      .limit(filter.limit)
+      .offset(filter.offset);
   },
 
   allWithUserOwnerCourse(id) {

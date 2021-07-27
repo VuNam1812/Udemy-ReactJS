@@ -50,6 +50,13 @@ export const reducer = (state, action) => {
         },
       };
 
+    case AUTH_ACTION.UPDATE_NAME_ACCOUNT:
+      state.account.name = payload;
+      return {
+        ...state,
+        account: state.account,
+      };
+
     default:
       return state;
   }
@@ -60,4 +67,5 @@ export const AUTH_ACTION = {
   UPDATE_ACCOUNT: 2,
   DELETE_ACCOUNT: 3,
   UPDATE_AVATAR_ACCOUNT: 4,
+  UPDATE_NAME_ACCOUNT: 5,
 };

@@ -18,7 +18,7 @@ app.use(
   })
 );
 app.use(express.json());
-//app.enable("trust proxy");
+app.enable("trust proxy");
 app.use(
   session({
     secret: "secret-key",
@@ -41,6 +41,7 @@ app.use("/api/courses", require("./routes/course.route"));
 app.use("/api/lectures", require("./routes/lecture.route"));
 app.use("/api/chapters", require("./routes/chapter.route"));
 app.use("/api/feedbacks", require("./routes/feedback.route"));
+app.use("/api/userlessions", require("./routes/userLession.route"));
 
 app.use("/webhook", require("./routes/webhook.route"));
 

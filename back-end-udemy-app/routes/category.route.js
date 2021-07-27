@@ -203,7 +203,7 @@ router.delete("/:id", auth, async (req, res) => {
 
 router.get("/:id/courses", async (req, res) => {
   const { id } = req.params;
-  const { getInfo } = req.query;
+  const { getInfo, page, limit, order, sort } = req.query;
   const cats = await categoryModel.allWithId(id);
 
   let courses = [];
@@ -211,6 +211,11 @@ router.get("/:id/courses", async (req, res) => {
   for (const cat of cats) {
     courses = [...courses, ...(await courseModel.allWithCatId(cat.id))];
   }
+
+  courses = handleCategory.orderAndSortCourses(courses, order, sort);
+  let offset = limit * (page - 1);
+
+  const length = courses.length;
 
   for (const course of courses) {
     await handleCourse.getMoreInfoCourse(
@@ -220,7 +225,10 @@ router.get("/:id/courses", async (req, res) => {
   }
 
   return res.json({
-    data: [...courses],
+    data: {
+      courses: [...courses.splice(offset, limit)],
+      length,
+    },
   });
 });
 

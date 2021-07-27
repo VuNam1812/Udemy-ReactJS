@@ -99,7 +99,6 @@ router.get("/:id/coursesJoin", auth, async (req, res) => {
   }
 
   const courses = await joinModel.allByUser(userId);
-
   for (const course of courses) {
     await handleCourse.getMoreInfoCourse(course, [].concat(getInfo));
   }
@@ -113,7 +112,6 @@ router.get("/:id/coursesFavorite", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
   const { getInfo } = req.query;
-
   if (+id !== +userId) {
     return res.json({
       data: {
