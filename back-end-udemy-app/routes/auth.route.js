@@ -113,7 +113,6 @@ router.post("/facebookLogin", async (req, res) => {
 });
 
 router.post("/googleLogin", async (req, res) => {
-  //check exists
   let user = await userModel.findById({
     googleId: req.body.userID,
   });
@@ -169,6 +168,7 @@ router.post("/logout", (req, res) => {
 
 router.get("/is-confirmEmail", async function (req, res) {
   const code = req.query.code;
+  console.log(req.session);
   if (code === req.session.codeConfirm) {
     return res.status(200).json({ status: true });
   }
