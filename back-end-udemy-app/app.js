@@ -23,8 +23,8 @@ app.enable("trust proxy");
 app.use(
   session({
     secret: "secret-key",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       httpOnly: true,
       sameSite: "none",
@@ -33,7 +33,12 @@ app.use(
     },
   })
 );
-
+//cookie: {
+//  httpOnly: true,
+//  sameSite: "none",
+//  secure: true,
+//  maxAge: 1000 * 60 * 60 * 48,
+//},
 app.use("/public", express.static("public"));
 webView(app);
 app.use("/api/auth", require("./routes/auth.route"));

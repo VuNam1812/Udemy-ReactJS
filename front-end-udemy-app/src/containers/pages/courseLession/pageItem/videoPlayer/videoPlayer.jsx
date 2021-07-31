@@ -12,12 +12,6 @@ export const VideoPlayer = ({ className, video, dispatch }) => {
   const videoTarget = useRef();
   useEffect(() => {
     setVideoId(video.id);
-    if (typeof videoTarget.current !== "undefined" && video.id) {
-      videoTarget.current.seekTo(
-        video.lastSeconds ? video.lastSeconds : 0,
-        "seconds"
-      );
-    }
     if (videoId !== -1 && Math.round(viewed) > 0) {
       userLessionApi.updateInfo({
         id_lecture: videoId,
@@ -60,7 +54,7 @@ export const VideoPlayer = ({ className, video, dispatch }) => {
       });
       userLessionApi.updateInfo({
         id_lecture: videoId,
-        lastSeconds: Math.round(viewed)+1,
+        lastSeconds: Math.round(viewed) + 1,
       });
     }
   };
@@ -73,6 +67,12 @@ export const VideoPlayer = ({ className, video, dispatch }) => {
           className="video-player__body"
           url={`${video.src}`}
           controls
+          onStart={() => {
+            videoTarget.current.seekTo(
+              video.lastSeconds ? video.lastSeconds : 0,
+              "seconds"
+            );
+          }}
           onProgress={handleCompleteLession}
         ></ReactPlayer>
       )}

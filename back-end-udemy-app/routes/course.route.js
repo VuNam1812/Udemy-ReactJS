@@ -399,6 +399,27 @@ router.patch("/:id", auth, async (req, res) => {
   }
 });
 
+router.patch("/:id/views", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await courseModel.update(id, {
+      viewCount: req.body.viewCount,
+    });
+    return res.json({
+      data: {
+        updated: true,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      data: {
+        updated: false,
+      },
+    });
+  }
+});
+
 router.patch("/:id/active", auth, async (req, res) => {
   const { id } = req.params;
   const { permission } = req.accessTokenPayload;
