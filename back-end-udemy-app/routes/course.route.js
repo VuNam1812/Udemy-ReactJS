@@ -326,7 +326,7 @@ router.post("/:id/feedbacks", auth, async (req, res) => {
   try {
     const filter = {
       order: "createAt",
-      sort: "asc",
+      sort: "desc",
       limit: 1000000000,
       offset: 0,
     };
