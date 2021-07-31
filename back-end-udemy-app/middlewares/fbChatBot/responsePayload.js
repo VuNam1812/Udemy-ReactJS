@@ -21,8 +21,7 @@ const responsePayload = {
             elements: [
               {
                 title: "Bạn đang cần hỗ trợ gì thế?",
-                subtitle:
-                  "Đưới đây là các vấn đề tôi có thể giải quyết cho bạn",
+                subtitle: "Đưới đây là các vấn đề tôi có thể hỗ trợ cho bạn",
                 image_url:
                   "https://img-c.udemycdn.com/course/240x135/2923266_4297_2.jpg?Expires=1621141528&Signature=EsSIDbgrLNKl2kUrafrHYnrNeuGyoYox6i3I7ISzOOgRHMrsg7l4VyTW1fb2BD0qKMDsCleG4HOEkHRu~BAgcoqmueOSxW8vcWHcjr879nch~5q~FgyGOrYFLSlLZ0GeuGU9ABJ4KNnDKqD6h-ECGDYRU0Pm2XiWYQq0tAFguQ3BzpLK5SSr9xydaFv03xOsLMYgcXyiGBx3IMXAsbhkKOmUt4lepNsOkzEZ8mOohpQXIgoDYFUYI03lDWXwGbn7SfZ1LEbjB~U4QJFuk-9AbeDvBxTLe1vo~U-LGcB3B2KVrried~lZhD04rNzeBJSzT38kbUoDbmcZSlhfmV7V2g__&Key-Pair-Id=APKAITJV77WS5ZT7262A",
                 buttons: [
@@ -102,7 +101,7 @@ const responsePayload = {
                       },
                       {
                         type: "web_url",
-                        url: `https://udemy-1612407.herokuapp.com/api/courses/${course.id}`,
+                        url: `https://main.d5ph5e9p9s4gm.amplifyapp.com/courses/${course.id}`,
                         title: "Xem chi tiết",
                       },
                     ],
@@ -253,7 +252,7 @@ const responsePayload = {
                     },
                     {
                       type: "web_url",
-                      url: `https://udemy-1612407.herokuapp.com/api/courses/${course.id}`,
+                      url: `https://main.d5ph5e9p9s4gm.amplifyapp.com/courses/${course.id}`,
                       title: "Xem chi tiết",
                     },
                   ],

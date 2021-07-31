@@ -12,7 +12,6 @@ module.exports = {
       .join("chapters", `${TBL_LECTURES}.id_chapter`, "chapters.id")
       .join("courses", `chapters.id_course`, "courses.id")
       .where("courses.id", id)
-      .orderBy("id")
       .select(`${TBL_LECTURES}.*`)
       .select(`courses.id as id_course`);
   },
