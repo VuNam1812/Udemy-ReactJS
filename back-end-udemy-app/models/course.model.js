@@ -4,7 +4,7 @@ const TBL_COURSES = "courses";
 
 module.exports = {
   all() {
-    return db(TBL_COURSES).where();
+    return db(TBL_COURSES);
   },
 
   allWithFilter(filter, condition = { isDelete: 0 }) {
@@ -35,6 +35,16 @@ module.exports = {
 
   async single(id) {
     const courses = await db(TBL_COURSES).where("id", id);
+
+    if (courses.length === 0) {
+      return null;
+    }
+
+    return courses[0];
+  },
+
+  async singleBySlug(slug) {
+    const courses = await db(TBL_COURSES).where("slug", "LIKE", `%${slug}%`);
 
     if (courses.length === 0) {
       return null;

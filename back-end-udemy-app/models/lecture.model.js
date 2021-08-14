@@ -30,6 +30,16 @@ module.exports = {
     return lectures[0];
   },
 
+  async singleBySlug(slug) {
+    const lectures = await db(TBL_LECTURES).where("slug", "LIKE", `%${slug}%`);
+
+    if (lectures.length === 0) {
+      return null;
+    }
+
+    return lectures[0];
+  },
+
   add(data) {
     return db(TBL_LECTURES).insert(data);
   },

@@ -1,4 +1,5 @@
 const express = require("express");
+const slugify = require("slugify");
 
 const lectureModel = require("../models/lecture.model");
 const chapterModel = require("../models/chapter.model");
@@ -8,6 +9,13 @@ const awsService = require("../aws/index");
 const router = express.Router();
 
 const auth = require("../middlewares/auth.mdw");
+
+const configSlug = (name) => {
+  return slugify(name, {
+    locale: "vi",
+    lower: true,
+  });
+};
 
 router.get("/", async (req, res) => {
   return res.json({
@@ -29,6 +37,7 @@ router.post("/", auth, async (req, res) => {
   try {
     const ret = await lectureModel.add({
       ...req.body,
+      slug: configSlug(req.body.name),
     });
 
     const chapter = await chapterModel.single(req.body.id_chapter);
@@ -76,7 +85,8 @@ router.get("/linkUpload", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const lecture = await lectureModel.single(id);
+  const { bySlug } = req.query;
+  const lecture = bySlug !== 'true' ? await lectureModel.single(id) : await lectureModel.singleBySlug(id);
   return res.json({
     data: lecture,
   });
@@ -97,6 +107,7 @@ router.patch("/:id", auth, async (req, res) => {
   try {
     const ret = await lectureModel.update(id, {
       ...req.body,
+      slug: configSlug(req.body.name),
     });
 
     return res.json({
@@ -111,30 +122,6 @@ router.patch("/:id", auth, async (req, res) => {
       },
     });
   }
-});
-
-router.get("/:id/courses", async (req, res) => {
-  const { id } = req.params;
-
-  const cats = await categoryModel.allWithId(id);
-
-  let courses = [];
-
-  for (const cat of cats) {
-    courses = [...courses, ...(await courseModel.allWithCatId(cat.id))];
-  }
-
-  for (const course of courses) {
-    await handleCourse.getMoreInfoCourse(course, [
-      "lectureCount",
-      "catName",
-      "teacherName",
-    ]);
-  }
-
-  return res.json({
-    data: [...courses],
-  });
 });
 
 router.delete("/:id", auth, async (req, res) => {

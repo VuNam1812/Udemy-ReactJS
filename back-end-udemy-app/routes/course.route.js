@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const moment = require("moment");
+const slugify = require("slugify");
 
 const handleCourse = require("../middlewares/route/course.mdw");
 const handleAccount = require("../middlewares/route/account.mdw");
@@ -18,6 +19,13 @@ const joinInCourseModel = require("../models/joinInCourse.model");
 const userLessionModel = require("../models/userLession.model");
 
 const router = express.Router();
+
+const configSlug = (url) => {
+  return slugify(url, {
+    locale: "vi",
+    lower: true,
+  });
+};
 
 const emptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/CourseEmptyImage.png";
@@ -89,6 +97,7 @@ router.post("/", auth, async (req, res) => {
     isAds: 0,
     viewCount: 0,
     status: 0,
+    slug: configSlug(req.body.courName),
   };
   try {
     const ret = await courseModel.add(newCourse);
@@ -108,11 +117,15 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.get("/payment", auth, async (req, res) => {
-  const { courId } = req.query;
+  const { courId, slug, bySlug } = req.query;
   const { userId } = req.accessTokenPayload;
 
-  const pay = await joinInCourseModel.singleByIdUserAndCourse(+userId, +courId);
+  const course = bySlug === "true" ? await courseModel.singleBySlug(slug) : {};
 
+  const pay = await joinInCourseModel.singleByIdUserAndCourse(
+    +userId,
+    bySlug !== "true" ? +courId : +course.id
+  );
   return res.json({
     data: {
       paid: pay !== null,
@@ -146,8 +159,11 @@ router.get("/linkUpload", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const { getInfo } = req.query;
-  const course = await courseModel.single(id);
+  const { getInfo, bySlug } = req.query;
+  const course =
+    bySlug !== "true"
+      ? await courseModel.single(id)
+      : await courseModel.singleBySlug(id);
 
   await handleCourse.getMoreInfoCourse(
     course,
@@ -207,6 +223,7 @@ router.get("/:id/lessions", async (req, res) => {
 router.get("/:id/userlessions", auth, async (req, res) => {
   const { id } = req.params;
   const { userId } = req.accessTokenPayload;
+
   const chapters = await chapterModel.allByCourse(id);
 
   for (const chapter of chapters) {
@@ -383,6 +400,7 @@ router.patch("/:id", auth, async (req, res) => {
   try {
     const ret = await courseModel.update(id, {
       ...req.body,
+      slug: configSlug(req.body.courName || course.courName),
       lastUpdate: moment(new Date()).format("YYYY-MM-DD"),
     });
     return res.json({

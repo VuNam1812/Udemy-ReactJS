@@ -19,6 +19,16 @@ module.exports = {
     return users[0];
   },
 
+  async singleBySlug(slug) {
+    const users = await db(TBL_USERS).where("slug", "like", `%${slug}%`);
+
+    if (users.length === 0) {
+      return null;
+    }
+
+    return users[0];
+  },
+
   async findByEmail(email, except = {}) {
     const users = await db(TBL_USERS)
       .where("email", email)
