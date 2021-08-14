@@ -3,15 +3,24 @@ const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const randomstring = require("randomstring");
+const slugify = require("slugify");
+
 const auth = require("../middlewares/auth.mdw");
-const userModel = require("../models/user.model");
-const { route } = require("./auth.route");
 const handleAccount = require("../middlewares/route/account.mdw");
 const handleCourse = require("../middlewares/route/course.mdw");
+
+const userModel = require("../models/user.model");
 const courseModel = require("../models/course.model");
 const teacherinfoModel = require("../models/teacherinfo.model");
 
 const router = express.Router();
+
+const configSlug = (name) => {
+  return slugify(name, {
+    locale: "vi",
+    lower: true,
+  });
+};
 
 const EmptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/UserEmptyImage.jpg";
@@ -25,6 +34,7 @@ router.post("/", async function (req, res) {
     permission: req.body.permission,
     status: 1,
     srcImage: EmptyImage,
+    slug: configSlug(req.body.name),
   };
 
   const accountID = await userModel.add(user);
@@ -62,10 +72,13 @@ router.get("/", async (req, res) => {
 router.get("/:id/courses", async (req, res) => {
   const { id } = req.params;
 
-  const { getInfo, isDelete } = req.query;
+  const { getInfo, isDelete, bySlug } = req.query;
+
+  const teacher =
+    bySlug === "true" ? await userModel.singleBySlug(id) : { id: id };
 
   const courses = await courseModel.singleByOwner(
-    id,
+    teacher.id,
     +isDelete !== -1 ? { isDelete: isDelete } : {}
   );
 

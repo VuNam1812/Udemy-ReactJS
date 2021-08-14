@@ -29,10 +29,11 @@ const getCategoryByFilter = async (type = "") => {
 const orderAndSortCourses = (courses, order) => {
   switch (order) {
     case "rate":
-      courses.sort((a, b) => +a.rate - b.rate);
+      courses.sort((a, b) => -(a.rate - b.rate));
+
       break;
     case "price":
-      courses.sort((a, b) => - a.price - b.price);
+      courses.sort((a, b) => a.price - b.price);
       break;
     default:
       break;

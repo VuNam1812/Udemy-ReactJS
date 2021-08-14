@@ -60,7 +60,13 @@ const getMoreInfoCourse = async (course, info = []) => {
       case "firstLecture":
         await (async () => {
           const lectures = await lectureModel.allByCourse(course.id);
-          course.firstLecture = lectures[0].id;
+          if (lectures.length !== 0) {
+            course.firstLecture = lectures[0].id;
+            course.firstLectureName = lectures[0].name;
+          } else {
+            course.firstLecture = -1;
+            course.firstLectureName = "empty";
+          }
         })();
         break;
       default:

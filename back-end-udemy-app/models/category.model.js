@@ -41,6 +41,16 @@ module.exports = {
     return cats[0];
   },
 
+  async singleBySlug(slug) {
+    const cats = await db(TBL_CATEGORIES).where("slug", "LIKE", `%${slug}%`);
+
+    if (cats.length === 0) {
+      return null;
+    }
+
+    return cats[0];
+  },
+
   add(data) {
     return db(TBL_CATEGORIES).insert({ ...data });
   },

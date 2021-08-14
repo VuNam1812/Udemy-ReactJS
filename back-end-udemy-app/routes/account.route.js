@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
+const slugify = require("slugify");
+
 const auth = require("../middlewares/auth.mdw");
 
 const userModel = require("../models/user.model");
@@ -14,6 +16,13 @@ const handleCourse = require("../middlewares/route/course.mdw");
 const AwsService = require("../aws/index");
 
 const router = express.Router();
+
+const configSlug = (url) => {
+  return slugify(url, {
+    locale: "vi",
+    lower: true,
+  });
+};
 
 const EmptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/UserEmptyImage.jpg";
@@ -29,6 +38,7 @@ router.post("/", async function (req, res) {
     permission: req.body.permission,
     status: 1,
     srcImage: EmptyImage,
+    slug: configSlug(req.body.name),
   };
 
   const accountID = await userModel.add(user);
@@ -146,8 +156,8 @@ router.get("/linkUpload", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const { getInfo } = req.query;
-  const user = await userModel.single(id);
+  const { getInfo, bySlug } = req.query;
+  const user = bySlug !== 'true' ? await userModel.single(id) : await userModel.singleBySlug(id);
 
   await handleAccount.getMoreInfoAccount(user, [].concat(getInfo));
 
@@ -204,6 +214,7 @@ router.patch("/:id", auth, async (req, res) => {
 
   if (req.body.password)
     req.body.password = bcrypt.hashSync(req.body.password, 10);
+  if (req.body.name) req.body.slug = configSlug(req.body.name);
   try {
     const result = await userModel.update(userId, {
       ...req.body,

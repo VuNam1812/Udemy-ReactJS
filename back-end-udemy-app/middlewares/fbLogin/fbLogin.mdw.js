@@ -1,5 +1,14 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
+const slugify = require("slugify");
+
+const configSlug = (name) => {
+  return slugify(name, {
+    locale: "vi",
+    lower: true,
+  });
+};
+
 const userModel = require("../../models/user.model");
 require("dotenv").config();
 
@@ -46,6 +55,7 @@ const fbLogin = {
       permission: 2,
       status: 1,
       srcImage: srcImage,
+      slug: configSlug(data.name),
     };
 
     const accountID = await userModel.add(user);

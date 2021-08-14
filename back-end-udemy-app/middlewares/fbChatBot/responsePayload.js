@@ -101,7 +101,7 @@ const responsePayload = {
                       },
                       {
                         type: "web_url",
-                        url: `https://main.d5ph5e9p9s4gm.amplifyapp.com/courses/${course.id}`,
+                        url: `https://main.d5ph5e9p9s4gm.amplifyapp.com/courses/${course.slug}`,
                         title: "Xem chi tiết",
                       },
                     ],
@@ -252,7 +252,7 @@ const responsePayload = {
                     },
                     {
                       type: "web_url",
-                      url: `https://main.d5ph5e9p9s4gm.amplifyapp.com/courses/${course.id}`,
+                      url: `https://main.d5ph5e9p9s4gm.amplifyapp.com/courses/${course.slug}`,
                       title: "Xem chi tiết",
                     },
                   ],

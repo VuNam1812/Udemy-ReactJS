@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const slugify = require("slugify");
 
 const categoryModel = require("../models/category.model");
 const courseModel = require("../models/course.model");
@@ -12,6 +13,13 @@ const auth = require("../middlewares/auth.mdw");
 
 const EmptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/CategoryEmptyImage.png";
+
+const configSlug = (name) => {
+  return slugify(name, {
+    locale: "vi",
+    lower: true,
+  });
+};
 
 router.get("/", async (req, res) => {
   const { filter } = req.query;
@@ -54,6 +62,7 @@ router.post("/", auth, async (req, res) => {
     const ret = await categoryModel.add({
       srcImage: EmptyImage,
       ...req.body,
+      slug: configSlug(req.body.catName),
       fullName: `${parentCatName}${req.body.catName}`,
     });
 
@@ -126,7 +135,11 @@ router.get("/linkUpload", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const cat = await categoryModel.single(id);
+  const { bySlug } = req.query;
+  const cat =
+    bySlug !== "true"
+      ? await categoryModel.single(id)
+      : await categoryModel.singleBySlug(id);
   return res.json({
     data: cat,
   });
@@ -152,9 +165,9 @@ router.patch("/:id", auth, async (req, res) => {
         : (await categoryModel.single(+req.body.id_parentCat)).fullName + " | ";
 
     await categoryModel.update(id, {
-      srcImage: EmptyImage,
       ...req.body,
       fullName: parentCatName + req.body.catName,
+      slug: configSlug(req.body.catName),
     });
 
     return res.json({
@@ -205,7 +218,6 @@ router.get("/:id/courses", async (req, res) => {
   const { id } = req.params;
   const { getInfo, page, limit, order, sort } = req.query;
   const cats = await categoryModel.allWithId(id);
-
   let courses = [];
 
   for (const cat of cats) {

@@ -28,6 +28,19 @@ module.exports = {
     return joiners[0];
   },
 
+  async singleByIdUserAndSlug(id_user, slug) {
+    const joiners = await db(TBL_JOININCOURSES)
+      .where("id_user", id_user)
+      .where("slug", "LIKE", `%${slug}%`)
+      .where("isDelete", 0);
+
+    if (joiners.length === 0) {
+      return null;
+    }
+
+    return joiners[0];
+  },
+
   async single(id) {
     const joiners = await db(TBL_JOININCOURSES).where("id", id);
 

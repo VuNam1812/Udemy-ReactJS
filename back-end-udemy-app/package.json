@@ -38,6 +38,7 @@
     "numeral": "^2.0.6",
     "randomstring": "^1.2.1",
     "rater-js": "^1.0.1",
+    "slugify": "^1.6.0",
     "uuid": "^8.3.2",
     "video.js": "^7.10.2"
   },
