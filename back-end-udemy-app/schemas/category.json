@@ -1,0 +1,15 @@
+{
+    "required": [
+        "catName",
+        "id_parentCat"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "catName": {
+            "type": "string"
+        },
+        "id_parentCat": {
+            "type": "number"
+        }
+    }
+}

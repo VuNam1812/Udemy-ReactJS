@@ -19,11 +19,11 @@ const getCourseByFilter = async (
 
 const getCourseBySearchText = async (getInfo, search, filter) => {
   let res_data = await courseModel.bySearchText(search, filter);
-  for (const course of res_data) {
+  for (const course of res_data[0]) {
     await getMoreInfoCourse(course, getInfo);
   }
 
-  return res_data;
+  return res_data[0];
 };
 
 const getMoreInfoCourse = async (course, info = []) => {

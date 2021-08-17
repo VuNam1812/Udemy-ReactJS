@@ -1,0 +1,15 @@
+{
+    "required": [
+        "name",
+        "id_cat"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "id_cat": {
+            "type": "number"
+        }
+    }
+}

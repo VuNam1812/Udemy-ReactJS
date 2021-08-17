@@ -1,0 +1,15 @@
+{
+    "required": [
+        "content",
+        "rate"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "content": {
+            "type": "string"
+        },
+        "rate": {
+            "type": "number"
+        }
+    }
+}

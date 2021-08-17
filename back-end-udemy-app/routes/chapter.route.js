@@ -5,9 +5,13 @@ const chapterModel = require("../models/chapter.model");
 const router = express.Router();
 
 const auth = require("../middlewares/auth.mdw");
+const validate = require("../middlewares/validate.mdw");
+
 const lectureModel = require("../models/lecture.model");
 
-router.post("/", auth, async (req, res) => {
+const chapterSchema = require("../schemas/chapter.json");
+
+router.post("/", validate(chapterSchema), auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 
   if (permission !== 1) {
@@ -51,7 +55,7 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-router.patch('/:id', auth, async (req, res) => {
+router.patch("/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { permission } = req.accessTokenPayload;
 
@@ -66,7 +70,7 @@ router.patch('/:id', auth, async (req, res) => {
 
   try {
     await chapterModel.update(+id, {
-      ...req.body
+      ...req.body,
     });
     return res.json({
       data: {
@@ -80,7 +84,7 @@ router.patch('/:id', auth, async (req, res) => {
       },
     });
   }
-})
+});
 
 router.delete("/:id", auth, async (req, res) => {
   const { id } = req.params;

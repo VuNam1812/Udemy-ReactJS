@@ -1,15 +1,18 @@
 const express = require("express");
 const fs = require("fs");
 const slugify = require("slugify");
+const router = express.Router();
 
 const categoryModel = require("../models/category.model");
 const courseModel = require("../models/course.model");
+
 const handleCategory = require("../middlewares/route/category.mdw");
 const handleCourse = require("../middlewares/route/course.mdw");
-const router = express.Router();
-
 const awsService = require("../aws/index");
 const auth = require("../middlewares/auth.mdw");
+const validate = require("../middlewares/validate.mdw");
+
+const categorySchema = require("../schemas/category.json");
 
 const EmptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/CategoryEmptyImage.png";
@@ -41,7 +44,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", validate(categorySchema), auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 
   if (permission !== 0) {

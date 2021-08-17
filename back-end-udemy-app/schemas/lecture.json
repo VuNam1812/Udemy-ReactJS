@@ -1,0 +1,23 @@
+{
+    "required": [
+        "name",
+        "duration",
+        "isCanPreview",
+        "id_chapter"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "duration": {
+            "type": "number"
+        },
+        "isCanPreview": {
+            "type": "number"
+        },
+        "id_chapter": {
+            "type": "number"
+        }
+    }
+}

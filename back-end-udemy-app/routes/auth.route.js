@@ -11,8 +11,10 @@ const ggLogin = require("../middlewares/fbLogin/ggLogin.mdw");
 const validate = require("../middlewares/validate.mdw");
 const mailer = require("../middlewares/mailer.mdw");
 
-const userSchema = require("../schemas/user.json");
+const userSchema = require("../schemas/userLogin.json");
 const rfTokenSchema = require("../schemas/rfToken.json");
+const userFacebook = require("../schemas/userFacebook.json");
+const userGoogle = require("../schemas/userGoogle.json");
 
 const router = express.Router();
 
@@ -84,7 +86,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/facebookLogin", async (req, res) => {
+router.post("/facebookLogin", validate(userFacebook), async (req, res) => {
   //check exists
   if (
     !(await fbLogin.checkValidToken(req.body.access_token, req.body.userID))
@@ -112,7 +114,7 @@ router.post("/facebookLogin", async (req, res) => {
   return res.json(await generateToken(req, user));
 });
 
-router.post("/googleLogin", async (req, res) => {
+router.post("/googleLogin", validate(userGoogle), async (req, res) => {
   let user = await userModel.findById({
     googleId: req.body.userID,
   });

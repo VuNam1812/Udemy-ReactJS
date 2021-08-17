@@ -2,10 +2,11 @@ import axios from "axios";
 import queryString from "query-string";
 // Set up default config for http requests here
 //"https://udemy-1612407.herokuapp.com/api"
+const URL_BASE = "http://localhost:3030/api";
 let isTokenExpired = false;
 let refreshTokenRequest = null;
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3030/api",
+  baseURL: URL_BASE,
   headers: {
     "content-type": "application/json",
   },
@@ -54,7 +55,7 @@ axiosClient.interceptors.response.use(
 );
 
 const refreshAccessToken = async () => {
-  const url = "http://localhost:3030/api/auth/refresh";
+  const url = `${URL_BASE}/auth/refresh`;
   const newToken = await axios.post(url, {
     accessToken: localStorage.udemyapp_accessToken,
     refreshToken: localStorage.udemyapp_refreshToken,

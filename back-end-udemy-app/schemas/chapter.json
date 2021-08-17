@@ -1,0 +1,15 @@
+{
+    "required": [
+        "name",
+        "id_course"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "id_course": {
+            "type": "number"
+        }
+    }
+}
