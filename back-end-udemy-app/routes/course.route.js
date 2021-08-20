@@ -66,7 +66,7 @@ router.get("/", async (req, res) => {
     );
     res_data.length = (
       await courseModel.bySearchText(search, { ...filter, limit: 1000000000 })
-    ).length;
+    )[0].length;
   }
 
   return res.json({

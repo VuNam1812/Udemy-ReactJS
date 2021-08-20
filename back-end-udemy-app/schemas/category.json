@@ -1,11 +1,15 @@
 {
     "required": [
         "catName",
-        "id_parentCat"
+        "id_parentCat",
+        "srcImage"
     ],
     "additionalProperties": false,
     "properties": {
         "catName": {
+            "type": "string"
+        },
+        "srcImage": {
             "type": "string"
         },
         "id_parentCat": {

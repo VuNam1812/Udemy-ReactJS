@@ -1,11 +1,11 @@
 {
     "required": [
-        "name",
+        "courName",
         "id_cat"
     ],
     "additionalProperties": false,
     "properties": {
-        "name": {
+        "courName": {
             "type": "string"
         },
         "id_cat": {

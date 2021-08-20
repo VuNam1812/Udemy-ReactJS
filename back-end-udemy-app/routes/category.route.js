@@ -63,8 +63,8 @@ router.post("/", validate(categorySchema), auth, async (req, res) => {
         : (await categoryModel.single(+req.body.id_parentCat)).fullName + " | ";
 
     const ret = await categoryModel.add({
-      srcImage: EmptyImage,
       ...req.body,
+      srcImage: req.body.srcImage.length === 0 ? EmptyImage : req.body.srcImage,
       slug: configSlug(req.body.catName),
       fullName: `${parentCatName}${req.body.catName}`,
     });
