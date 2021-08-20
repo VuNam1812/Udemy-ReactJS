@@ -28,7 +28,7 @@ router.put("/", auth, async (req, res) => {
   }
   await userLessionModel.update(target.id, {
     ...target,
-    isCompleted: +target.isCompleted === 1 ? 1 : 0,
+    isCompleted: +target.isCompleted || isCompleted ? 1 : 0,
     lastSeconds: +lastSeconds,
   });
 

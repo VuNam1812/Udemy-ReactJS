@@ -6,6 +6,7 @@ const slugify = require("slugify");
 const handleCourse = require("../middlewares/route/course.mdw");
 const handleAccount = require("../middlewares/route/account.mdw");
 const awsService = require("../aws/index");
+const validate = require("../middlewares/validate.mdw");
 
 const chapterModel = require("../models/chapter.model");
 const courseModel = require("../models/course.model");
@@ -17,6 +18,9 @@ const favoriteCourseModel = require("../models/favoriteCourse.model");
 const auth = require("../middlewares/auth.mdw");
 const joinInCourseModel = require("../models/joinInCourse.model");
 const userLessionModel = require("../models/userLession.model");
+
+const courseSchema = require("../schemas/course.json");
+const feedbackSchema = require("../schemas/feedback.json");
 
 const router = express.Router();
 
@@ -62,7 +66,7 @@ router.get("/", async (req, res) => {
     );
     res_data.length = (
       await courseModel.bySearchText(search, { ...filter, limit: 1000000000 })
-    ).length;
+    )[0].length;
   }
 
   return res.json({
@@ -70,7 +74,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", validate(courseSchema), auth, async (req, res) => {
   const { permission, userId } = req.accessTokenPayload;
 
   if (permission !== 1) {
@@ -227,6 +231,7 @@ router.get("/:id/userlessions", auth, async (req, res) => {
   const chapters = await chapterModel.allByCourse(id);
 
   for (const chapter of chapters) {
+    chapter.lectureCompleted = 0;
     chapter["lectures"] = await lectureModel.allByChapter(chapter.id);
     for (const lecture of chapter["lectures"]) {
       const userLession = await userLessionModel.singleByUserIdAndLectureId(
@@ -234,6 +239,7 @@ router.get("/:id/userlessions", auth, async (req, res) => {
         lecture.id
       );
       lecture.isCompleted = userLession?.isCompleted || 0;
+      chapter.lectureCompleted += lecture.isCompleted;
       lecture.lastSeconds = userLession?.lastSeconds || 0;
     }
   }
@@ -336,49 +342,55 @@ router.get("/:id/feedbacks", async (req, res) => {
   });
 });
 
-router.post("/:id/feedbacks", auth, async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.accessTokenPayload;
+router.post(
+  "/:id/feedbacks",
+  validate(feedbackSchema),
+  auth,
+  async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.accessTokenPayload;
 
-  try {
-    const filter = {
-      order: "createAt",
-      sort: "desc",
-      limit: 1000000000,
-      offset: 0,
-    };
-    const ret = await feedbackModel.add({
-      id_course: id,
-      id_user: userId,
-      ...req.body,
-      createAt: moment(new Date()).format("YYYY-MM-DD"),
-    });
+    try {
+      const filter = {
+        order: "createAt",
+        sort: "desc",
+        limit: 1000000000,
+        offset: 0,
+      };
+      const ret = await feedbackModel.add({
+        id_course: id,
+        id_user: userId,
+        ...req.body,
+        createAt: moment(new Date()).format("YYYY-MM-DD"),
+      });
 
-    const feedbackCount = (await courseModel.single(id)).feedbackCount;
-    const feedbacks = await feedbackModel.allWithCourseId(id, filter);
+      const feedbackCount = (await courseModel.single(id)).feedbackCount;
+      const feedbacks = await feedbackModel.allWithCourseId(id, filter);
 
-    const rate =
-      feedbacks.reduce((sum, value) => sum + +value.rate, 0) / feedbacks.length;
+      const rate =
+        feedbacks.reduce((sum, value) => sum + +value.rate, 0) /
+        feedbacks.length;
 
-    await courseModel.update(id, {
-      feedbackCount: feedbackCount + 1,
-      rate: Math.round(rate * 10) / 10,
-    });
+      await courseModel.update(id, {
+        feedbackCount: feedbackCount + 1,
+        rate: Math.round(rate * 10) / 10,
+      });
 
-    return res.json({
-      data: {
-        created: true,
-        id_feedback: ret,
-      },
-    });
-  } catch (error) {
-    return res.json({
-      data: {
-        created: false,
-      },
-    });
+      return res.json({
+        data: {
+          created: true,
+          id_feedback: ret,
+        },
+      });
+    } catch (error) {
+      return res.json({
+        data: {
+          created: false,
+        },
+      });
+    }
   }
-});
+);
 
 router.patch("/:id", auth, async (req, res) => {
   const { id } = req.params;

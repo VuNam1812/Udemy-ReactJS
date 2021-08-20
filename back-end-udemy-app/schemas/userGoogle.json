@@ -1,0 +1,23 @@
+{
+    "required": [
+        "userID",
+        "name",
+        "srcImage",
+        "email"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "userID": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "srcImage": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        }
+    }
+}

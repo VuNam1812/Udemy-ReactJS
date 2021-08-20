@@ -1,14 +1,15 @@
 const express = require("express");
 const slugify = require("slugify");
+const router = express.Router();
 
 const lectureModel = require("../models/lecture.model");
 const chapterModel = require("../models/chapter.model");
 
 const awsService = require("../aws/index");
-
-const router = express.Router();
-
 const auth = require("../middlewares/auth.mdw");
+const validate = require('../middlewares/validate.mdw');
+
+const lectureSchema = require('../schemas/lecture.json');
 
 const configSlug = (name) => {
   return slugify(name, {
@@ -23,7 +24,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", validate(lectureSchema), auth, async (req, res) => {
   const { permission } = req.accessTokenPayload;
 
   if (permission !== 1) {

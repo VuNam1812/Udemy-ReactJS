@@ -1,0 +1,23 @@
+{
+    "required": [
+        "name",
+        "email",
+        "permission",
+        "password"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "permission": {
+            "type": "number"
+        },
+        "password": {
+            "type": "string"
+        }
+    }
+}

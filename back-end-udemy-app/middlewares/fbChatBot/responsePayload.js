@@ -59,12 +59,12 @@ const responsePayload = {
   },
 
   SEARCH_COURSES_MESSAGE: async (message = "") => {
-    const courses = await courseModel.bySearchText(message, {
+    const courses = (await courseModel.bySearchText(message, {
       order: "id",
       sort: "asc",
       limit: 10,
       offset: 0,
-    });
+    }))[0];
 
     if (courses.length === 0) {
       return [
@@ -216,7 +216,7 @@ const responsePayload = {
     if (courses.length === 0) {
       return [
         {
-          text: "Rất xin lỗi bạn nhiếu!!",
+          text: "Rất xin lỗi bạn nhiều!!",
         },
         {
           text: "Danh mục mà bạn đang tìm kiếm hiện chúng tôi chưa cập nhật khóa học!!",

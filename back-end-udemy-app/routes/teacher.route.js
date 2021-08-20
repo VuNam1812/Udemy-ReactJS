@@ -8,11 +8,13 @@ const slugify = require("slugify");
 const auth = require("../middlewares/auth.mdw");
 const handleAccount = require("../middlewares/route/account.mdw");
 const handleCourse = require("../middlewares/route/course.mdw");
+const validate = require("../middlewares/validate.mdw");
 
 const userModel = require("../models/user.model");
 const courseModel = require("../models/course.model");
 const teacherinfoModel = require("../models/teacherinfo.model");
 
+const teacherSchema = require("../schemas/teacher.json");
 const router = express.Router();
 
 const configSlug = (name) => {
@@ -25,7 +27,17 @@ const configSlug = (name) => {
 const EmptyImage =
   "https://myedu-1612407.s3.sa-east-1.amazonaws.com/empty/UserEmptyImage.jpg";
 
-router.post("/", async function (req, res) {
+router.post("/", validate(teacherSchema), auth, async function (req, res) {
+  const { permission } = req.accessTokenPayload;
+
+  if (permission !== 0) {
+    return res.json({
+      data: {
+        created: false,
+        err_message: "Permission invalid!!",
+      },
+    });
+  }
   const hash = bcrypt.hashSync(req.body.password, 10);
   const user = {
     name: req.body.name,

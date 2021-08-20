@@ -25,12 +25,18 @@ module.exports = {
   },
 
   bySearchText(text, filter) {
-    return db(TBL_COURSES)
-      .whereRaw(`MATCH(CourName) AGAINST('+${text}' IN BOOLEAN MODE)`)
-      .where("isDelete", 0)
-      .orderBy(filter.order, filter.sort)
-      .limit(filter.limit)
-      .offset(filter.offset);
+    if (filter.order === "id") {
+      filter.order = "score";
+      filter.sort = "desc";
+    }
+    return db.raw(`
+      SELECT courses.*, MATCH (courses.courName,courses.fullDes) AGAINST ('+${text}' IN NATURAL LANGUAGE MODE) as score
+      FROM courses join categories on courses.id_cat = categories.id
+      where courses.isDelete = 0 and MATCH (courName,fullDes) AGAINST ('+${text}' IN NATURAL LANGUAGE MODE) or 
+        MATCH (fullName) AGAINST ('+${text}' IN NATURAL LANGUAGE MODE)
+      ORDER BY ${filter.order} ${filter.sort}
+      LIMIT ${filter.limit} OFFSET ${filter.offset}
+      `);
   },
 
   async single(id) {

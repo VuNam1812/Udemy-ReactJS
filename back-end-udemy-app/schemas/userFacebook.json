@@ -1,0 +1,19 @@
+{
+    "required": [
+        "userID",
+        "name",
+        "access_token"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "userID": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "access_token": {
+            "type": "string"
+        }
+    }
+}
